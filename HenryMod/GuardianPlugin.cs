@@ -21,7 +21,7 @@ namespace HenryMod
         "SoundAPI",
     })]
 
-    public class HenryPlugin : BaseUnityPlugin
+    public class GuardianPlugin : BaseUnityPlugin
     {
         // if you don't change these you're giving permission to deprecate the mod-
         //  please change the names to your own stuff, thanks
@@ -35,7 +35,7 @@ namespace HenryMod
 
         internal List<SurvivorBase> Survivors = new List<SurvivorBase>();
 
-        public static HenryPlugin instance;
+        public static GuardianPlugin instance;
 
         private void Awake()
         {
