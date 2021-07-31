@@ -7,7 +7,7 @@ using System.IO;
 using System.Collections.Generic;
 using RoR2.UI;
 
-namespace HenryMod.Modules
+namespace GuardianPlugin.Modules
 {
     internal static class Assets
     {
@@ -33,7 +33,7 @@ namespace HenryMod.Modules
         private static string[] assetNames = new string[0];
 
         // CHANGE THIS
-        private const string assetbundleName = "myassetbundle";
+        private const string assetbundleName = "guardianassetbundle";
 
         internal static void Initialize()
         {
@@ -52,7 +52,7 @@ namespace HenryMod.Modules
         {
             if (mainAssetBundle == null)
             {
-                using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("HenryMod." + assetbundleName))
+                using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Guardian." + assetbundleName))
                 {
                     mainAssetBundle = AssetBundle.LoadFromStream(assetStream);
                 }
@@ -63,7 +63,7 @@ namespace HenryMod.Modules
 
         internal static void LoadSoundbank()
         {
-            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("HenryMod.HenryBank.bnk"))
+            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("Guardian.GuardianBank.bnk"))
             {
                 byte[] array = new byte[manifestResourceStream2.Length];
                 manifestResourceStream2.Read(array, 0, array.Length);

@@ -1,5 +1,5 @@
 ﻿using BepInEx;
-using HenryMod.Modules.Survivors;
+using GuardianPlugin.Modules.Survivors;
 using R2API.Utils;
 using RoR2;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Security.Permissions;
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 
-namespace HenryMod
+namespace GuardianPlugin
 {
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
@@ -26,12 +26,12 @@ namespace HenryMod
         // if you don't change these you're giving permission to deprecate the mod-
         //  please change the names to your own stuff, thanks
         //   this shouldn't even have to be said
-        public const string MODUID = "com.DeveloperName.MyCharacterMod";
-        public const string MODNAME = "MyCharacterMod";
+        public const string MODUID = "com.Ozzymops.GW2Guardian";
+        public const string MODNAME = "GW2Guardian";
         public const string MODVERSION = "1.0.0";
 
         // a prefix for name tokens to prevent conflicts- please capitalize all name tokens for convention
-        public const string developerPrefix = "ROB";
+        public const string developerPrefix = "OZZ";
 
         internal List<SurvivorBase> Survivors = new List<SurvivorBase>();
 
@@ -51,7 +51,7 @@ namespace HenryMod
             Modules.ItemDisplays.PopulateDisplays(); // collect item display prefabs for use in our display rules
 
             // survivor initialization
-            new MyCharacter().Initialize();
+            new Guardian().Initialize();
 
             // now make a content pack and add it- this part will change with the next update
             new Modules.ContentPacks().Initialize();
@@ -64,7 +64,7 @@ namespace HenryMod
         private void LateSetup(HG.ReadOnlyArray<RoR2.ContentManagement.ReadOnlyContentPack> obj)
         {
             // have to set item displays later now because they require direct object references..
-            Modules.Survivors.MyCharacter.instance.SetItemDisplays();
+            Modules.Survivors.Guardian.instance.SetItemDisplays();
         }
 
         private void Hook()

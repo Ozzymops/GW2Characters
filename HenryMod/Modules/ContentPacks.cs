@@ -1,6 +1,6 @@
 ﻿using RoR2.ContentManagement;
 
-namespace HenryMod.Modules
+namespace GuardianPlugin.Modules
 {
     internal class ContentPacks : IContentPackProvider
     {

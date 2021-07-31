@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HenryMod.Modules
+namespace GuardianPlugin.Modules
 {
     internal static class Helpers
     {

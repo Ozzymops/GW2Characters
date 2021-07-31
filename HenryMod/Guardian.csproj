@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -13,14 +13,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="guardianassetbundle" />
     <None Remove="GuardianBank.bnk" />
     <None Remove="Modules\Survivors\Henry.cs~RF6221a098.TMP" />
-    <None Remove="myassetbundle" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="GuardianBank.bnk" />
-    <EmbeddedResource Include="myassetbundle" />
+    <EmbeddedResource Include="guardianassetbundle" />
   </ItemGroup>
 
   <ItemGroup>

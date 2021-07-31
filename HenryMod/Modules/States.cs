@@ -1,9 +1,9 @@
-﻿using HenryMod.SkillStates;
-using HenryMod.SkillStates.BaseStates;
+﻿using GuardianPlugin.SkillStates;
+using GuardianPlugin.SkillStates.BaseStates;
 using System.Collections.Generic;
 using System;
 
-namespace HenryMod.Modules
+namespace GuardianPlugin.Modules
 {
     public static class States
     {

@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace HenryMod.Modules.Achievements
+namespace GuardianPlugin.Modules.Achievements
 {
     internal class MasteryAchievement : ModdedUnlockable
     {
@@ -27,7 +27,7 @@ namespace HenryMod.Modules.Achievements
 
         public override BodyIndex LookUpRequiredBodyIndex()
         {
-            return BodyCatalog.FindBodyIndex(Modules.Survivors.MyCharacter.instance.fullBodyName);
+            return BodyCatalog.FindBodyIndex(Modules.Survivors.Guardian.instance.fullBodyName);
         }
 
         public void ClearCheck(Run run, RunReport runReport)
