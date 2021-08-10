@@ -13,12 +13,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\icon.png" />
+    <None Remove="Assets\skillMace1.png" />
+    <None Remove="Assets\skillMace2.png" />
+    <None Remove="Assets\skillMace3.png" />
+    <None Remove="Assets\skillSanctuary.png" />
+    <None Remove="Assets\skillTrueShot.png" />
+    <None Remove="Assets\skillVirtueCourage.png" />
+    <None Remove="Assets\skillVirtueJustice.png" />
+    <None Remove="Assets\skillVirtueResolve.png" />
+    <None Remove="Assets\skillWingsOfResolve.png" />
     <None Remove="guardianassetbundle" />
     <None Remove="GuardianBank.bnk" />
     <None Remove="Modules\Survivors\Henry.cs~RF6221a098.TMP" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Assets\icon.png" />
+    <EmbeddedResource Include="Assets\skillMace1.png" />
+    <EmbeddedResource Include="Assets\skillMace2.png" />
+    <EmbeddedResource Include="Assets\skillMace3.png" />
+    <EmbeddedResource Include="Assets\skillSanctuary.png" />
+    <EmbeddedResource Include="Assets\skillTrueShot.png" />
+    <EmbeddedResource Include="Assets\skillVirtueCourage.png" />
+    <EmbeddedResource Include="Assets\skillVirtueJustice.png" />
+    <EmbeddedResource Include="Assets\skillVirtueResolve.png" />
+    <EmbeddedResource Include="Assets\skillWingsOfResolve.png" />
     <EmbeddedResource Include="GuardianBank.bnk" />
     <EmbeddedResource Include="guardianassetbundle" />
   </ItemGroup>
