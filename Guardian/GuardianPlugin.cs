@@ -95,47 +95,60 @@ namespace GuardianPlugin
 
             if (self)
             {
-                // Main container
-                UnityEngine.GameObject guardianContainer = new GameObject("GuardianContainer");
+                // Set up main container
+                GameObject guardianContainer = new GameObject("GuardianUIContainer");
                 guardianContainer.transform.SetParent(hud.mainContainer.transform);
-                RectTransform containerTransform = guardianContainer.AddComponent<RectTransform>();
-                containerTransform.anchorMin = new Vector2(0.5f, 0.5f);
-                containerTransform.anchorMax = new Vector2(0.5f, 0.5f);
-                containerTransform.sizeDelta = new Vector2(200, 50);
-                containerTransform.anchoredPosition = new Vector2(1000, 1000);
+                RectTransform guardianContainerTransform = guardianContainer.AddComponent<RectTransform>();
+                guardianContainerTransform.anchorMin = new Vector2(0.05f, 0.15f);
+                guardianContainerTransform.anchorMax = new Vector2(0.35f, 0.35f);
+                guardianContainerTransform.sizeDelta = Vector2.zero;
+                guardianContainerTransform.anchoredPosition = new Vector2(0.5f, 0.5f);
 
-                // Virtue of Justice
-                GameObject guardianVirtueJustice = new GameObject("VirtueJustice");
-                guardianVirtueJustice.transform.SetParent(guardianContainer.transform);
-                RectTransform justiceTransform = guardianVirtueJustice.AddComponent<RectTransform>();
-                justiceTransform.anchorMin = new Vector2(0f, 0.5f);
-                justiceTransform.anchorMax = new Vector2(0f, 0.5f);
-                justiceTransform.sizeDelta = new Vector2(50, 50);
-                justiceTransform.position = new Vector3(25, 0, 0);
-                guardianVirtueJustice.AddComponent<Image>();
-                guardianVirtueJustice.GetComponent<Image>().sprite = Resources.Load<Sprite>("textures/itemicons/texBearIcon");
+                // Profession container
+                GameObject professionContainer = new GameObject("GuardianUIContainer_Profession");
+                professionContainer.transform.SetParent(hud.mainContainer.transform);
+                RectTransform professionContainerTransform = professionContainer.AddComponent<RectTransform>();
+                professionContainerTransform.anchorMin = new Vector2(0.0025f, 0.05f);
+                professionContainerTransform.anchorMax = new Vector2(0.06f, 0.15f);
+                professionContainerTransform.sizeDelta = Vector2.zero;
+                professionContainerTransform.anchoredPosition = new Vector2(0.5f, 0.5f);
 
-                // Virtue of Resolve
-                GameObject guardianVirtueResolve = new GameObject("VirtueResolve");
-                guardianVirtueResolve.transform.SetParent(guardianContainer.transform);
-                RectTransform resolveTransform = guardianVirtueResolve.AddComponent<RectTransform>();
-                resolveTransform.anchorMin = new Vector2(0.5f, 0.5f);
-                resolveTransform.anchorMax = new Vector2(0.5f, 0.5f);
-                resolveTransform.sizeDelta = new Vector2(50, 50);
-                resolveTransform.position = new Vector3(0, 0, 0);
-                guardianVirtueResolve.AddComponent<Image>();
-                guardianVirtueResolve.GetComponent<Image>().sprite = Resources.Load<Sprite>("textures/itemicons/texBearIcon");
+                // 'Justice' container
+                GameObject justiceContainer = new GameObject("GuardianUIContainer_Justice");
+                justiceContainer.transform.SetParent(guardianContainer.transform);
+                RectTransform justiceContainerTransform = justiceContainer.AddComponent<RectTransform>();
+                justiceContainerTransform.anchorMin = new Vector2(0.05f, 0.15f);
+                justiceContainerTransform.anchorMax = new Vector2(0.15f, 0.35f);
+                justiceContainerTransform.sizeDelta = Vector2.zero;
+                justiceContainerTransform.anchoredPosition = new Vector2(0.5f, 0.5f);
 
-                // Virtue of Courage
-                GameObject guardianVirtueCourage = new GameObject("VirtueCourage");
-                guardianVirtueCourage.transform.SetParent(guardianContainer.transform);
-                RectTransform courageTransform = guardianVirtueCourage.AddComponent<RectTransform>();
-                courageTransform.anchorMin = new Vector2(1f, 0.5f);
-                courageTransform.anchorMax = new Vector2(1f, 0.5f);
-                courageTransform.sizeDelta = new Vector2(50, 50);
-                courageTransform.position = new Vector3(-25, 0, 0);
-                guardianVirtueCourage.AddComponent<Image>();
-                guardianVirtueCourage.GetComponent<Image>().sprite = Resources.Load<Sprite>("textures/itemicons/texBearIcon");
+                // 'Resolve' container
+                GameObject resolveContainer = new GameObject("GuardianUIContainer_Resolve");
+                resolveContainer.transform.SetParent(guardianContainer.transform);
+                RectTransform resolveContainerTransform = resolveContainer.AddComponent<RectTransform>();
+                resolveContainerTransform.anchorMin = new Vector2(0.15f, 0.15f);
+                resolveContainerTransform.anchorMax = new Vector2(0.25f, 0.35f);
+                resolveContainerTransform.sizeDelta = Vector2.zero;
+                resolveContainerTransform.anchoredPosition = new Vector2(0.5f, 0.5f);
+
+                // 'Courage' container
+                GameObject courageContainer = new GameObject("GuardianUIContainer_Courage");
+                courageContainer.transform.SetParent(guardianContainer.transform);
+                RectTransform courageContainerTransform = courageContainer.AddComponent<RectTransform>();
+                courageContainerTransform.anchorMin = new Vector2(0.25f, 0.15f);
+                courageContainerTransform.anchorMax = new Vector2(0.35f, 0.35f);
+                courageContainerTransform.sizeDelta = Vector2.zero;
+                courageContainerTransform.anchoredPosition = new Vector2(0.5f, 0.5f);
+
+                // Assign images
+                professionContainer.AddComponent<Image>();
+                justiceContainer.AddComponent<Image>();
+                resolveContainer.AddComponent<Image>();
+                courageContainer.AddComponent<Image>();
+                professionContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("profession");
+                justiceContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillVirtueJustice");
+                resolveContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillVirtueResolve");
+                courageContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillVirtueCourage");
             }
         }
 

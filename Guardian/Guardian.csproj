@@ -26,19 +26,24 @@
     <None Remove="guardianassetbundle" />
     <None Remove="GuardianBank.bnk" />
     <None Remove="Modules\Survivors\Henry.cs~RF6221a098.TMP" />
+    <None Remove="old_guardianassetbundle" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Assets\icon.png" />
-    <EmbeddedResource Include="Assets\skillMace1.png" />
-    <EmbeddedResource Include="Assets\skillMace2.png" />
-    <EmbeddedResource Include="Assets\skillMace3.png" />
-    <EmbeddedResource Include="Assets\skillSanctuary.png" />
-    <EmbeddedResource Include="Assets\skillTrueShot.png" />
-    <EmbeddedResource Include="Assets\skillVirtueCourage.png" />
-    <EmbeddedResource Include="Assets\skillVirtueJustice.png" />
-    <EmbeddedResource Include="Assets\skillVirtueResolve.png" />
-    <EmbeddedResource Include="Assets\skillWingsOfResolve.png" />
+    <EmbeddedResource Include="old_guardianassetbundle" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\Resources\Guardian\icon.png" />
+    <EmbeddedResource Include="Assets\Resources\Guardian\skillMace1.png" />
+    <EmbeddedResource Include="Assets\Resources\Guardian\skillMace2.png" />
+    <EmbeddedResource Include="Assets\Resources\Guardian\skillMace3.png" />
+    <EmbeddedResource Include="Assets\Resources\Guardian\skillSanctuary.png" />
+    <EmbeddedResource Include="Assets\Resources\Guardian\skillTrueShot.png" />
+    <EmbeddedResource Include="Assets\Resources\Guardian\skillVirtueCourage.png" />
+    <EmbeddedResource Include="Assets\Resources\Guardian\skillVirtueJustice.png" />
+    <EmbeddedResource Include="Assets\Resources\Guardian\skillVirtueResolve.png" />
+    <EmbeddedResource Include="Assets\Resources\Guardian\skillWingsOfResolve.png" />
     <EmbeddedResource Include="GuardianBank.bnk" />
     <EmbeddedResource Include="guardianassetbundle" />
   </ItemGroup>
@@ -143,6 +148,10 @@
     <Reference Include="Zio">
       <HintPath>..\libs\Zio.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

@@ -13,6 +13,7 @@ namespace GuardianPlugin.Modules
     {
         // the assetbundle to load assets from
         internal static AssetBundle mainAssetBundle;
+        internal static AssetBundle subAssetBundle;
 
         // particle effects
         internal static GameObject swordSwingEffect;
@@ -31,13 +32,15 @@ namespace GuardianPlugin.Modules
         internal static Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/HGStandard");
         internal static Material commandoMat;
         private static string[] assetNames = new string[0];
+        private static string[] subAssetNames = new string[0];
 
         // CHANGE THIS
-        private const string assetbundleName = "guardianassetbundle";
+        private const string assetbundleName = "old_guardianassetbundle";
+        private const string subAssetbundleName = "guardianassetbundle";
 
         internal static void Initialize()
         {
-            if (assetbundleName == "myassetbundle")
+            if (assetbundleName == "myassetbundle" || subAssetbundleName == "myassetbundle")
             {
                 Debug.LogError("AssetBundle name hasn't been changed- not loading any assets to avoid conflicts");
                 return;
@@ -53,12 +56,23 @@ namespace GuardianPlugin.Modules
             if (mainAssetBundle == null)
             {
                 using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Guardian." + assetbundleName))
-                {
+                {                
                     mainAssetBundle = AssetBundle.LoadFromStream(assetStream);
+                    Debug.LogWarning("Main asset bundle loaded!");
+                }
+            }
+
+            if (subAssetBundle == null)
+            {
+                using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Guardian." + subAssetbundleName))
+                {
+                    subAssetBundle = AssetBundle.LoadFromStream(assetStream);
+                    Debug.LogWarning("Sub asset bundle loaded!");
                 }
             }
 
             assetNames = mainAssetBundle.GetAllAssetNames();
+            subAssetNames = subAssetBundle.GetAllAssetNames();
         }
 
         internal static void LoadSoundbank()
@@ -73,7 +87,7 @@ namespace GuardianPlugin.Modules
 
         internal static void PopulateAssets()
         {
-            if (!mainAssetBundle)
+            if (!mainAssetBundle || !subAssetBundle)
             {
                 Debug.LogError("There is no AssetBundle to load assets from.");
                 return;
@@ -183,7 +197,7 @@ namespace GuardianPlugin.Modules
 
         internal static Texture LoadCharacterIcon(string characterName)
         {
-            return mainAssetBundle.LoadAsset<Texture>("tex" + characterName + "Icon");
+            return subAssetBundle.LoadAsset<Texture>(characterName);
         }
 
         internal static GameObject LoadCrosshair(string crosshairName)
