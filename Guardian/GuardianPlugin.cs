@@ -87,7 +87,6 @@ namespace GuardianPlugin
 
         // UI
         private HUD hud = null;
-
         private void InitializeUserInterface(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
         {
             orig(self);

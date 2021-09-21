@@ -22,7 +22,7 @@ namespace GuardianPlugin.Modules.Survivors
         {
             armor = 20f,
             armorGrowth = 0f,
-            bodyName = "HenryBody",
+            bodyName = "GuardianBody",
             bodyNameToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_NAME",
             bodyColor = Color.grey,
             // characterPortrait = Modules.Assets.LoadCharacterIcon("Henry"),
@@ -97,7 +97,7 @@ namespace GuardianPlugin.Modules.Survivors
             string prefix = GuardianPlugin.developerPrefix;
 
             #region Primary
-            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.SlashCombo)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_SLASH_NAME", prefix + "_GUARDIAN_BODY_PRIMARY_SLASH_DESCRIPTION", Modules.Assets.mainAssetBundle.LoadAsset<Sprite>("texPrimaryIcon"), true));
+            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.SlashCombo)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_SLASH_NAME", prefix + "_GUARDIAN_BODY_PRIMARY_SLASH_DESCRIPTION", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace1"), true));
             #endregion
 
             #region Secondary
@@ -106,7 +106,7 @@ namespace GuardianPlugin.Modules.Survivors
                 skillName = prefix + "_GUARDIAN_BODY_SECONDARY_GUN_NAME",
                 skillNameToken = prefix + "_GUARDIAN_BODY_SECONDARY_GUN_NAME",
                 skillDescriptionToken = prefix + "_GUARDIAN_BODY_SECONDARY_GUN_DESCRIPTION",
-                skillIcon = Modules.Assets.mainAssetBundle.LoadAsset<Sprite>("texSecondaryIcon"),
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillTrueShot"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Shoot)),
                 activationStateMachineName = "Slide",
                 baseMaxStock = 1,
@@ -134,7 +134,7 @@ namespace GuardianPlugin.Modules.Survivors
                 skillName = prefix + "_GUARDIAN_BODY_UTILITY_ROLL_NAME",
                 skillNameToken = prefix + "_GUARDIAN_BODY_UTILITY_ROLL_NAME",
                 skillDescriptionToken = prefix + "_GUARDIAN_BODY_UTILITY_ROLL_DESCRIPTION",
-                skillIcon = Modules.Assets.mainAssetBundle.LoadAsset<Sprite>("texUtilityIcon"),
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillWingsOfResolve"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Roll)),
                 activationStateMachineName = "Body",
                 baseMaxStock = 1,
@@ -162,7 +162,7 @@ namespace GuardianPlugin.Modules.Survivors
                 skillName = prefix + "_GUARDIAN_BODY_SPECIAL_BOMB_NAME",
                 skillNameToken = prefix + "_GUARDIAN_BODY_SPECIAL_BOMB_NAME",
                 skillDescriptionToken = prefix + "_GUARDIAN_BODY_SPECIAL_BOMB_DESCRIPTION",
-                skillIcon = Modules.Assets.mainAssetBundle.LoadAsset<Sprite>("texSpecialIcon"),
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillSanctuary"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.ThrowBomb)),
                 activationStateMachineName = "Slide",
                 baseMaxStock = 1,

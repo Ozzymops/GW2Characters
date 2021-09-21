@@ -15,5 +15,10 @@ namespace GuardianPlugin.Modules
         internal const float gunDamageCoefficient = 4.2f;
 
         internal const float bombDamageCoefficient = 16f;
+
+        internal const float maceDamageCoefficient = 1.0f;
+        internal const float bowDamageCoefficient = 1.0f;
+        internal const float wingsDamageCoefficient = 1.0f;
+        internal const float shieldDamageCoefficient = 1.0f;
     }
 }
