@@ -14,6 +14,10 @@ namespace GuardianPlugin.Modules
             entityStates.Add(typeof(BaseMeleeAttack));
             entityStates.Add(typeof(SlashCombo));
 
+            entityStates.Add(typeof(Mace1));
+            entityStates.Add(typeof(Mace2));
+            entityStates.Add(typeof(Mace3));
+
             entityStates.Add(typeof(Shoot));
 
             entityStates.Add(typeof(Roll));

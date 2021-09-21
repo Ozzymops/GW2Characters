@@ -49,6 +49,15 @@ namespace GuardianPlugin.Modules
                                                                                         $"Faithful Strike: deal <style=cIsDamage>{155f * StaticValues.maceDamageCoefficient}% damage</style>, cleaving up to three enemies, and <style=cIsHealing>heal yourself and nearby allies for 1% health</style>.");
             #endregion
 
+            #region Primary chain
+            LanguageAPI.Add(prefix + "PRIMARY_MACE_ONE_NAME", "True Strike");
+            LanguageAPI.Add(prefix + "PRIMARY_MACE_ONE_DESCRIPTION", Helpers.agilePrefix + $"Smash your foe for <style=cIsDamage>{80f * StaticValues.maceDamageCoefficient}% damage. Chains into <style=cIsUtility>Pure Strike</style>.");
+            LanguageAPI.Add(prefix + "PRIMARY_MACE_TWO_NAME", "Pure Strike");
+            LanguageAPI.Add(prefix + "PRIMARY_MACE_TWO_DESCRIPTION", Helpers.agilePrefix + $"Bash your foe for <style=cIsDamage>{100f * StaticValues.maceDamageCoefficient}% damage. Chains into <style=cIsUtility>Faithful Strike</style>.");
+            LanguageAPI.Add(prefix + "PRIMARY_MACE_THREE_NAME", "Faithful Strike");
+            LanguageAPI.Add(prefix + "PRIMARY_MACE_THREE_DESCRIPTION", Helpers.agilePrefix + $"Hit your foe with a final strike for <style=cIsDamage>{155f * StaticValues.maceDamageCoefficient}% damage and <style=cIsHealing>heal yourself and nearby allies for 1% health</style>.");
+            #endregion
+
             #region Secondary
             LanguageAPI.Add(prefix + "SECONDARY_GUN_NAME", "True Shot");
             LanguageAPI.Add(prefix + "SECONDARY_GUN_DESCRIPTION", $"Charge up a powerful spirit-bowshot, dealing between <style=cIsDamage>{250f * StaticValues.bowDamageCoefficient}% and {2500f * StaticValues.bowDamageCoefficient}% damage depending on charge</style>. This attack <style=cIsUtility>pierces</style>.");

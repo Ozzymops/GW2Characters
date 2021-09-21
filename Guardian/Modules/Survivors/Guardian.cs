@@ -97,7 +97,7 @@ namespace GuardianPlugin.Modules.Survivors
             string prefix = GuardianPlugin.developerPrefix;
 
             #region Primary
-            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.SlashCombo)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_SLASH_NAME", prefix + "_GUARDIAN_BODY_PRIMARY_SLASH_DESCRIPTION", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace1"), true));
+            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.Mace1)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_MACE_ONE_NAME", prefix + "_GUARDIAN_BODY_PRIMARY_SLASH_DESCRIPTION", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace1"), true));
             #endregion
 
             #region Secondary
