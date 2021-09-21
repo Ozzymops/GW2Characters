@@ -20,19 +20,19 @@ namespace GuardianPlugin.Modules.Survivors
 
         internal override BodyInfo bodyInfo { get; set; } = new BodyInfo
         {
-            armor = 20f,
+            armor = 40f,
             armorGrowth = 0f,
             bodyName = "HenryBody",
             bodyNameToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_NAME",
-            bodyColor = Color.grey,
-            // characterPortrait = Modules.Assets.LoadCharacterIcon("Henry"),
+            bodyColor = Color.blue,
             characterPortrait = Modules.Assets.LoadCharacterIcon("profession"),
             crosshair = Modules.Assets.LoadCrosshair("Standard"),
             damage = 12f,
-            healthGrowth = 33f,
-            healthRegen = 1.5f,
+            healthGrowth = 27f,
+            healthRegen = 0.0f,
             jumpCount = 1,
-            maxHealth = 110f,
+            maxHealth = 90f,
+            moveSpeed = 7f,
             subtitleNameToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_SUBTITLE",
             podPrefab = Resources.Load<GameObject>("Prefabs/NetworkedObjects/SurvivorPod")
         };
