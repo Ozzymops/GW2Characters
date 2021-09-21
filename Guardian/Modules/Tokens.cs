@@ -51,12 +51,12 @@ namespace GuardianPlugin.Modules
 
             #region Secondary
             LanguageAPI.Add(prefix + "SECONDARY_GUN_NAME", "True Shot");
-            LanguageAPI.Add(prefix + "SECONDARY_GUN_DESCRIPTION", $"Charge up a powerful spirit-bowshot, dealing <style=cIsDamage>{250f * StaticValues.bowDamageCoefficient}% - {2500f * StaticValues.bowDamageCoefficient}% damage depending on charge</style>. This attack <style=cIsUtility>pierces</style>.");
+            LanguageAPI.Add(prefix + "SECONDARY_GUN_DESCRIPTION", $"Charge up a powerful spirit-bowshot, dealing between <style=cIsDamage>{250f * StaticValues.bowDamageCoefficient}% and {2500f * StaticValues.bowDamageCoefficient}% damage depending on charge</style>. This attack <style=cIsUtility>pierces</style>.");
             #endregion
 
             #region Utility
             LanguageAPI.Add(prefix + "UTILITY_ROLL_NAME", "Wings of Resolve");
-            LanguageAPI.Add(prefix + "UTILITY_ROLL_DESCRIPTION", "Sprout <style=cIsUtility>two angelic wings and leap up in the air</style>. While winged, <style=cIsUtility>receive 50% less damage</style>. Upon landing, lose your wings and deal <style=cIsDamage>{200f * StaticValues.wingsDamageCoefficient}% damage</style> around you and <style=cIsHealing>heal yourself and allies for 5% health</style>.");
+            LanguageAPI.Add(prefix + "UTILITY_ROLL_DESCRIPTION", $"Sprout <style=cIsUtility>two angelic wings and leap up in the air</style>. While winged, <style=cIsUtility>receive 50% less damage</style>. Upon landing, lose your wings and deal <style=cIsDamage>{200f * StaticValues.wingsDamageCoefficient}% damage</style> around you and <style=cIsHealing>heal yourself and allies for 5% health</style>.");
             #endregion
 
             #region Special

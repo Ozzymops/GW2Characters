@@ -22,7 +22,7 @@ namespace GuardianPlugin.Modules.Survivors
         {
             armor = 20f,
             armorGrowth = 0f,
-            bodyName = "GuardianBody",
+            bodyName = "HenryBody",
             bodyNameToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_NAME",
             bodyColor = Color.grey,
             // characterPortrait = Modules.Assets.LoadCharacterIcon("Henry"),
