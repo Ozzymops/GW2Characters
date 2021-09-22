@@ -8,20 +8,6 @@ namespace GuardianPlugin.SkillStates
     public class Mace2 : BaseMeleeAttack
     {
         private bool hitEnemy;
-        private bool updateSkillDef = false;
-
-        public override void FixedUpdate()
-        {
-            if (!updateSkillDef)
-            {
-                SkillDef skillDef = characterBody.skillLocator.primary.skillDef;
-                skillDef.skillName = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_TWO_NAME";
-                skillDef.skillDescriptionToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_TWO_DESCRIPTION";
-                skillDef.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace2");
-            }
-
-            base.FixedUpdate();
-        }
 
         public override void OnEnter()
         {
@@ -74,10 +60,20 @@ namespace GuardianPlugin.SkillStates
             if (hitEnemy)
             {
                 this.outer.SetNextState(new Mace3 { });
+
+                SkillDef skillDef = characterBody.skillLocator.primary.skillDef;
+                skillDef.skillName = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_THREE_NAME";
+                skillDef.skillDescriptionToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_THREE_DESCRIPTION";
+                skillDef.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace3");
             }
             else
             {
                 this.outer.SetNextState(new Mace2 { });
+
+                SkillDef skillDef = characterBody.skillLocator.primary.skillDef;
+                skillDef.skillName = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_TWO_NAME";
+                skillDef.skillDescriptionToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_TWO_DESCRIPTION";
+                skillDef.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace2");
             }
         }
 

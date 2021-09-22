@@ -8,20 +8,6 @@ namespace GuardianPlugin.SkillStates
     public class Mace1 : BaseMeleeAttack
     {
         private bool hitEnemy;
-        private bool updateSkillDef = false;
-
-        public override void FixedUpdate()
-        {
-            if (!updateSkillDef)
-            {
-                SkillDef skillDef = characterBody.skillLocator.primary.skillDef;
-                skillDef.skillName = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_ONE_NAME";
-                skillDef.skillDescriptionToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_ONE_DESCRIPTION";
-                skillDef.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace1");
-            }
-
-            base.FixedUpdate();
-        }
 
         public override void OnEnter()
         {
@@ -66,18 +52,28 @@ namespace GuardianPlugin.SkillStates
         protected override void OnHitEnemyAuthority()
         {
             base.OnHitEnemyAuthority();
-            hitEnemy = true;
+            hitEnemy = true;    
         }
 
         protected override void SetNextState()
         {
             if (hitEnemy)
             {
-                this.outer.SetNextState(new Mace2 { });                          
+                this.outer.SetNextState(new Mace2 { });
+
+                SkillDef skillDef = characterBody.skillLocator.primary.skillDef;
+                skillDef.skillName = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_TWO_NAME";
+                skillDef.skillDescriptionToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_TWO_DESCRIPTION";
+                skillDef.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace2");
             }       
             else
             {
                 this.outer.SetNextState(new Mace1 { });
+
+                SkillDef skillDef = characterBody.skillLocator.primary.skillDef;
+                skillDef.skillName = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_ONE_NAME";
+                skillDef.skillDescriptionToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_ONE_DESCRIPTION";
+                skillDef.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace1");
             }
         }
 

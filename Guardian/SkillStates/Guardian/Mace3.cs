@@ -10,20 +10,6 @@ namespace GuardianPlugin.SkillStates
     {
         private bool hitEnemy;
         private bool didHeal;
-        private bool updateSkillDef = false;
-
-        public override void FixedUpdate()
-        {
-            if (!updateSkillDef)
-            {
-                SkillDef skillDef = characterBody.skillLocator.primary.skillDef;
-                skillDef.skillName = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_THREE_NAME";
-                skillDef.skillDescriptionToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_THREE_DESCRIPTION";
-                skillDef.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace3");
-            }
-
-            base.FixedUpdate();
-        }
 
         public override void OnEnter()
         {
@@ -32,14 +18,14 @@ namespace GuardianPlugin.SkillStates
             this.damageType = DamageType.Generic;
             this.damageCoefficient = Modules.StaticValues.maceDamageCoefficient * 1.55f;
             this.procCoefficient = 1f;
-            this.pushForce = 300f;
+            this.pushForce = 400f;
             this.bonusForce = Vector3.zero;
             this.baseDuration = 1f;
             this.attackStartTime = 0.2f;
-            this.attackEndTime = 0.4f;
-            this.baseEarlyExitTime = 0.4f;
-            this.hitStopDuration = 0.012f;
-            this.attackRecoil = 0.5f;
+            this.attackEndTime = 0.8f;
+            this.baseEarlyExitTime = 0.8f;
+            this.hitStopDuration = 0.024f;
+            this.attackRecoil = 0.8f;
             this.hitHopVelocity = 4f;
 
             this.swingSoundString = "HenrySwordSwing";
@@ -75,7 +61,7 @@ namespace GuardianPlugin.SkillStates
             if (NetworkServer.active && !didHeal)
             {
                 didHeal = true;
-                characterBody.healthComponent.Heal(characterBody.maxHealth * 0.05f, new ProcChainMask(), false);
+                characterBody.healthComponent.Heal(characterBody.maxHealth * 0.05f, new ProcChainMask(), true);
             }
         }
 
@@ -84,10 +70,20 @@ namespace GuardianPlugin.SkillStates
             if (hitEnemy)
             {
                 this.outer.SetNextState(new Mace1 { });
+
+                SkillDef skillDef = characterBody.skillLocator.primary.skillDef;
+                skillDef.skillName = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_ONE_NAME";
+                skillDef.skillDescriptionToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_ONE_DESCRIPTION";
+                skillDef.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace1");
             }
             else
             {
                 this.outer.SetNextState(new Mace3 { });
+
+                SkillDef skillDef = characterBody.skillLocator.primary.skillDef;
+                skillDef.skillName = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_THREE_NAME";
+                skillDef.skillDescriptionToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_THREE_DESCRIPTION";
+                skillDef.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace3");
             }
         }
 
