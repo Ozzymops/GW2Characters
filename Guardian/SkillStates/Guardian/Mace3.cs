@@ -20,7 +20,7 @@ namespace GuardianPlugin.SkillStates
             this.procCoefficient = 1f;
             this.pushForce = 400f;
             this.bonusForce = Vector3.zero;
-            this.baseDuration = 1f;
+            this.baseDuration = 2f;
             this.attackStartTime = 0.2f;
             this.attackEndTime = 0.8f;
             this.baseEarlyExitTime = 0.8f;

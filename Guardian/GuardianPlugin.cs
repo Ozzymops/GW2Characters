@@ -55,7 +55,7 @@ namespace GuardianPlugin
             Modules.ItemDisplays.PopulateDisplays(); // collect item display prefabs for use in our display rules
 
             // survivor initialization
-            new Guardian().Initialize();
+            new GuardianSurvivor().Initialize();
 
             // now make a content pack and add it- this part will change with the next update
             new Modules.ContentPacks().Initialize();
@@ -70,7 +70,7 @@ namespace GuardianPlugin
         private void LateSetup(HG.ReadOnlyArray<RoR2.ContentManagement.ReadOnlyContentPack> obj)
         {
             // have to set item displays later now because they require direct object references..
-            Modules.Survivors.Guardian.instance.SetItemDisplays();
+            Modules.Survivors.GuardianSurvivor.instance.SetItemDisplays();
         }
 
         private void Hook()
@@ -144,10 +144,10 @@ namespace GuardianPlugin
                 justiceContainer.AddComponent<Image>();
                 resolveContainer.AddComponent<Image>();
                 courageContainer.AddComponent<Image>();
-                professionContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("profession");
-                justiceContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillVirtueJustice");
-                resolveContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillVirtueResolve");
-                courageContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillVirtueCourage");
+                professionContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("textures/texGuardian");
+                justiceContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("textures/texGuardianJustice");
+                resolveContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("textures/texGuardianResolve");
+                courageContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("textures/texGuardianCourage");
             }
         }
 

@@ -14,6 +14,7 @@ namespace GuardianPlugin.Modules
         // the assetbundle to load assets from
         internal static AssetBundle mainAssetBundle;
         internal static AssetBundle subAssetBundle;
+        internal static AssetBundle sharedAssetBundle;
 
         // particle effects
         internal static GameObject swordSwingEffect;
@@ -33,14 +34,16 @@ namespace GuardianPlugin.Modules
         internal static Material commandoMat;
         private static string[] assetNames = new string[0];
         private static string[] subAssetNames = new string[0];
+        private static string[] sharedAssetNames = new string[0];
 
         // CHANGE THIS
         private const string assetbundleName = "old_guardianassetbundle";
         private const string subAssetbundleName = "guardianassetbundle";
+        private const string sharedAssetbundleName = "sharedassetbundle";
 
         internal static void Initialize()
         {
-            if (assetbundleName == "myassetbundle" || subAssetbundleName == "myassetbundle")
+            if (assetbundleName == "myassetbundle" || subAssetbundleName == "myassetbundle" || sharedAssetbundleName == "myassetbundle")
             {
                 Debug.LogError("AssetBundle name hasn't been changed- not loading any assets to avoid conflicts");
                 return;
@@ -71,8 +74,18 @@ namespace GuardianPlugin.Modules
                 }
             }
 
+            if (sharedAssetBundle == null)
+            {
+                using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Guardian." + sharedAssetbundleName))
+                {
+                    sharedAssetBundle = AssetBundle.LoadFromStream(assetStream);
+                    Debug.LogWarning("Shared asset bundle loaded!");
+                }
+            }
+
             assetNames = mainAssetBundle.GetAllAssetNames();
             subAssetNames = subAssetBundle.GetAllAssetNames();
+            sharedAssetNames = sharedAssetBundle.GetAllAssetNames();
         }
 
         internal static void LoadSoundbank()

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GuardianPlugin.Modules.Survivors
 {
-    internal class Guardian : SurvivorBase
+    internal class GuardianSurvivor : SurvivorBase
     {
         internal override string bodyName { get; set; } = "Henry";
 
@@ -25,7 +25,7 @@ namespace GuardianPlugin.Modules.Survivors
             bodyName = "HenryBody",
             bodyNameToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_NAME",
             bodyColor = Color.blue,
-            characterPortrait = Modules.Assets.LoadCharacterIcon("profession"),
+            characterPortrait = Modules.Assets.LoadCharacterIcon("textures/texCharacterIcon"),
             crosshair = Modules.Assets.LoadCrosshair("Standard"),
             damage = 12f,
             healthGrowth = 27f,
@@ -97,16 +97,16 @@ namespace GuardianPlugin.Modules.Survivors
             string prefix = GuardianPlugin.developerPrefix;
 
             #region Primary
-            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.Mace1)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_MACE_ONE_NAME", prefix + "_GUARDIAN_BODY_PRIMARY_SLASH_DESCRIPTION", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace1"), true));
+            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.Mace1)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_MACECHAIN_NAME", prefix + "_GUARDIAN_BODY_PRIMARY_MACECHAIN_DESCRIPTION", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("textures/texGuardianMaceOne"), true));
             #endregion
 
             #region Secondary
             SkillDef shootSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = prefix + "_GUARDIAN_BODY_SECONDARY_GUN_NAME",
-                skillNameToken = prefix + "_GUARDIAN_BODY_SECONDARY_GUN_NAME",
-                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SECONDARY_GUN_DESCRIPTION",
-                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillTrueShot"),
+                skillName = prefix + "_GUARDIAN_BODY_SECONDARY_ZEALOTSDEFENSE_NAME",
+                skillNameToken = prefix + "_GUARDIAN_BODY_SECONDARY_ZEALOTSDEFENSE_NAME",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SECONDARY_ZEALOTSDEFENSE_DESCRIPTION",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("textures/texGuardianZealot"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Shoot)),
                 activationStateMachineName = "Slide",
                 baseMaxStock = 1,
@@ -131,10 +131,10 @@ namespace GuardianPlugin.Modules.Survivors
             #region Utility
             SkillDef rollSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = prefix + "_GUARDIAN_BODY_UTILITY_ROLL_NAME",
-                skillNameToken = prefix + "_GUARDIAN_BODY_UTILITY_ROLL_NAME",
-                skillDescriptionToken = prefix + "_GUARDIAN_BODY_UTILITY_ROLL_DESCRIPTION",
-                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillWingsOfResolve"),
+                skillName = prefix + "_GUARDIAN_BODY_UTILITY_SHIELD_NAME",
+                skillNameToken = prefix + "_GUARDIAN_BODY_UTILITY_SHIELD_NAME",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_UTILITY_SHIELD_DESCRIPTION",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("textures/texGuardianAbsorption"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Roll)),
                 activationStateMachineName = "Body",
                 baseMaxStock = 1,
@@ -159,10 +159,10 @@ namespace GuardianPlugin.Modules.Survivors
             #region Special
             SkillDef bombSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = prefix + "_GUARDIAN_BODY_SPECIAL_BOMB_NAME",
-                skillNameToken = prefix + "_GUARDIAN_BODY_SPECIAL_BOMB_NAME",
-                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SPECIAL_BOMB_DESCRIPTION",
-                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillSanctuary"),
+                skillName = prefix + "_GUARDIAN_BODY_SPECIAL_SHIELD_NAME",
+                skillNameToken = prefix + "_GUARDIAN_BODY_SPECIAL_SHIELD_NAME",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SPECIAL_SHIELD_DESCRIPTION",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("textures/texGuardianSanctuary"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.ThrowBomb)),
                 activationStateMachineName = "Slide",
                 baseMaxStock = 1,
@@ -199,14 +199,14 @@ namespace GuardianPlugin.Modules.Survivors
 
             List<SkinDef> skins = new List<SkinDef>();
 
-            #region DefaultSkin
-            SkinDef defaultSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_DEFAULT_SKIN_NAME",
+            #region Core
+            SkinDef coreSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_CORE_SKIN_NAME",
                 Assets.mainAssetBundle.LoadAsset<Sprite>("texMainSkin"),
                 defaultRenderers,
                 mainRenderer,
                 model);
 
-            defaultSkin.meshReplacements = new SkinDef.MeshReplacement[]
+            coreSkin.meshReplacements = new SkinDef.MeshReplacement[]
             {
                 new SkinDef.MeshReplacement
                 {
@@ -225,27 +225,27 @@ namespace GuardianPlugin.Modules.Survivors
                 }
             };
 
-            skins.Add(defaultSkin);
+            skins.Add(coreSkin);
             #endregion
 
-            #region MasterySkin
-            Material masteryMat = Modules.Assets.CreateMaterial("matHenryAlt");
-            CharacterModel.RendererInfo[] masteryRendererInfos = SkinRendererInfos(defaultRenderers, new Material[]
+            #region Dragonhunter
+            Material dragonhunterMat = Modules.Assets.CreateMaterial("matHenryAlt");
+            CharacterModel.RendererInfo[] dragonhunterRendererInfos = SkinRendererInfos(defaultRenderers, new Material[]
             {
-                masteryMat,
-                masteryMat,
-                masteryMat,
-                masteryMat
+                dragonhunterMat,
+                dragonhunterMat,
+                dragonhunterMat,
+                dragonhunterMat
             });
 
-            SkinDef masterySkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_MASTERY_SKIN_NAME",
+            SkinDef dragonhunterSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_DRAGONHUNTER_SKIN_NAME",
                 Assets.mainAssetBundle.LoadAsset<Sprite>("texMasteryAchievement"),
-                masteryRendererInfos,
+                dragonhunterRendererInfos,
                 mainRenderer,
                 model,
                 masterySkinUnlockableDef);
 
-            masterySkin.meshReplacements = new SkinDef.MeshReplacement[]
+            dragonhunterSkin.meshReplacements = new SkinDef.MeshReplacement[]
             {
                 new SkinDef.MeshReplacement
                 {
@@ -259,7 +259,41 @@ namespace GuardianPlugin.Modules.Survivors
                 }
             };
 
-            skins.Add(masterySkin);
+            skins.Add(dragonhunterSkin);
+            #endregion
+
+            #region Firebrand
+            Material firebrandMat = Modules.Assets.CreateMaterial("matHenryAlt");
+            CharacterModel.RendererInfo[] firebrandRendererInfos = SkinRendererInfos(defaultRenderers, new Material[]
+            {
+                firebrandMat,
+                firebrandMat,
+                firebrandMat,
+                firebrandMat
+            });
+
+            SkinDef firebrandSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_DRAGONHUNTER_SKIN_NAME",
+                Assets.mainAssetBundle.LoadAsset<Sprite>("texMasteryAchievement"),
+                firebrandRendererInfos,
+                mainRenderer,
+                model,
+                masterySkinUnlockableDef);
+
+            firebrandSkin.meshReplacements = new SkinDef.MeshReplacement[]
+            {
+                new SkinDef.MeshReplacement
+                {
+                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenrySwordAlt"),
+                    renderer = defaultRenderers[0].renderer
+                },
+                new SkinDef.MeshReplacement
+                {
+                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenryAlt"),
+                    renderer = defaultRenderers[instance.mainRendererIndex].renderer
+                }
+            };
+
+            skins.Add(firebrandSkin);
             #endregion
 
             skinController.skins = skins.ToArray();
