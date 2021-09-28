@@ -17,15 +17,15 @@ namespace GuardianPlugin.Modules
         internal const float bombDamageCoefficient = 16f;
 
         // Core
-        internal const float maceDamageCoefficient = 1.0f;
-        internal const float zealotsDefenseDamageCoefficient = 1.0f;
-        internal const float shieldDamageCoefficient = 1.0f;
+        internal const float maceDamageCoefficient = 1.5f;
+        internal const float zealotsDefenseDamageCoefficient = 2.0f;
+        internal const float shieldDamageCoefficient = 1.25f;
 
         // Dragonhunter
-        internal const float bowDamageCoefficient = 1.0f;
-        internal const float trueShotDamageCoefficient = 1.0f;
-        internal const float trapsDamageCoefficient = 1.0f;
-        internal const float dragonsMawDamageCoefficient = 1.0f;
+        internal const float bowDamageCoefficient = 2.5f;
+        internal const float trueShotDamageCoefficient = 3.0f;
+        internal const float trapsDamageCoefficient = 1.25f;
+        internal const float dragonsMawDamageCoefficient = 1.5f;
 
         // Firebrand
     }

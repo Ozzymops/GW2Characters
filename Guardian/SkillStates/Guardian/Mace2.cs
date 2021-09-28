@@ -52,28 +52,49 @@ namespace GuardianPlugin.SkillStates
         protected override void OnHitEnemyAuthority()
         {
             base.OnHitEnemyAuthority();
-            hitEnemy = true;
+
+            if (!hitEnemy)
+            {
+                characterBody.GetComponent<Guardian.Modules.Guardian.AttackChainController>().ProgressChain();
+                hitEnemy = true;
+            }
         }
 
         protected override void SetNextState()
         {
-            if (hitEnemy)
-            {
-                this.outer.SetNextState(new Mace3 { });
+            int index = this.swingIndex;
+            if (index == 0) index = 1;
+            else index = 0;
 
-                SkillDef skillDef = characterBody.skillLocator.primary.skillDef;
-                skillDef.skillName = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_THREE_NAME";
-                skillDef.skillDescriptionToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_THREE_DESCRIPTION";
-                skillDef.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace3");
-            }
-            else
+            switch (characterBody.GetComponent<Guardian.Modules.Guardian.AttackChainController>().chainCount)
             {
-                this.outer.SetNextState(new Mace2 { });
+                case 0:
+                    this.outer.SetNextState(new Mace1
+                    {
+                        swingIndex = index
+                    });
+                    break;
 
-                SkillDef skillDef = characterBody.skillLocator.primary.skillDef;
-                skillDef.skillName = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_TWO_NAME";
-                skillDef.skillDescriptionToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_PRIMARY_MACE_TWO_DESCRIPTION";
-                skillDef.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("skillMace2");
+                case 1:
+                    this.outer.SetNextState(new Mace2
+                    {
+                        swingIndex = index
+                    });
+                    break;
+
+                case 2:
+                    this.outer.SetNextState(new Mace3
+                    {
+                        swingIndex = index
+                    });
+                    break;
+
+                default:
+                    this.outer.SetNextState(new Mace1
+                    {
+                        swingIndex = index
+                    });
+                    break;
             }
         }
 
