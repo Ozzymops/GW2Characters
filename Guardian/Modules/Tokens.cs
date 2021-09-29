@@ -59,9 +59,9 @@ namespace GuardianPlugin.Modules
 
             LanguageAPI.Add(prefix + "PRIMARY_MACECHAIN_NAME", "Mace Chain");
             LanguageAPI.Add(prefix + "PRIMARY_MACECHAIN_DESCRIPTION", Helpers.agilePrefix + $"Attack chain only progresses on succesful hits. Final attack in chain always progresses.\n" +
-                                                                                        $"True Strike: deal <style=cIsDamage>{80f * StaticValues.maceDamageCoefficient}% damage</style>.\n" +
-                                                                                        $"Pure Strike: deal <style=cIsDamage>{100f * StaticValues.maceDamageCoefficient}% damage</style>.\n" +
-                                                                                        $"Faithful Strike: deal <style=cIsDamage>{155f * StaticValues.maceDamageCoefficient}% damage</style> and <style=cIsHealing>heal yourself and nearby allies for 1% health</style>.");
+                                                                                        $"True Strike: deal <style=cIsDamage>{100f * StaticValues.maceDamageCoefficient}% damage</style>.\n" +
+                                                                                        $"Pure Strike: deal <style=cIsDamage>{150f * StaticValues.maceDamageCoefficient}% damage</style>.\n" +
+                                                                                        $"Faithful Strike: deal <style=cIsDamage>{250f * StaticValues.maceDamageCoefficient}% damage</style> and <style=cIsHealing>heal yourself and nearby allies for 1% health</style>.");
 
             LanguageAPI.Add(prefix + "PRIMARY_MACE_ONE_NAME", "True Strike");
             LanguageAPI.Add(prefix + "PRIMARY_MACE_ONE_DESCRIPTION", Helpers.agilePrefix + $"Smash your foe for <style=cIsDamage>{80f * StaticValues.maceDamageCoefficient}% damage</style>. Chains into <style=cIsUtility>Pure Strike</style>.");
