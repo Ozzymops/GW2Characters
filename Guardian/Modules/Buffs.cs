@@ -8,12 +8,16 @@ namespace GuardianPlugin.Modules
     {
         // armor buff gained during roll
         internal static BuffDef armorBuff;
+        internal static BuffDef justiceBuff;
+        internal static BuffDef aegisBuff;
 
         internal static List<BuffDef> buffDefs = new List<BuffDef>();
 
         internal static void RegisterBuffs()
         {
             armorBuff = AddNewBuff("HenryArmorBuff", Resources.Load<Sprite>("Textures/BuffIcons/texBuffGenericShield"), Color.white, false, false);
+            justiceBuff = AddNewBuff("GuardianJusticeBuff", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianJustice"), Color.white, true, false);
+            aegisBuff = AddNewBuff("GuardianAegisBuff", Modules.Assets.sharedAssetBundle.LoadAsset<Sprite>("boonAegis"), Color.white, true, false);
         }
 
         // simple helper method

@@ -56,6 +56,7 @@ namespace GuardianPlugin.SkillStates
             if (!hitEnemy)
             {
                 characterBody.GetComponent<Guardian.Modules.Guardian.AttackChainController>().ProgressChain();
+                characterBody.GetComponent<Guardian.Modules.Guardian.VirtueController>().ProgressJustice();
                 hitEnemy = true;
             }
         }

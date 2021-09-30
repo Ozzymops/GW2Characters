@@ -80,6 +80,13 @@ namespace GuardianPlugin
             // run hooks here, disabling one is as simple as commenting out the line
             On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
             On.RoR2.UI.HUD.Awake += CustomHUD;
+            On.RoR2.HealthComponent.TakeDamage += HandleGuardianBuffs;
+        }
+
+        private void OnDestroy() 
+        {
+            On.RoR2.UI.HUD.Awake -= CustomHUD;
+            On.RoR2.HealthComponent.TakeDamage -= HandleGuardianBuffs;
         }
 
         private void CustomHUD(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
@@ -130,6 +137,34 @@ namespace GuardianPlugin
             justiceContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianJustice");
             resolveContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianResolve");
             courageContainer.GetComponent<Image>().sprite = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianCourage");
+        }
+
+        private void HandleGuardianBuffs(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        {
+            // Justice
+            if (damageInfo != null && damageInfo.attacker && damageInfo.attacker.GetComponent<CharacterBody>() && damageInfo.attacker.GetComponent<CharacterBody>().HasBuff(Modules.Buffs.justiceBuff))
+            {
+                if (damageInfo.damageType != DamageType.DoT)
+                {
+                    damageInfo.attacker.GetComponent<CharacterBody>().RemoveBuff(Modules.Buffs.justiceBuff);
+                    damageInfo.damageType = DamageType.IgniteOnHit;
+                }
+            }
+
+            // Courage
+            if (self.body.HasBuff(Modules.Buffs.aegisBuff))
+            {
+                if (damageInfo.damageType != DamageType.DoT)
+                {
+                    self.body.RemoveBuff(Modules.Buffs.aegisBuff);
+
+                    EffectData effectData = new EffectData { origin = damageInfo.position, rotation = Util.QuaternionSafeLookRotation((damageInfo.force != Vector3.zero ? damageInfo.force : Random.onUnitSphere)) };
+                    EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/BearProc"), effectData, true);
+                    damageInfo.rejected = true;
+                }
+            }
+
+            orig.Invoke(self, damageInfo);
         }
 
         private void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
