@@ -21,7 +21,7 @@ namespace Guardian.Modules.Guardian
         // Justice
         public int justiceCount;
         private bool justiceUsed = false;
-        private int maxJusticeCount = 2;
+        private int maxJusticeCount = 1;
         private float justiceCooldown = 10f;
 
         // Resolve
