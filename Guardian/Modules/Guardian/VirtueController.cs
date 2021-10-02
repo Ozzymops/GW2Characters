@@ -1,11 +1,23 @@
 ﻿using GuardianPlugin;
 using RoR2;
+using RoR2.Skills;
+using System.Linq;
 using UnityEngine;
 
 namespace Guardian.Modules.Guardian
 {
     public class VirtueController : MonoBehaviour
     {
+        private CharacterBody characterBody;
+        private HealthComponent healthComponent;
+        private bool scriptEnabled = false;
+
+        // Selection
+        public static SkillDef passiveCore;
+        public static SkillDef passiveDragonhunter;
+        public static SkillDef passiveFirebrand;
+        public static GenericSkill selectedPassive;
+
         // Justice
         public int justiceCount;
         private bool justiceUsed = false;
@@ -23,24 +35,52 @@ namespace Guardian.Modules.Guardian
         private float courageCooldown = 20f;
         private int courageToApply = 3;
 
+        // Visible
+        public bool _justiceUsed;
+        public bool _resolveUsed;
+        public bool _courageUsed;
+        public float _justiceCooldown;
+        public float _resolveCooldown;
+        public float _courageCooldown;
+
         private void Awake()
         {
-            justiceCount = 0;
+            if (GetComponent<CharacterBody>().baseNameToken.Contains("GUARDIAN"))
+            {
+                characterBody = GetComponent<CharacterBody>();
 
-            ApplyJustice(1);
-            ApplyCourage();
+                justiceCount = 0;
+                ApplyJustice(1);
+                ApplyCourage();
+
+                scriptEnabled = true;
+            }
         }
 
         private void FixedUpdate()
         {
-            PassiveJustice();
-            PassiveResolve();
-            PassiveCourage();
+            if (scriptEnabled)
+            {
+                PassiveJustice();
+                PassiveResolve();
+                PassiveCourage();
+            }
         }
 
         private void Update()
         {
-            Controls();
+            if (scriptEnabled)
+            {
+                Controls();
+
+                _justiceUsed = justiceUsed;
+                _resolveUsed = resolveUsed;
+                _courageUsed = courageUsed;
+
+                _justiceCooldown = justiceCooldown;
+                _resolveCooldown = resolveCooldown;
+                _courageCooldown = courageCooldown;
+            }
         }
 
         private void Controls()
@@ -59,6 +99,16 @@ namespace Guardian.Modules.Guardian
             {
                 ActiveCourage();
             }
+        }
+
+        public void SetupVirtues(SkillDef[] passives, GenericSkill passive)
+        {
+            Debug.Log(passives[0].skillNameToken + " : " + passives[1].skillNameToken + " : " + passives[2].skillNameToken + " : " + passive.skillNameToken);
+
+            passiveCore = passives[0];
+            passiveDragonhunter = passives[1];
+            passiveFirebrand = passives[2];
+            selectedPassive = passive;        
         }
 
         #region Justice
@@ -105,11 +155,8 @@ namespace Guardian.Modules.Guardian
 
         private void ApplyJustice(int stacks)
         {
-            var characterBody = GetComponent<CharacterBody>();
-
             // 757469347: ror2_item_fireballsOnHit_shoot_01
             Util.PlaySound("ror2_item_fireballsOnHit_shoot_01", base.gameObject);
-            Util.PlaySound("757469347", base.gameObject);
 
             for (int i = 0; i < stacks; i++)
             {
@@ -127,7 +174,6 @@ namespace Guardian.Modules.Guardian
 
                 // 1065927408: ror2_item_proc_TPhealingNova_01
                 Util.PlaySound("ror2_item_proc_TPhealingNova_01", base.gameObject);
-                Util.PlaySound("1065927408", base.gameObject);
 
                 ApplyResolve(10f, true);
             }
@@ -234,7 +280,7 @@ namespace Guardian.Modules.Guardian
 
         private void ApplyCourage()
         {
-            GetComponent<CharacterBody>().AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 10f);
+            characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 10f);
         }
         #endregion
     }

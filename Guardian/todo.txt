@@ -1,0 +1,18 @@
+[GUARDIAN - CORE]
+Virtue: effects
+		sounds
+		fix Courage passive
+		Justice aoe
+		Resolve aoe
+		Courage aoe
+		
+Shield of Absorption: engineer shield but mobile
+					  pulse Aegis inside bubble
+					  
+Sanctuary: engineer shield placable
+		   pulse healing inside bubble
+		   pulse burning inside bubble
+		   
+Model, animations, effects, sound effects
+
+[GUARDIAN - DRAGONHUNTER]

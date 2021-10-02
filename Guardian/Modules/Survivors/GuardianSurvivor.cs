@@ -5,9 +5,12 @@ using Guardian.Modules.Guardian;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using R2API.Utils;
+using R2API;
 
 namespace GuardianPlugin.Modules.Survivors
 {
+    [R2APISubmoduleDependency(nameof(LoadoutAPI))]
     internal class GuardianSurvivor : SurvivorBase
     {
         internal override string bodyName { get; set; } = "Henry";
@@ -76,8 +79,8 @@ namespace GuardianPlugin.Modules.Survivors
         internal void InitializeCustom()
         {
             bodyPrefab.AddComponent<AttackChainController>();
+            bodyPrefab.AddComponent<GuardianHUD>();
             bodyPrefab.AddComponent<VirtueController>();
-            bodyPrefab.AddComponent<GuardianHUD>();  
         }
 
         internal override void InitializeUnlockables()
@@ -159,8 +162,7 @@ namespace GuardianPlugin.Modules.Survivors
                 stockToConsume = 1
             });
 
-            Modules.Skills.AddSecondarySkills(bodyPrefab, zealotsDefenseSkillDef);
-            Modules.Skills.AddSecondarySkills(bodyPrefab, trueShotSkillDef);
+            Modules.Skills.AddSecondarySkills(bodyPrefab, new SkillDef[] { zealotsDefenseSkillDef, trueShotSkillDef });
             #endregion
 
             #region Utility
@@ -212,8 +214,7 @@ namespace GuardianPlugin.Modules.Survivors
                 stockToConsume = 1
             });
 
-            Modules.Skills.AddUtilitySkills(bodyPrefab, shieldSkillDef);
-            Modules.Skills.AddUtilitySkills(bodyPrefab, trapsSkillDef);
+            Modules.Skills.AddUtilitySkills(bodyPrefab, new SkillDef[] { shieldSkillDef, trapsSkillDef});
             #endregion
 
             #region Special
@@ -265,9 +266,74 @@ namespace GuardianPlugin.Modules.Survivors
                 stockToConsume = 1
             });
 
-            Modules.Skills.AddSpecialSkills(bodyPrefab, sanctuarySkillDef);
-            Modules.Skills.AddSpecialSkills(bodyPrefab, dragonsMawSkillDef);
+            Modules.Skills.AddSpecialSkills(bodyPrefab, new SkillDef[] { sanctuarySkillDef, dragonsMawSkillDef});
             #endregion
+
+            GenericSkill genericSkill = bodyPrefab.AddComponent<GenericSkill>();
+            InitializePassives(genericSkill);
+        }
+
+        private void InitializePassives(GenericSkill genericSkill)
+        {
+            string prefix = GuardianPlugin.developerPrefix;
+
+            SkillLocator skillLocator = bodyPrefab.GetComponent<SkillLocator>();
+            skillLocator.passiveSkill.enabled = false;
+
+            SkillFamily passiveSkillFamily = ScriptableObject.CreateInstance<SkillFamily>();
+
+            // Core
+            SkillDef passiveCore = ScriptableObject.CreateInstance<SkillDef>();
+            passiveCore.skillNameToken = prefix + "_GUARDIAN_BODY_PASSIVE_NAME_CORE";
+            passiveCore.skillDescriptionToken = prefix + "_GUARDIAN_BODY_PASSIVE_DESCRIPTION_CORE";
+            passiveCore.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardian");
+            passiveCore.activationState = new EntityStates.SerializableEntityStateType(typeof(EntityStates.BaseState));
+            passiveCore.activationStateMachineName = "Weapon";
+            passiveCore.keywordTokens = new[] { prefix + "_GUARDIAN_BODY_KEYWORD_JUSTICE", prefix + "_GUARDIAN_BODY_KEYWORD_RESOLVE", prefix + "_GUARDIAN_BODY_KEYWORD_COURAGE" };
+
+            SkillFamily.Variant coreVariant = new SkillFamily.Variant()
+            {
+                skillDef = passiveCore,
+                unlockableDef = null,
+                viewableNode = new ViewablesCatalog.Node(passiveCore.skillNameToken, isFolder: false)
+            };
+
+            // Dragonhunter
+            SkillDef passiveDragonhunter = ScriptableObject.CreateInstance<SkillDef>();
+            passiveDragonhunter.skillNameToken = prefix + "_GUARDIAN_BODY_PASSIVE_NAME_DRAGONHUNTER";
+            passiveDragonhunter.skillDescriptionToken = prefix + "_GUARDIAN_BODY_PASSIVE_DESCRIPTION_DRAGONHUNTER";
+            passiveDragonhunter.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texDragonhunter");
+            passiveDragonhunter.activationState = new EntityStates.SerializableEntityStateType(typeof(EntityStates.BaseState));
+            passiveDragonhunter.activationStateMachineName = "Weapon";
+            passiveDragonhunter.keywordTokens = new[] { prefix + "_GUARDIAN_BODY_KEYWORD_JUSTICE", prefix + "_GUARDIAN_BODY_KEYWORD_RESOLVE", prefix + "_GUARDIAN_BODY_KEYWORD_COURAGE" };
+
+            SkillFamily.Variant dragonhunterVariant = new SkillFamily.Variant()
+            {
+                skillDef = passiveDragonhunter,
+                unlockableDef = null,
+                viewableNode = new ViewablesCatalog.Node(passiveDragonhunter.skillNameToken, isFolder: false)
+            };
+
+            // Firebrand
+            SkillDef passiveFirebrand = ScriptableObject.CreateInstance<SkillDef>();
+            passiveFirebrand.skillNameToken = prefix + "_GUARDIAN_BODY_PASSIVE_NAME_FIREBRAND";
+            passiveFirebrand.skillDescriptionToken = prefix + "_GUARDIAN_BODY_PASSIVE_DESCRIPTION_FIREBRAND";
+            passiveFirebrand.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texFirebrand");
+            passiveFirebrand.activationState = new EntityStates.SerializableEntityStateType(typeof(EntityStates.BaseState));
+            passiveFirebrand.activationStateMachineName = "Weapon";
+            passiveFirebrand.keywordTokens = new[] { prefix + "_GUARDIAN_BODY_KEYWORD_JUSTICE", prefix + "_GUARDIAN_BODY_KEYWORD_RESOLVE", prefix + "_GUARDIAN_BODY_KEYWORD_COURAGE" };
+
+            SkillFamily.Variant firebrandVariant = new SkillFamily.Variant()
+            {
+                skillDef = passiveFirebrand,
+                unlockableDef = null,
+                viewableNode = new ViewablesCatalog.Node(passiveFirebrand.skillNameToken, isFolder: false)
+            };
+
+            passiveSkillFamily.variants = new SkillFamily.Variant[] { coreVariant, dragonhunterVariant, firebrandVariant };
+            genericSkill._skillFamily = passiveSkillFamily;
+
+            // bodyPrefab.GetComponent<VirtueController>().SetupVirtues(new SkillDef[] { passiveCore, passiveDragonhunter, passiveFirebrand }, genericSkill);
         }
 
         internal override void InitializeSkins()

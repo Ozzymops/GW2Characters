@@ -53,9 +53,13 @@ namespace GuardianPlugin.Modules
 
             #region Skills
             LanguageAPI.Add(prefix + "PASSIVE_NAME_CORE", "Virtues");
-            LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_CORE", "Virtue of Justice: inflict <style=cIsDamage>burning</style> every three attacks. Active: inflict <style=cIsDamage>5 * burning</style> on next attack.\n" +
-                                                                 "Virtue of Resolve: <style=cIsHealing>regenerate 1% health</style> every two seconds. Active: <style=cIsHealing>heal yourself and nearby allies for 10% health, removing two debuffs</style>.\n" +
-                                                                 "Virtue of Courage: gain <style=cIsUtility>Aegis</style> every ten seconds. Active: gain <style=cIsHealing>Aegis</style> every second for three seconds.");
+            LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_CORE", "Virtue of Justice: inflict <style=cIsDamage>burning</style> on the next five attacks.\n" +
+                                                                 "Virtue of Resolve: <style=cIsHealing>heal yourself and nearby allies for 10% health, removing two debuffs</style>.\n" +
+                                                                 "Virtue of Courage: gain <style=cIsHealing>Aegis</style> every second for three seconds.");
+            // Keywords for virtues!
+            LanguageAPI.Add(prefix + "KEYWORD_JUSTICE", "Justice: inflict <style=cIsDamage>burning</style> every three attacks.");
+            LanguageAPI.Add(prefix + "KEYWORD_RESOLVE", "Resolve: <style=cIsHealing>regenerate 1% health</style> every two seconds.");
+            LanguageAPI.Add(prefix + "KEYWORD_COURAGE", "Courage: gain <style=cIsUtility>Aegis</style> every ten seconds.");
 
             LanguageAPI.Add(prefix + "PRIMARY_MACECHAIN_NAME", "Mace Chain");
             LanguageAPI.Add(prefix + "PRIMARY_MACECHAIN_DESCRIPTION", Helpers.agilePrefix + $"Attack chain only progresses on succesful hits. Final attack in chain always progresses.\n" +
@@ -96,10 +100,10 @@ namespace GuardianPlugin.Modules
             string loreDragonhunter = "blah blah";
 
             #region Skills
-            LanguageAPI.Add(prefix + "PASSIVE_NAME_DRAGONHUNTER", "Virtues");
-            LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_DRAGONHUNTER", "Spear of Justice: inflict <style=cIsDamage>burning</style> every three attacks. Active: inflict <style=cIsDamage>5 * burning</style> on next attack.\n" +
-                                                                 "Wings of Resolve: <style=cIsHealing>regenerate 1% health</style> every two seconds. Active: <style=cIsHealing>heal yourself and nearby allies for 10% health, removing two debuffs</style>.\n" +
-                                                                 "Shield of Courage: gain <style=cIsUtility>Aegis</style> every ten seconds. Active: gain <style=cIsHealing>Aegis</style> every second for three seconds.");
+            LanguageAPI.Add(prefix + "PASSIVE_NAME_DRAGONHUNTER", "Projected Virtues");
+            LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_DRAGONHUNTER", "Spear of Justice: inflict <style=cIsDamage>burning</style> every three attacks. When activated, inflict <style=cIsDamage>5 * burning</style> on next attack.\n" +
+                                                                 "Wings of Resolve: <style=cIsHealing>regenerate 1% health</style> every two seconds. When activated, <style=cIsHealing>heal yourself and nearby allies for 10% health, removing two debuffs</style>.\n" +
+                                                                 "Shield of Courage: gain <style=cIsUtility>Aegis</style> every ten seconds. When activated, gain <style=cIsHealing>Aegis</style> every second for three seconds.");
 
             LanguageAPI.Add(prefix + "PRIMARY_LONGBOW_NAME", "Puncture Shot");
             LanguageAPI.Add(prefix + "PRIMARY_LONGBOW_DESCRIPTION", Helpers.agilePrefix + $"Fire an arrow that <style=cIsUtility>pierces</style> enemies, dealing <style=cIsDamage>{250f * StaticValues.bowDamageCoefficient}% damage</style>. If the arrow hits a second target, all struck enemies are hit for an extra <style=cIsDamage>{75f * StaticValues.bowDamageCoefficient}% damage</style>.");
