@@ -8,62 +8,50 @@ namespace Guardian.Modules.Guardian
 {
     public class VirtueController : MonoBehaviour
     {
+        private bool scriptEnabled;
+
         private CharacterBody characterBody;
         private HealthComponent healthComponent;
-        private bool scriptEnabled = false;
 
-        // Selection
-        public static SkillDef passiveCore;
-        public static SkillDef passiveDragonhunter;
-        public static SkillDef passiveFirebrand;
-        public static GenericSkill selectedPassive;
+        private int hitsForJustice;
+        private int hitsUntilJustice = 2;
+        private bool justiceActive;
+        private float justiceCooldown = 15f;
+        private float justiceCooldownTimer;
 
-        // Justice
-        public int justiceCount;
-        private bool justiceUsed = false;
-        private int maxJusticeCount = 1;
-        private float justiceCooldown = 10f;
+        private float passiveResolveInterval = 2f;
+        private float passiveResolveIntervalTimer;
+        private float passiveResolveHeal = 2.5f;
+        private float activeResolveHeal = 15f;
+        private bool resolveActive;
+        private float resolveCooldown = 20f;
+        private float resolveCooldownTimer;
 
-        // Resolve
-        private bool resolveUsed = false;
-        private float resolveTimer = 2f;
-        private float resolveCooldown = 15f;
-
-        // Courage
-        private bool courageUsed = false;
-        private float courageTimer = 10f;
-        private float courageCooldown = 20f;
-        private int courageToApply = 3;
-
-        // Visible
-        public bool _justiceUsed;
-        public bool _resolveUsed;
-        public bool _courageUsed;
-        public float _justiceCooldown;
-        public float _resolveCooldown;
-        public float _courageCooldown;
+        private float passiveCourageInterval = 10f;
+        private float passiveCourageIntervalTimer;
+        private int activeCourageCount;
+        private int activeCourageCountMax = 4;
+        private bool courageActive;
+        private float courageCooldown = 30f;
+        private float courageCooldownTimer;
 
         private void Awake()
         {
-            if (GetComponent<CharacterBody>().baseNameToken.Contains("GUARDIAN"))
-            {
-                characterBody = GetComponent<CharacterBody>();
+            characterBody = GetComponent<CharacterBody>();
+            healthComponent = GetComponent<HealthComponent>();
 
-                justiceCount = 0;
-                ApplyJustice(1);
-                ApplyCourage();
+            if (characterBody.baseNameToken.Contains("GUARDIAN"))
+            {
+                hitsForJustice = 0;
+                passiveResolveIntervalTimer = passiveResolveInterval;
+                passiveCourageIntervalTimer = passiveCourageInterval;
+                activeCourageCount = activeCourageCountMax;
+
+                justiceCooldownTimer = justiceCooldown;
+                resolveCooldownTimer = resolveCooldown;
+                courageCooldownTimer = courageCooldown;
 
                 scriptEnabled = true;
-            }
-        }
-
-        private void FixedUpdate()
-        {
-            if (scriptEnabled)
-            {
-                PassiveJustice();
-                PassiveResolve();
-                PassiveCourage();
             }
         }
 
@@ -72,216 +60,178 @@ namespace Guardian.Modules.Guardian
             if (scriptEnabled)
             {
                 Controls();
-
-                _justiceUsed = justiceUsed;
-                _resolveUsed = resolveUsed;
-                _courageUsed = courageUsed;
-
-                _justiceCooldown = justiceCooldown;
-                _resolveCooldown = resolveCooldown;
-                _courageCooldown = courageCooldown;
+                Cooldowns();
+                PassiveEffects();
             }
         }
 
         private void Controls()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1) && !justiceUsed)
+            if (Input.GetKeyDown(KeyCode.Alpha1) && !justiceActive)
             {
-                ActiveJustice();
+                ApplyJustice(5, false);
+                justiceActive = true;
+
+                Debug.Log("[Active Justice]: activated.");
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha2) && !resolveUsed)
+            if (Input.GetKeyDown(KeyCode.Alpha2) && !resolveActive)
             {
-                ActiveResolve();
+                ApplyResolve(activeResolveHeal, false);
+                resolveActive = true;
+
+                Debug.Log("[Active Resolve]: activated.");
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha3) && !courageUsed)
+            if (Input.GetKeyDown(KeyCode.Alpha3) && !courageActive)
             {
-                ActiveCourage();
-            }
-        }
-
-        public void SetupVirtues(SkillDef[] passives, GenericSkill passive)
-        {
-            Debug.Log(passives[0].skillNameToken + " : " + passives[1].skillNameToken + " : " + passives[2].skillNameToken + " : " + passive.skillNameToken);
-
-            passiveCore = passives[0];
-            passiveDragonhunter = passives[1];
-            passiveFirebrand = passives[2];
-            selectedPassive = passive;        
-        }
-
-        #region Justice
-        private void ActiveJustice()
-        {
-            if (!justiceUsed)
-            {
-                justiceUsed = true;
-
-                ApplyJustice(5);
+                courageActive = true;
+                passiveCourageIntervalTimer = 0f;
+                Debug.Log("[Active Courage]: activated.");
             }
         }
 
-        public void PassiveJustice()
+        private void Cooldowns()
         {
-            if (justiceUsed)
+            if (justiceActive)
             {
-                justiceCooldown -= 1f * Time.fixedDeltaTime;
+                justiceCooldownTimer -= 1f * Time.deltaTime;
 
-                if (justiceCooldown <= 0f)
+                if (justiceCooldownTimer <= 0)
                 {
-                    justiceCooldown = 10f;
-                    justiceCount = 0;
-                    justiceUsed = false;
+                    hitsForJustice = 0;
+                    justiceActive = false;
+                    justiceCooldownTimer = justiceCooldown;
+                }
+            }
+
+            if (resolveActive)
+            {
+                resolveCooldownTimer -= 1f * Time.deltaTime;
+
+                if (resolveCooldownTimer <= 0)
+                {
+                    passiveResolveIntervalTimer = passiveResolveInterval;
+                    resolveActive = false;
+                    resolveCooldownTimer = resolveCooldown;
+                }
+            }
+
+            if (courageActive)
+            {
+                courageCooldownTimer -= 1f * Time.deltaTime;
+
+                if (courageCooldownTimer <= 0)
+                {
+                    passiveCourageIntervalTimer = passiveCourageInterval;
+                    activeCourageCount = activeCourageCountMax;
+                    courageActive = false;
+                    courageCooldownTimer = courageCooldown;
                 }
             }
         }
 
-        public void ProgressJustice()
+        private void PassiveEffects()
         {
-            if (!justiceUsed)
+            if (!justiceActive)
             {
-                if (justiceCount + 1 > maxJusticeCount)
+                if (hitsForJustice + 1 > hitsUntilJustice)
                 {
-                    ApplyJustice(1);
-                    justiceCount = 0;
+                    ApplyJustice(1, false);
+                    hitsForJustice = 0;
                 }
-                else
+            }
+
+            if (!resolveActive)
+            {
+                passiveResolveIntervalTimer -= 1f * Time.deltaTime;
+
+                if (passiveResolveIntervalTimer <= 0)
                 {
-                    justiceCount++;
+                    ApplyResolve(passiveResolveHeal, false);
+                    passiveResolveIntervalTimer = passiveResolveInterval;
+                }
+            }
+
+            if (courageActive)
+            {
+                passiveCourageIntervalTimer -= 1f * Time.deltaTime;
+
+                if (passiveCourageIntervalTimer <= 0 && activeCourageCount > 0)
+                {
+                    ApplyCourage(false);
+                    passiveCourageIntervalTimer = 1f;
+                    activeCourageCount--;
+
+                    Debug.Log("[Active Courage]: procced.");
+                }
+            }
+            else
+            {
+                passiveCourageIntervalTimer -= 1f * Time.deltaTime;
+
+                if (passiveCourageIntervalTimer <= 0)
+                {
+                    ApplyCourage(false);
+                    passiveCourageIntervalTimer = passiveCourageInterval;
+
+                    Debug.Log("[Passive Courage]: procced.");
                 }
             }
         }
 
-        private void ApplyJustice(int stacks)
+        private void ApplyJustice(int stacks, bool aoe)
         {
-            // 757469347: ror2_item_fireballsOnHit_shoot_01
-            Util.PlaySound("ror2_item_fireballsOnHit_shoot_01", base.gameObject);
-
+            // Play sound
             for (int i = 0; i < stacks; i++)
             {
-                characterBody.AddBuff(GuardianPlugin.Modules.Buffs.justiceBuff);
-            }       
-        }
-        #endregion
-
-        #region Resolve
-        private void ActiveResolve()
-        {
-            if (!resolveUsed)
-            {
-                resolveUsed = true;
-
-                // 1065927408: ror2_item_proc_TPhealingNova_01
-                Util.PlaySound("ror2_item_proc_TPhealingNova_01", base.gameObject);
-
-                ApplyResolve(10f, true);
+                characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.justiceBuff, 9.9f, 5);
             }
         }
 
-        private void PassiveResolve()
+        private void ApplyResolve(float percent, bool aoe)
         {
-            if (!resolveUsed)
-            {
-                resolveTimer -= 1f * Time.fixedDeltaTime;
-
-                if (resolveTimer <= 0f)
-                {
-                    ApplyResolve(2f, false);
-                    resolveTimer = 2f;
-                }
-            }
-            else
-            {
-                resolveCooldown -= 1f * Time.fixedDeltaTime;
-
-                if (resolveCooldown <= 0f)
-                {
-                    resolveCooldown = 0f;
-                    resolveTimer = 2f;
-                    resolveUsed = false;
-                }
-            }
-        }
-
-        private void ApplyResolve(float percent, bool area)
-        {
+            // Play sound
             percent /= 100;
 
-            if (area)
+            healthComponent.HealFraction(percent, new ProcChainMask());
+
+            if (aoe)
             {
-                for (int i = 0; i < CharacterMaster.readOnlyInstancesList.Count; i++)
-                {
-                    if (Vector3.Distance(base.gameObject.transform.position, CharacterMaster.readOnlyInstancesList[i].transform.position) <= 60)
-                    {
-                        // 178055884: ror2_item_proc_TPhealingNova_hitPlayer_01
-                        Util.PlaySound("ror2_item_proc_TPhealingNova_hitPlayer_01", CharacterMaster.readOnlyInstancesList[i].gameObject);
-                        CharacterMaster.readOnlyInstancesList[i].GetComponent<HealthComponent>().Heal(CharacterMaster.readOnlyInstancesList[i].GetComponent<CharacterBody>().maxHealth * percent, new ProcChainMask(), true);
-                    }
-                }
-            }
-            else
-            {
-                GetComponent<HealthComponent>().Heal(GetComponent<CharacterBody>().maxHealth * percent, new ProcChainMask(), true);
+
             }
         }
-        #endregion
 
-        #region Courage
-        private void ActiveCourage()
+        private void ApplyCourage(bool aoe)
         {
-            if (!courageUsed)
-            {
-                courageUsed = true;
-
-                ApplyCourage();
-
-                courageTimer = 1f;
-            }
+            // Play sound
+            characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
         }
 
-        private void PassiveCourage()
+        public void IncrementJustice()
         {
-            if (!courageUsed)
+            if (!justiceActive)
             {
-                courageTimer -= 1f * Time.fixedDeltaTime;
-
-                if (courageTimer <= 0f)
-                {
-                    ApplyCourage();
-                    courageTimer = 10f;
-                }
-            }
-            else
-            {
-                if (courageToApply > 0)
-                {
-                    courageTimer -= 1f * Time.fixedDeltaTime;
-
-                    if (courageTimer <= 0f)
-                    {
-                        ApplyCourage();
-                        courageTimer = 1f;
-                        courageToApply--;
-                    }
-                }
-
-                courageCooldown -= 1f * Time.fixedDeltaTime;
-
-                if (courageCooldown <= 0f)
-                {
-                    courageCooldown = 20f;
-                    courageTimer = 0f;
-                    courageToApply = 3;
-                    courageUsed = false;
-                }
+                hitsForJustice++;
             }
         }
 
-        private void ApplyCourage()
+        /// <summary>
+        /// Get VirtueController active virtues
+        /// </summary>
+        /// <returns>justice, resolve, courage</returns>
+        public bool[] GetBools()
         {
-            characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 10f);
+            return new bool[] { justiceActive, resolveActive, courageActive };
         }
-        #endregion
+
+        /// <summary>
+        /// Get current and maximum VirtueController cooldowns
+        /// </summary>
+        /// <returns>justice timer, justice cooldown, resolve timer, resolve cooldown, courage timer, courage cooldown</returns>
+        public float[] GetCooldowns()
+        {
+            return new float[] { justiceCooldownTimer, justiceCooldown, resolveCooldownTimer, resolveCooldown, courageCooldownTimer, courageCooldown };
+        }
     }
 }

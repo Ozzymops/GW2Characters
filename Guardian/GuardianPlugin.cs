@@ -4,6 +4,7 @@ using R2API.Utils;
 using RoR2;
 using RoR2.UI;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security;
 using System.Security.Permissions;
 using UnityEngine;
@@ -89,13 +90,39 @@ namespace GuardianPlugin
 
         private void HandleGuardianBuffs(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
+            CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
+
             // Justice
-            if (damageInfo != null && damageInfo.attacker && damageInfo.attacker.GetComponent<CharacterBody>() && damageInfo.attacker.GetComponent<CharacterBody>().HasBuff(Modules.Buffs.justiceBuff))
+            if (damageInfo != null && damageInfo.attacker && attackerBody && attackerBody.baseNameToken.Contains("GUARDIAN"))
             {
                 if (damageInfo.damageType != DamageType.DoT)
                 {
-                    damageInfo.attacker.GetComponent<CharacterBody>().RemoveBuff(Modules.Buffs.justiceBuff);
-                    damageInfo.damageType = DamageType.IgniteOnHit;
+                    if (attackerBody.HasBuff(Modules.Buffs.justiceBuff))
+                    {
+                        int buffCount = 0;
+                        float buffTimer = 0f;
+
+                        foreach(CharacterBody.TimedBuff timedBuff in attackerBody.timedBuffs)
+                        {
+                            if (timedBuff.buffIndex == Modules.Buffs.justiceBuff.buffIndex)
+                            {
+                                buffTimer = timedBuff.timer;
+                                buffCount++;
+                            }
+                        }
+
+                        attackerBody.ClearTimedBuffs(Modules.Buffs.justiceBuff);
+
+                        // Re-add buffs minus one
+                        for (int i = 1; i < buffCount; i++)
+                        {
+                            attackerBody.AddTimedBuff(Modules.Buffs.justiceBuff, buffTimer, 5);
+                        }
+
+                        damageInfo.damageType = DamageType.PercentIgniteOnHit;                      
+                    }
+
+                    damageInfo.attacker.GetComponent<Guardian.Modules.Guardian.VirtueController>().IncrementJustice();
                 }
             }
 
@@ -104,7 +131,9 @@ namespace GuardianPlugin
             {
                 if (damageInfo.damageType != DamageType.DoT)
                 {
-                    self.body.RemoveBuff(Modules.Buffs.aegisBuff);
+                    Debug.Log("[Passive Courage]: aegis used, buff removed.");
+
+                    self.body.ClearTimedBuffs(Modules.Buffs.aegisBuff);
 
                     EffectData effectData = new EffectData { origin = damageInfo.position, rotation = Util.QuaternionSafeLookRotation((damageInfo.force != Vector3.zero ? damageInfo.force : Random.onUnitSphere)) };
                     EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/BearProc"), effectData, true);

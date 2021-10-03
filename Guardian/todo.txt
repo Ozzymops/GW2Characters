@@ -1,7 +1,12 @@
 [GUARDIAN - CORE]
-- Fix virtues
+- Fix Courage
+- Fix virtue HUD
 - Add virtue visual and sound effects
 - Add AoE effect to allies for virtues
+- 'Traits' on level up?
+	Level 5: Minor Trait
+	Level 10: Major Trait
+	Level 15: Grandmaster Trait
 
 - Skill: Shield of Absorption - engineer shield, but parented to Guardian, pulses Aegis to allies inside
 - Skill: Sanctuary - engineer shield, but bigger, pulses healing to allies and burning to enemies inside
