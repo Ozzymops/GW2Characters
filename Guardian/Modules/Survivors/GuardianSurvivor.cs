@@ -81,6 +81,7 @@ namespace GuardianPlugin.Modules.Survivors
             bodyPrefab.AddComponent<AttackChainController>();
             bodyPrefab.AddComponent<GuardianHUD>();
             bodyPrefab.AddComponent<VirtueController>();
+            bodyPrefab.AddComponent<TraitController>();
         }
 
         internal override void InitializeUnlockables()

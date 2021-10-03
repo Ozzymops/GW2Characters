@@ -1,7 +1,6 @@
 ﻿using GuardianPlugin;
 using RoR2;
 using RoR2.Skills;
-using System.Linq;
 using UnityEngine;
 
 namespace Guardian.Modules.Guardian
@@ -12,6 +11,7 @@ namespace Guardian.Modules.Guardian
 
         private CharacterBody characterBody;
         private HealthComponent healthComponent;
+        private TraitController traitController;
 
         private int hitsForJustice;
         private int hitsUntilJustice = 2;
@@ -69,6 +69,7 @@ namespace Guardian.Modules.Guardian
         {
             if (Input.GetKeyDown(KeyCode.Alpha1) && !justiceActive)
             {
+                Util.PlaySound("PlayJusticeActivation", characterBody.gameObject);
                 ApplyJustice(5, false);
                 justiceActive = true;
 
@@ -77,6 +78,7 @@ namespace Guardian.Modules.Guardian
 
             if (Input.GetKeyDown(KeyCode.Alpha2) && !resolveActive)
             {
+                Util.PlaySound("PlayResolveActivation", characterBody.gameObject);
                 ApplyResolve(activeResolveHeal, false);
                 resolveActive = true;
 
@@ -182,7 +184,6 @@ namespace Guardian.Modules.Guardian
 
         private void ApplyJustice(int stacks, bool aoe)
         {
-            // Play sound
             for (int i = 0; i < stacks; i++)
             {
                 characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.justiceBuff, 9.9f, 5);
@@ -191,7 +192,6 @@ namespace Guardian.Modules.Guardian
 
         private void ApplyResolve(float percent, bool aoe)
         {
-            // Play sound
             percent /= 100;
 
             healthComponent.HealFraction(percent, new ProcChainMask());
@@ -204,7 +204,7 @@ namespace Guardian.Modules.Guardian
 
         private void ApplyCourage(bool aoe)
         {
-            // Play sound
+            Util.PlaySound("PlayCourageActivation", characterBody.gameObject);
             characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
         }
 
@@ -214,6 +214,28 @@ namespace Guardian.Modules.Guardian
             {
                 hitsForJustice++;
             }
+        }
+
+        public void ResetJustice()
+        {
+            if (justiceActive)
+            {
+                justiceCooldownTimer = 0f;
+            }
+        }
+
+        public void ReduceCooldownsAndIntervals()
+        {
+            justiceCooldown *= 0.66f;
+            resolveCooldown *= 0.66f;
+            courageCooldown *= 0.66f;
+
+            passiveResolveInterval *= 0.66f;
+            passiveCourageInterval *= 0.66f;
+
+            justiceCooldownTimer = 0f;
+            resolveCooldownTimer = 0f;
+            courageCooldownTimer = 0f;
         }
 
         /// <summary>

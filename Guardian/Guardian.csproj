@@ -13,19 +13,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Guardian.bnk" />
     <None Remove="guardianassetbundle" />
     <None Remove="GuardianBank.bnk" />
+    <None Remove="GuardianSoundbank.bnk" />
     <None Remove="Modules\Survivors\Henry.cs~RF6221a098.TMP" />
     <None Remove="old_guardianassetbundle" />
     <None Remove="sharedassetbundle" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Guardian.bnk" />
+    <EmbeddedResource Include="GuardianBank.bnk" />
     <EmbeddedResource Include="old_guardianassetbundle" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="GuardianBank.bnk" />
     <EmbeddedResource Include="guardianassetbundle" />
     <EmbeddedResource Include="sharedassetbundle" />
   </ItemGroup>

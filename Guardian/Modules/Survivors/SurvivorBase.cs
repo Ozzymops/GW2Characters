@@ -55,7 +55,7 @@ namespace GuardianPlugin.Modules.Survivors
 
                 displayPrefab = Modules.Prefabs.CreateDisplayPrefab(bodyName + "Display", bodyPrefab, bodyInfo);
 
-                Modules.Prefabs.RegisterNewSurvivor(bodyPrefab, displayPrefab, Color.grey, bodyName.ToUpper(), characterUnlockableDef, sortPosition);
+                Modules.Prefabs.RegisterNewSurvivor(bodyPrefab, displayPrefab, Color.grey, "GUARDIAN", characterUnlockableDef, sortPosition);
 
                 InitializeHitboxes();
                 InitializeSkills();

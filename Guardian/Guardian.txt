@@ -1,0 +1,18 @@
+Event	ID	Name			Wwise Object Path	Notes
+	786420526	PlayJusticeActivation			\Default Work Unit\PlayJusticeActivation	
+	1424907985	PlayResolveActivation			\Default Work Unit\PlayResolveActivation	
+	1914738456	PlayCourageBlock			\Default Work Unit\PlayCourageBlock	
+	3426742141	PlayCourageActivation			\Default Work Unit\PlayCourageActivation	
+	3725638963	PlayResolveHeal			\Default Work Unit\PlayResolveHeal	
+
+Game Parameter	ID	Name			Wwise Object Path	Notes
+	3673881719	Volume_SFX			\Default Work Unit\Volume_SFX	
+	3695994288	Volume_Master			\Default Work Unit\Volume_Master	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	407052420	Courage_Block	D:\Projects\WWise\ROR2Guardian\.cache\Windows\SFX\Courage_Block_A1793BE9.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master Mixer\SFX Mixer\Virtues\Courage_Block		52411
+	737530779	Courage_Activated	D:\Projects\WWise\ROR2Guardian\.cache\Windows\SFX\Courage_Activated_A1793BE9.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master Mixer\SFX Mixer\Virtues\Courage_Activated		50529
+	744599248	Resolve_Heal	D:\Projects\WWise\ROR2Guardian\.cache\Windows\SFX\Resolve_Heal_A1793BE9.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master Mixer\SFX Mixer\Virtues\Resolve_Heal		10492
+	835883700	Resolve_Activated	D:\Projects\WWise\ROR2Guardian\.cache\Windows\SFX\Resolve_Activated_A1793BE9.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master Mixer\SFX Mixer\Virtues\Resolve_Activated		25688
+	951882774	Justice_Activated	D:\Projects\WWise\ROR2Guardian\.cache\Windows\SFX\Justice_Activated_A1793BE9.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master Mixer\SFX Mixer\Virtues\Justice_Activated		52498
+

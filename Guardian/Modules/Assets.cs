@@ -90,11 +90,22 @@ namespace GuardianPlugin.Modules
 
         internal static void LoadSoundbank()
         {
-            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("Guardian.GuardianBank.bnk"))
+            // Original Henry
+            using (Stream manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Guardian.GuardianBank.bnk"))
+            {
+                byte[] array = new byte[manifestResourceStream.Length];
+                manifestResourceStream.Read(array, 0, array.Length);
+                SoundAPI.SoundBanks.Add(array);
+            }
+
+            // Custom
+            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("Guardian.Guardian.bnk"))
             {
                 byte[] array = new byte[manifestResourceStream2.Length];
                 manifestResourceStream2.Read(array, 0, array.Length);
                 SoundAPI.SoundBanks.Add(array);
+
+                Debug.Log("Added custom soundbank!");
             }
         }
 

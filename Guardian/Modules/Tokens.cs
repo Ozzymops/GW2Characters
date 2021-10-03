@@ -35,14 +35,24 @@ namespace GuardianPlugin.Modules
             string nameCore = "Guardian";
             string subtitleCore = "Selfless Defender";
 
-            string descCore = "Favors Melee * Supports Allies * Defensive Magic" + Environment.NewLine;
-            descCore = descCore + "The Guardian is a very durable fighter, capable of staying in the fight for extended periods of time. Their magic in the form of Virtues allow them to mend, protect and defeat.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine;
-            descCore = descCore + "< ! > Virtue of Justice: Justice comes to all. Spread the burning passion of Justice by attacking your foes, punishing the unjust for their sins. When activated, the next attack will engulf your target in flames, making sure that they will not escape the flames of Justice." + Environment.NewLine + Environment.NewLine;
-            descCore = descCore + "< ! > Virtue of Resolve: A Guardian’s Resolve is not to be tested. Continuously mend your wounds as the battle rages on. When activated, unleash a burst of restorative magic, mending your and your allies’ wounds and removing any debilitating factors, such as poisons." + Environment.NewLine + Environment.NewLine;
-            descCore = descCore + "< ! > Virtue of Courage: A Guardian is most of all Courageous. Subconsciously block attacks as a vision appears before you, informing you of your enemies’ next moves. When activated, protect you and your allies from any attacks for the next three seconds." + Environment.NewLine + Environment.NewLine;
+            string descCore = "The Guardian is a very durable fighter, capable of staying in the fight for extended periods of time. Their magic in the form of Virtues allow them to mend, protect and defeat.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine;
+            descCore = descCore + "< ! > Justice comes to all. Spread the burning passion of Justice by attacking your foes, punishing the unjust for their sins with the Virtue of Justice." + Environment.NewLine + Environment.NewLine;
+            descCore = descCore + "< ! > A Guardian’s Resolve is not to be tested. Continuously mend your wounds as the battle rages on with the Virtue of Resolve." + Environment.NewLine + Environment.NewLine;
+            descCore = descCore + "< ! > A Guardian is most of all Courageous. Subconsciously block attacks as a vision appears before you, informing you of your enemies’ next moves with the Virtue of Courage." + Environment.NewLine + Environment.NewLine;
             descCore = descCore + "< ! > Passive effects of Virtues are temporarily lost on activation." + Environment.NewLine + Environment.NewLine;
+            descCore = descCore + "< ! > The Dragonhunter is a formidable long range skirmisher, using a longbow and light-based traps to inflict massive damage, trading in passive Virtues for Projected Virtues that allow their Virtues to actively interact with the world, and foes." + Environment.NewLine + Environment.NewLine;
+            descCore = descCore + "< ! > The Firebrand is a powerful frontliner, using an axe and mantras to support and defeat, trading in Virtues for Tomes that allow for even more power, support and mitigation." + Environment.NewLine + Environment.NewLine;
 
-            string loreCore = "blah blah";
+            string loreCore = "As the frontline is broken, a man clad in silver armor walks up, projecting a massive bubble from his shield." +
+                              "\n''Rally to me!'' he yells to his broken brethren in arms. ''I can protect you!''" +
+                              "\n\nA rain of arrows falls down on the Ascalonians as they are slaughtered by the Charr, one by one. The wounded flock to the Guardian, desperate for survival." +
+                              "\nThe Guardian's hope never faltered. He can protect them, he can defeat the Charr. But he must bring his brethren to safety first." +
+                              "\n\nHe retreats, his bubble protecting him and the ones underneath from the rain of death. A few of his brethren are being carried by him." +
+                              "\nThe Guardian flashes, using his Resolve to mend the wounded, keeping them atleast from bleeding out. Some are inspired to fight, and sacrifice their life to guarantee the Guardian's retreat." +
+                              "\n\nIt was all in vain. The final attack from the Charr was unexpected. Magical, burning crystals rain down from the sky, causing massive widespread destruction, wiping out Ascalon in mere minutes." +
+                              "\nThe shield bubble sustains, but even the Guardian's power is limited. As he finally escorted his brethren to safety, his shield bubble flickers." +
+                              "\n\nA final flash is seen, and the Guardian is no more." +
+                              "\n\nAfter what seems like an eternity passed, the Guardian awakens in a strange world. All he knows is that he must protect, and if necessary, defeat.";
 
             LanguageAPI.Add(prefix + "NAME", nameCore);
             LanguageAPI.Add(prefix + "DESCRIPTION", descCore);

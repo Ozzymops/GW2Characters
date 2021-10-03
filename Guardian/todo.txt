@@ -1,12 +1,10 @@
 [GUARDIAN - CORE]
-- Fix Courage
-- Fix virtue HUD
 - Add virtue visual and sound effects
 - Add AoE effect to allies for virtues
 - 'Traits' on level up?
-	Level 5: Minor Trait
-	Level 10: Major Trait
-	Level 15: Grandmaster Trait
+	Level 5: Adept Trait - Gain Aegis when struck below 33% health [ICD 10s], Aegis deals 100% damage around you on block, can not crit or proc
+	Level 10: Master Trait - Virtue of Justice cooldown is reset after killing a foe
+	Level 15: Grandmaster Trait - Reduce passive intervals of Resolve and Courage by 33%, reduce cooldowns of Resolve and Courage by 33%
 
 - Skill: Shield of Absorption - engineer shield, but parented to Guardian, pulses Aegis to allies inside
 - Skill: Sanctuary - engineer shield, but bigger, pulses healing to allies and burning to enemies inside

@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using Guardian.Modules.Guardian;
 using GuardianPlugin.Modules.Survivors;
 using R2API.Utils;
 using RoR2;
@@ -91,10 +92,16 @@ namespace GuardianPlugin
         private void HandleGuardianBuffs(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
             CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
+            bool[] traits = new bool[] { false, false, false };
 
-            // Justice
+            if (self.body.baseNameToken.Contains("GUARDIAN") || attackerBody.baseNameToken.Contains("GUARDIAN"))
+            {
+                traits = attackerBody.GetComponent<TraitController>().GetTraits();
+            }
+
             if (damageInfo != null && damageInfo.attacker && attackerBody && attackerBody.baseNameToken.Contains("GUARDIAN"))
             {
+                // Justice
                 if (damageInfo.damageType != DamageType.DoT)
                 {
                     if (attackerBody.HasBuff(Modules.Buffs.justiceBuff))
@@ -119,10 +126,19 @@ namespace GuardianPlugin
                             attackerBody.AddTimedBuff(Modules.Buffs.justiceBuff, buffTimer, 5);
                         }
 
-                        damageInfo.damageType = DamageType.PercentIgniteOnHit;                      
+                        damageInfo.damageType = DamageType.IgniteOnHit;                      
                     }
 
-                    damageInfo.attacker.GetComponent<Guardian.Modules.Guardian.VirtueController>().IncrementJustice();
+                    damageInfo.attacker.GetComponent<VirtueController>().IncrementJustice();
+                }
+
+                // Master Trait
+                if (!self.alive)
+                {
+                    if (traits[1])
+                    {
+                        damageInfo.attacker.GetComponent<VirtueController>().ResetJustice();
+                    }
                 }
             }
 
@@ -131,13 +147,42 @@ namespace GuardianPlugin
             {
                 if (damageInfo.damageType != DamageType.DoT)
                 {
-                    Debug.Log("[Passive Courage]: aegis used, buff removed.");
+                    int buffCount = 0;
+                    float buffTimer = 0f;
+
+                    foreach (CharacterBody.TimedBuff timedBuff in self.body.timedBuffs)
+                    {
+                        if (timedBuff.buffIndex == Modules.Buffs.aegisBuff.buffIndex)
+                        {
+                            buffTimer = timedBuff.timer;
+                            buffCount++;
+                        }
+                    }
 
                     self.body.ClearTimedBuffs(Modules.Buffs.aegisBuff);
 
+                    // Re-add buffs minus one
+                    for (int i = 1; i < buffCount; i++)
+                    {
+                        self.body.AddTimedBuff(Modules.Buffs.aegisBuff, buffTimer, 5);
+                    }
+
                     EffectData effectData = new EffectData { origin = damageInfo.position, rotation = Util.QuaternionSafeLookRotation((damageInfo.force != Vector3.zero ? damageInfo.force : Random.onUnitSphere)) };
                     EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/BearProc"), effectData, true);
+
+                    Util.PlaySound("PlayCourageBlock", self.gameObject);
+
                     damageInfo.rejected = true;
+
+                    // Adept Trait
+                    if (self.body.baseNameToken.Contains("GUARDIAN"))
+                    {
+                        if (traits[0])
+                        {
+                            // Shattered Aegis
+                            Debug.Log("Do shattered aegis!");
+                        }
+                    }
                 }
             }
 
