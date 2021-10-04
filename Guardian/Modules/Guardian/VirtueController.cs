@@ -1,6 +1,8 @@
 ﻿using GuardianPlugin;
 using RoR2;
 using RoR2.Skills;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Guardian.Modules.Guardian
@@ -12,6 +14,8 @@ namespace Guardian.Modules.Guardian
         private CharacterBody characterBody;
         private HealthComponent healthComponent;
         private TraitController traitController;
+
+        private float virtueRadius = 15f;
 
         private int hitsForJustice;
         private int hitsUntilJustice = 2;
@@ -52,7 +56,14 @@ namespace Guardian.Modules.Guardian
                 courageCooldownTimer = courageCooldown;
 
                 scriptEnabled = true;
+
+                On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
             }
+        }
+
+        private void OnDestroy()
+        {
+            On.RoR2.HealthComponent.TakeDamage -= HealthComponent_TakeDamage;
         }
 
         private void Update()
@@ -70,7 +81,7 @@ namespace Guardian.Modules.Guardian
             if (Input.GetKeyDown(KeyCode.Alpha1) && !justiceActive)
             {
                 Util.PlaySound("PlayJusticeActivation", characterBody.gameObject);
-                ApplyJustice(5, false);
+                ApplyJustice(5, true);
                 justiceActive = true;
 
                 Debug.Log("[Active Justice]: activated.");
@@ -79,7 +90,7 @@ namespace Guardian.Modules.Guardian
             if (Input.GetKeyDown(KeyCode.Alpha2) && !resolveActive)
             {
                 Util.PlaySound("PlayResolveActivation", characterBody.gameObject);
-                ApplyResolve(activeResolveHeal, false);
+                ApplyResolve(activeResolveHeal, true);
                 resolveActive = true;
 
                 Debug.Log("[Active Resolve]: activated.");
@@ -184,28 +195,77 @@ namespace Guardian.Modules.Guardian
 
         private void ApplyJustice(int stacks, bool aoe)
         {
-            for (int i = 0; i < stacks; i++)
+            if (aoe)
             {
-                characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.justiceBuff, 9.9f, 5);
+                List<HurtBox> hurtBoxes = new List<HurtBox>();
+                hurtBoxes = new SphereSearch { radius = virtueRadius, mask = LayerIndex.entityPrecise.mask, origin = transform.position }
+                    .RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.all).FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes().ToList();
+
+                foreach (HurtBox hurtBox in hurtBoxes)
+                {
+                    if (hurtBox.healthComponent.body && hurtBox.healthComponent.body.teamComponent.teamIndex == TeamIndex.Player)
+                    {
+                        for (int i = 0; i < stacks; i++)
+                        {
+                            hurtBox.healthComponent.body.AddTimedBuff(GuardianPlugin.Modules.Buffs.justiceBuff, 9.9f, 5);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < stacks; i++)
+                {
+                    characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.justiceBuff, 9.9f, 5);
+                }
             }
         }
 
         private void ApplyResolve(float percent, bool aoe)
         {
-            percent /= 100;
-
-            healthComponent.HealFraction(percent, new ProcChainMask());
+            percent /= 100;      
 
             if (aoe)
             {
+                List<HurtBox> hurtBoxes = new List<HurtBox>();
+                hurtBoxes = new SphereSearch { radius = virtueRadius, mask = LayerIndex.entityPrecise.mask, origin = transform.position }
+                    .RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.all).FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes().ToList();
 
+                foreach (HurtBox hurtBox in hurtBoxes)
+                {
+                    if (hurtBox.healthComponent.body && hurtBox.healthComponent.body.teamComponent.teamIndex == TeamIndex.Player)
+                    {
+                        hurtBox.healthComponent.HealFraction(percent, new ProcChainMask());
+                    }
+                }
+            }
+            else
+            {
+                healthComponent.HealFraction(percent, new ProcChainMask());
             }
         }
 
         private void ApplyCourage(bool aoe)
-        {
-            Util.PlaySound("PlayCourageActivation", characterBody.gameObject);
-            characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
+        {          
+            if (aoe)
+            {
+                List<HurtBox> hurtBoxes = new List<HurtBox>();
+                hurtBoxes = new SphereSearch { radius = virtueRadius, mask = LayerIndex.entityPrecise.mask, origin = transform.position }
+                    .RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.all).FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes().ToList();
+
+                foreach (HurtBox hurtBox in hurtBoxes)
+                {
+                    if (hurtBox.healthComponent.body && hurtBox.healthComponent.body.teamComponent.teamIndex == TeamIndex.Player)
+                    {
+                        hurtBox.healthComponent.body.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
+                    }
+                }
+            }      
+            else
+            {
+                Util.PlaySound("PlayCourageActivation", characterBody.gameObject);
+                characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
+            }
         }
 
         public void IncrementJustice()
@@ -254,6 +314,89 @@ namespace Guardian.Modules.Guardian
         public float[] GetCooldowns()
         {
             return new float[] { justiceCooldownTimer, justiceCooldown, resolveCooldownTimer, resolveCooldown, courageCooldownTimer, courageCooldown };
+        }
+
+        public void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        {
+            // Aegis - block all damage except DoT and Void Reaver explosion
+            if (self.body.HasBuff(GuardianPlugin.Modules.Buffs.aegisBuff) && damageInfo.damageType != DamageType.DoT && damageInfo.damageType != DamageType.VoidDeath)
+            {
+                // Shattered Aegis
+
+                // Clear and reapply stacks
+                ClearAndReapplyTimedBuffs(GuardianPlugin.Modules.Buffs.aegisBuff, self.body, 5);
+
+                // Visual effect
+                EffectData effectData = new EffectData { origin = damageInfo.position, rotation = Util.QuaternionSafeLookRotation((damageInfo.force != Vector3.zero ? damageInfo.force : Random.onUnitSphere)) };
+                EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/BearProc"), effectData, true);
+
+                // Block
+                Util.PlaySound("PlayCourageBlock", self.gameObject);
+                damageInfo.rejected = true;
+            }
+
+            // Justice - deal 15% increased damage and inflict burning
+            if (damageInfo.attacker.GetComponent<CharacterBody>().HasBuff(GuardianPlugin.Modules.Buffs.justiceBuff) && damageInfo.damageType != DamageType.DoT)
+            {
+                // Clear and reapply stacks
+                ClearAndReapplyTimedBuffs(GuardianPlugin.Modules.Buffs.justiceBuff, damageInfo.attacker.GetComponent<CharacterBody>(), 5);
+
+                // Visual Effect
+
+                // Extra damage & burning
+                damageInfo.damage *= 1.15f;
+                damageInfo.damageType = DamageType.IgniteOnHit;
+            }
+
+            if (damageInfo.attacker.GetComponent<CharacterBody>().baseNameToken.Contains("GUARDIAN"))
+            {
+                // Justice stacks
+                if (damageInfo.damageType != DamageType.DoT)
+                {
+                    damageInfo.attacker.GetComponent<VirtueController>().IncrementJustice();
+                }
+
+                // Renewed Justice
+                if (!self.alive && damageInfo.attacker.GetComponent<TraitController>().GetTraits()[1])
+                {
+                    damageInfo.attacker.GetComponent<VirtueController>().RenewJustice();
+                }
+            }
+
+            // Original code
+            orig(self, damageInfo);
+        }
+
+        /// <summary>
+        /// Remove and reapply all stacks minus one of a certain timed buff
+        /// </summary>
+        /// <param name="buffDef"></param>
+        /// <param name="body"></param>
+        /// <param name="maxStacks"></param>
+        private void ClearAndReapplyTimedBuffs(BuffDef buffDef, CharacterBody body, int maxStacks)
+        {
+            int buffCount = 0;
+            float buffTimer = 0f;
+
+            foreach (CharacterBody.TimedBuff buff in body.timedBuffs)
+            {
+                if (buff.buffIndex == buffDef.buffIndex)
+                {
+                    if (buffTimer > buff.timer || buffTimer == 0f)
+                    {
+                        buffTimer = buff.timer;
+                    }
+
+                    buffCount++;
+                }
+            }
+
+            body.ClearTimedBuffs(buffDef);
+
+            for (int i = 1; i < buffCount; i++)
+            {
+                body.AddTimedBuff(buffDef, buffTimer, maxStacks);
+            }
         }
     }
 }
