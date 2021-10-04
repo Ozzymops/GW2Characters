@@ -72,6 +72,28 @@ namespace GuardianPlugin.SkillStates
                 this.timer = 0.2f;
             }
 
+            // Repeat
+            List<ProjectileController> projectiles = new List<ProjectileController>();
+            new RoR2.SphereSearch { radius = 5f, mask = LayerIndex.projectile.mask, origin = gameObject.transform.position }.RefreshCandidates().FilterCandidatesByProjectileControllers().GetProjectileControllers(projectiles);
+
+            if (projectiles.Count > 0)
+            {
+                foreach (ProjectileController projectile in projectiles)
+                {
+                    if (projectile.owner && projectile.owner.GetComponent<CharacterBody>())
+                    {
+                        if (projectile.owner.GetComponent<CharacterBody>().teamComponent.teamIndex == GetComponent<CharacterBody>().teamComponent.teamIndex)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            EntityState.Destroy(projectile.gameObject);
+                        }
+                    }            
+                }
+            }
+
             if (firedProjectiles >= projectileCount)
             {
                 if (base.fixedAge >= this.duration && base.isAuthority)

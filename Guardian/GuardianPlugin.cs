@@ -81,112 +81,81 @@ namespace GuardianPlugin
         {
             // run hooks here, disabling one is as simple as commenting out the line
             On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
-            On.RoR2.HealthComponent.TakeDamage += HandleGuardianBuffs;
+            On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
         }
 
         private void OnDestroy() 
         {
-            On.RoR2.HealthComponent.TakeDamage -= HandleGuardianBuffs;
+            On.RoR2.HealthComponent.TakeDamage -= HealthComponent_TakeDamage;
         }
 
-        private void HandleGuardianBuffs(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
-            bool[] traits = new bool[] { false, false, false };
-
-            if (self.body.baseNameToken.Contains("GUARDIAN") || attackerBody.baseNameToken.Contains("GUARDIAN"))
+            // Aegis - block all damage except DoT and Void Reaver explosion
+            if (self.body.HasBuff(Modules.Buffs.aegisBuff) && damageInfo.damageType != DamageType.DoT && damageInfo.damageType != DamageType.VoidDeath)
             {
-                traits = attackerBody.GetComponent<TraitController>().GetTraits();
+                // Shattered Aegis
+
+                // Clear and reapply stacks
+                ClearAndReapplyTimedBuffs(Modules.Buffs.aegisBuff, self.body, 5);
+                
+                // Visual effect
+                EffectData effectData = new EffectData { origin = damageInfo.position, rotation = Util.QuaternionSafeLookRotation((damageInfo.force != Vector3.zero ? damageInfo.force : Random.onUnitSphere)) };
+                EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/BearProc"), effectData, true);
+
+                // Block
+                Util.PlaySound("PlayCourageBlock", self.gameObject);
+                damageInfo.rejected = true;
             }
 
-            if (damageInfo != null && damageInfo.attacker && attackerBody && attackerBody.baseNameToken.Contains("GUARDIAN"))
+            // Justice - deal 15% increased damage and inflict burning
+            if (damageInfo.attacker.GetComponent<CharacterBody>().HasBuff(Modules.Buffs.justiceBuff) && damageInfo.damageType != DamageType.DoT)
             {
-                // Justice
-                if (damageInfo.damageType != DamageType.DoT)
+                // Clear and reapply stacks
+                ClearAndReapplyTimedBuffs(Modules.Buffs.justiceBuff, damageInfo.attacker.GetComponent<CharacterBody>(), 5);
+
+                // Visual Effect
+
+                // Extra damage & burning
+                damageInfo.damage *= 1.15f;
+                damageInfo.damageType = DamageType.IgniteOnHit;
+            }
+
+            if (damageInfo.attacker.GetComponent<CharacterBody>().baseNameToken.Contains("GUARDIAN"))
+            {
+                // Justice stacks
+                damageInfo.attacker.GetComponent<VirtueController>().IncrementJustice();
+
+                // Renewed Justice
+                if (!self.alive && damageInfo.attacker.GetComponent<TraitController>().GetTraits()[1])
                 {
-                    if (attackerBody.HasBuff(Modules.Buffs.justiceBuff))
-                    {
-                        int buffCount = 0;
-                        float buffTimer = 0f;
-
-                        foreach(CharacterBody.TimedBuff timedBuff in attackerBody.timedBuffs)
-                        {
-                            if (timedBuff.buffIndex == Modules.Buffs.justiceBuff.buffIndex)
-                            {
-                                buffTimer = timedBuff.timer;
-                                buffCount++;
-                            }
-                        }
-
-                        attackerBody.ClearTimedBuffs(Modules.Buffs.justiceBuff);
-
-                        // Re-add buffs minus one
-                        for (int i = 1; i < buffCount; i++)
-                        {
-                            attackerBody.AddTimedBuff(Modules.Buffs.justiceBuff, buffTimer, 5);
-                        }
-
-                        damageInfo.damageType = DamageType.IgniteOnHit;                      
-                    }
-
-                    damageInfo.attacker.GetComponent<VirtueController>().IncrementJustice();
-                }
-
-                // Master Trait
-                if (!self.alive)
-                {
-                    if (traits[1])
-                    {
-                        damageInfo.attacker.GetComponent<VirtueController>().ResetJustice();
-                    }
+                    damageInfo.attacker.GetComponent<VirtueController>().RenewJustice();
                 }
             }
 
-            // Courage
-            if (self.body.HasBuff(Modules.Buffs.aegisBuff))
+            // Original code
+            orig(self, damageInfo);
+        }
+
+        private void ClearAndReapplyTimedBuffs(BuffDef buffDef, CharacterBody body, int maxStacks)
+        {
+            int buffCount = 0;
+            float buffTimer = 0f;
+
+            foreach (CharacterBody.TimedBuff buff in body.timedBuffs)
             {
-                if (damageInfo.damageType != DamageType.DoT)
-                {
-                    int buffCount = 0;
-                    float buffTimer = 0f;
-
-                    foreach (CharacterBody.TimedBuff timedBuff in self.body.timedBuffs)
-                    {
-                        if (timedBuff.buffIndex == Modules.Buffs.aegisBuff.buffIndex)
-                        {
-                            buffTimer = timedBuff.timer;
-                            buffCount++;
-                        }
-                    }
-
-                    self.body.ClearTimedBuffs(Modules.Buffs.aegisBuff);
-
-                    // Re-add buffs minus one
-                    for (int i = 1; i < buffCount; i++)
-                    {
-                        self.body.AddTimedBuff(Modules.Buffs.aegisBuff, buffTimer, 5);
-                    }
-
-                    EffectData effectData = new EffectData { origin = damageInfo.position, rotation = Util.QuaternionSafeLookRotation((damageInfo.force != Vector3.zero ? damageInfo.force : Random.onUnitSphere)) };
-                    EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/BearProc"), effectData, true);
-
-                    Util.PlaySound("PlayCourageBlock", self.gameObject);
-
-                    damageInfo.rejected = true;
-
-                    // Adept Trait
-                    if (self.body.baseNameToken.Contains("GUARDIAN"))
-                    {
-                        if (traits[0])
-                        {
-                            // Shattered Aegis
-                            Debug.Log("Do shattered aegis!");
-                        }
-                    }
-                }
+                buffTimer = buff.timer;
+                buffCount++;
             }
 
-            orig.Invoke(self, damageInfo);
+            body.ClearTimedBuffs(buffDef);
+
+            for (int i = 1; i < buffCount; i++)
+            {
+                body.AddTimedBuff(buffDef, buffTimer, maxStacks);
+            }
+
+            Debug.Log(buffCount + " * " + buffDef.name + " for " + buffTimer + "s.");
         }
 
         private void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)

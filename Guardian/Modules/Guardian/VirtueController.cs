@@ -216,7 +216,7 @@ namespace Guardian.Modules.Guardian
             }
         }
 
-        public void ResetJustice()
+        public void RenewJustice()
         {
             if (justiceActive)
             {

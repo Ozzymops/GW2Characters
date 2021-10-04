@@ -58,7 +58,6 @@ namespace Guardian.Modules.Guardian
                 if (chainTimer <= 0)
                 {
                     ResetChain();
-                    Debug.Log("Attack chain: decayed, resetting to 0.");
                 }
             }
         }
@@ -70,15 +69,11 @@ namespace Guardian.Modules.Guardian
             if (chainCount + 1 > maxChainCount)
             {
                 ResetChain();
-
-                Debug.Log("Attack chain: finished, resetting to 0.");
             }
             else
             {
                 chainTimer = 3f;
                 chainCount++;
-
-                Debug.Log("Attack chain: going from state " + oldChain + " to " + chainCount + ".");
             }
 
             UpdateAttack();
