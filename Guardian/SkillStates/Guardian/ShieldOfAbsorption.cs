@@ -44,7 +44,7 @@ namespace GuardianPlugin.SkillStates
 
                 if (NetworkServer.active)
                 {
-                    base.characterBody.AddTimedBuff(Modules.Buffs.shieldBuff, duration);
+                    base.characterBody.AddTimedBuff(Modules.Buffs.shieldOfAbsorptionBuff, duration);
                 }
             }
         }
@@ -81,7 +81,7 @@ namespace GuardianPlugin.SkillStates
                         {
                             if (hurtBox.healthComponent.body && hurtBox.healthComponent.body.teamComponent.teamIndex == TeamIndex.Player)
                             {
-                                hurtBox.healthComponent.body.AddTimedBuff(Modules.Buffs.aegisBuff, 9.9f, 5);
+                                // hurtBox.healthComponent.body.AddTimedBuff(SharedPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
                             }
                         }
                     }
@@ -95,7 +95,7 @@ namespace GuardianPlugin.SkillStates
 
             shieldObject.GetComponent<Guardian.Modules.SkillHelpers.ShieldBubble>().SetState(2);
 
-            base.characterBody.ClearTimedBuffs(Modules.Buffs.shieldBuff);
+            base.characterBody.ClearTimedBuffs(Modules.Buffs.shieldOfAbsorptionBuff);
         }
 
         public override InterruptPriority GetMinimumInterruptPriority()

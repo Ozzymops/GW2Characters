@@ -19,9 +19,9 @@ namespace Guardian.Modules.Guardian
 
         private void Awake()
         {
-            chainSprites = new Sprite[] { GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianMaceOne"),
-                                          GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianMaceTwo"),
-                                          GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianMaceThree")};
+            chainSprites = new Sprite[] { GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore1"),
+                                          GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore2"),
+                                          GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore3")};
 
             chainSkills = SetupSkills();
 
@@ -32,13 +32,13 @@ namespace Guardian.Modules.Guardian
         private SkillDef[] SetupSkills()
         {
             SkillDef mace1 = ScriptableObject.CreateInstance<SkillDef>();
-            mace1 = GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace1)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_MACE_ONE_NAME", "OZZ_GUARDIAN_BODY_PRIMARY_MACE_ONE_DESCRIPTION", chainSprites[0], true);
+            mace1 = GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace1)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN1", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN1", chainSprites[0], true);
             
             SkillDef mace2 = ScriptableObject.CreateInstance<SkillDef>();
-            mace2 = GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace2)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_MACE_TWO_NAME", "OZZ_GUARDIAN_BODY_PRIMARY_MACE_TWO_DESCRIPTION", chainSprites[1], true);
+            mace2 = GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace2)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN2", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN2", chainSprites[1], true);
 
             SkillDef mace3 = ScriptableObject.CreateInstance<SkillDef>();
-            mace3 = GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace3)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_MACE_THREE_NAME", "OZZ_GUARDIAN_BODY_PRIMARY_MACE_THREE_DESCRIPTION", chainSprites[2], true);
+            mace3 = GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace3)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN3", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN3", chainSprites[2], true);
 
 
             return new SkillDef[] { mace1, mace2, mace3 };

@@ -17,6 +17,7 @@ using UnityEngine.UI;
 namespace GuardianPlugin
 {
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("com.Ozzymops.GW2Shared", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     [BepInPlugin(MODUID, MODNAME, MODVERSION)]
     [R2APISubmoduleDependency(new string[]
@@ -42,7 +43,6 @@ namespace GuardianPlugin
 
         public static GuardianPlugin instance;
 
-
         private void Awake()
         {
             instance = this;
@@ -64,10 +64,18 @@ namespace GuardianPlugin
 
             RoR2.ContentManagement.ContentManager.onContentPacksAssigned += LateSetup;
 
+            // 'Connect' with other plugin
+            if (Guardian.Modules.SharedPluginWrapper.enabled)
+            {
+                Debug.Log("GW2Guardian - Dependency com.Ozzymops.GW2Shared loaded!");
+            }
+            else
+            {
+                Debug.LogError("GW2Guardian - Dependency com.Ozzymops.GW2Shared not found/loaded!");
+            }
+
             Hook();
         }
-
-
 
         private void LateSetup(HG.ReadOnlyArray<RoR2.ContentManagement.ReadOnlyContentPack> obj)
         {
@@ -88,12 +96,7 @@ namespace GuardianPlugin
             // a simple stat hook, adds armor after stats are recalculated
             if (self)
             {
-                if (self.HasBuff(Modules.Buffs.armorBuff))
-                {
-                    self.armor += 300f;
-                }
-
-                if (self.HasBuff(Modules.Buffs.shieldBuff))
+                if (self.HasBuff(Modules.Buffs.shieldOfAbsorptionBuff))
                 {
                     self.armor += 50f;
                     self.moveSpeed *= 0.8f;

@@ -9,14 +9,23 @@ namespace Guardian.Modules.Guardian
     public class GuardianHUD : MonoBehaviour
     {
         private bool activateHUD;
+        private int hudType;
         private HUD hud;
         private VirtueController virtueController;
         private GameObject customHUD;
+
+        private Image justiceSlot;
+        private Image resolveSlot;
+        private Image courageSlot;
+        private Text justiceText;
+        private Text resolveText;
+        private Text courageText;
 
         private void Awake()
         {
             if (GetComponent<CharacterBody>().baseNameToken.Contains("GUARDIAN"))
             {
+                hudType = 0;
                 hud = this.GetComponent<HUD>();
                 virtueController = GetComponent<VirtueController>();
 
@@ -44,7 +53,27 @@ namespace Guardian.Modules.Guardian
             orig(self);
             hud = self;
 
-            customHUD = Instantiate(GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<GameObject>("GuardianHUD"), hud.mainContainer.transform);
+            string prefabString = "";
+
+            switch (hudType)
+            {
+                case 0: // Core
+                    prefabString = "GuardianHUDCore";
+                    break;
+
+                case 1: // DH
+                    prefabString = "GuardianHUDDH";
+                    break;
+            }
+
+            customHUD = Instantiate(GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<GameObject>(prefabString), hud.mainContainer.transform);
+
+            justiceSlot = customHUD.transform.GetChild(1).GetChild(0).GetComponent<Image>();
+            resolveSlot = customHUD.transform.GetChild(2).GetChild(0).GetComponent<Image>();
+            courageSlot = customHUD.transform.GetChild(3).GetChild(0).GetComponent<Image>();
+            justiceText = customHUD.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Text>();
+            resolveText = customHUD.transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<Text>();
+            courageText = customHUD.transform.GetChild(3).GetChild(0).GetChild(0).GetComponent<Text>();
         }
 
         public void UpdateHUD(On.RoR2.UI.HUD.orig_Update orig, RoR2.UI.HUD self)
@@ -64,73 +93,73 @@ namespace Guardian.Modules.Guardian
                 Debug.LogWarning("[UpdateHUD] virtueFloats did not return six floats!");
             }
 
-            // Justice: 0 0 1
+            // Justice
             if (virtueBools[0])
             {
-                customHUD.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Text>().color = new Color(Color.white.r, Color.white.g, Color.white.b, 1f);
+                justiceText.color = new Color(Color.white.r, Color.white.g, Color.white.b, 1f);
 
                 if (virtueFloats[0] <= 4f)
                 {
-                    customHUD.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Text>().text = virtueFloats[0].ToString("0.0");
+                    justiceText.text = virtueFloats[0].ToString("0.0");
                 }
                 else
                 {
-                    customHUD.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Text>().text = virtueFloats[0].ToString("0");
+                    justiceText.text = virtueFloats[0].ToString("0");
                 }
           
-                customHUD.transform.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = 1f - (virtueFloats[0] / virtueFloats[1]);
+                justiceSlot.fillAmount = 1f - (virtueFloats[0] / virtueFloats[1]);
             }
             else
             {
-                customHUD.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Text>().color = new Color(Color.white.r, Color.white.g, Color.white.b, 0f);
-                customHUD.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Text>().text = "0";
-                customHUD.transform.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = 1f;
+                justiceText.color = new Color(Color.white.r, Color.white.g, Color.white.b, 0f);
+                justiceText.text = "0";
+                justiceSlot.fillAmount = 1f;
             }
 
-            // Resolve 1 2 3
+            // Resolve
             if (virtueBools[1])
             {
-                customHUD.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Text>().color = new Color(Color.white.r, Color.white.g, Color.white.b, 1f);
+                resolveText.color = new Color(Color.white.r, Color.white.g, Color.white.b, 1f);
 
                 if (virtueFloats[2] <= 4f)
                 {
-                    customHUD.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Text>().text = virtueFloats[2].ToString("0.0");
+                    resolveText.text = virtueFloats[2].ToString("0.0");
                 }
                 else
                 {
-                    customHUD.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Text>().text = virtueFloats[2].ToString("0");
+                    resolveText.text = virtueFloats[2].ToString("0");
                 }
 
-                customHUD.transform.GetChild(1).GetChild(0).GetComponent<Image>().GetComponent<Image>().fillAmount = 1f - (virtueFloats[2] / virtueFloats[3]);
+                resolveSlot.fillAmount = 1f - (virtueFloats[2] / virtueFloats[3]);
             }
             else
             {
-                customHUD.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Text>().color = new Color(Color.white.r, Color.white.g, Color.white.b, 0f);
-                customHUD.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Text>().text = "0";
-                customHUD.transform.GetChild(1).GetChild(0).GetComponent<Image>().GetComponent<Image>().fillAmount = 1f;
+                resolveText.color = new Color(Color.white.r, Color.white.g, Color.white.b, 0f);
+                resolveText.text = "0";
+                resolveSlot.fillAmount = 1f;
             }
 
-            // Courage 2 4 5
+            // Courage
             if (virtueBools[2])
             {
-                customHUD.transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<Text>().color = new Color(Color.white.r, Color.white.g, Color.white.b, 1f);
+                courageText.color = new Color(Color.white.r, Color.white.g, Color.white.b, 1f);
 
                 if (virtueFloats[4] <= 4f)
                 {
-                    customHUD.transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<Text>().text = virtueFloats[4].ToString("0.0");
+                    courageText.text = virtueFloats[4].ToString("0.0");
                 }
                 else
                 {
-                    customHUD.transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<Text>().text = virtueFloats[4].ToString("0");
+                    courageText.text = virtueFloats[4].ToString("0");
                 }
 
-                customHUD.transform.GetChild(2).GetChild(0).GetComponent<Image>().fillAmount = 1f - (virtueFloats[4] / virtueFloats[5]);
+                courageSlot.fillAmount = 1f - (virtueFloats[4] / virtueFloats[5]);
             }
             else
             {
-                customHUD.transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<Text>().color = new Color(Color.white.r, Color.white.g, Color.white.b, 0f);
-                customHUD.transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<Text>().text = "0";
-                customHUD.transform.GetChild(2).GetChild(0).GetComponent<Image>().fillAmount = 1f;
+                courageText.color = new Color(Color.white.r, Color.white.g, Color.white.b, 0f);
+                courageText.text = "0";
+                courageSlot.fillAmount = 1f;
             }
         }
     }

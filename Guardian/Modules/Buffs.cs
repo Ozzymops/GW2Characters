@@ -6,20 +6,15 @@ namespace GuardianPlugin.Modules
 {
     public static class Buffs
     {
-        // armor buff gained during roll
-        internal static BuffDef armorBuff;
         internal static BuffDef justiceBuff;
-        internal static BuffDef aegisBuff;
-        internal static BuffDef shieldBuff;
+        internal static BuffDef shieldOfAbsorptionBuff;
 
         internal static List<BuffDef> buffDefs = new List<BuffDef>();
 
         internal static void RegisterBuffs()
         {
-            armorBuff = AddNewBuff("HenryArmorBuff", Resources.Load<Sprite>("Textures/BuffIcons/texBuffGenericShield"), Color.white, false, false);
-            justiceBuff = AddNewBuff("GuardianJusticeBuff", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianJustice"), Color.white, true, false);
-            aegisBuff = AddNewBuff("GuardianAegisBuff", Modules.Assets.sharedAssetBundle.LoadAsset<Sprite>("boonAegis"), Color.white, true, false);
-            shieldBuff = AddNewBuff("GuardianShieldBuff", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianAbsorption"), Color.white, false, false);
+            justiceBuff = AddNewBuff("GW2JusticeBuff", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texJusticeCore"), Color.white, true, false);
+            shieldOfAbsorptionBuff = AddNewBuff("GW2ShieldOfAbsorptionBuff", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texUtilityCore"), Color.white, false, false);
         }
 
         // simple helper method

@@ -1,4 +1,6 @@
-﻿using GuardianPlugin;
+﻿using BepInEx;
+using GuardianPlugin;
+using R2API;
 using RoR2;
 using RoR2.Skills;
 using System.Collections.Generic;
@@ -13,7 +15,6 @@ namespace Guardian.Modules.Guardian
 
         private CharacterBody characterBody;
         private HealthComponent healthComponent;
-        private TraitController traitController;
 
         private float virtueRadius = 15f;
 
@@ -57,13 +58,13 @@ namespace Guardian.Modules.Guardian
 
                 scriptEnabled = true;
 
-                On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
+                On.RoR2.HealthComponent.TakeDamage += HealthComponent_Guardian_TakeDamage;
             }
         }
 
         private void OnDestroy()
         {
-            On.RoR2.HealthComponent.TakeDamage -= HealthComponent_TakeDamage;
+            On.RoR2.HealthComponent.TakeDamage -= HealthComponent_Guardian_TakeDamage;
         }
 
         private void Update()
@@ -83,8 +84,6 @@ namespace Guardian.Modules.Guardian
                 Util.PlaySound("PlayJusticeActivation", characterBody.gameObject);
                 ApplyJustice(5, true);
                 justiceActive = true;
-
-                Debug.Log("[Active Justice]: activated.");
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha2) && !resolveActive)
@@ -92,15 +91,12 @@ namespace Guardian.Modules.Guardian
                 Util.PlaySound("PlayResolveActivation", characterBody.gameObject);
                 ApplyResolve(activeResolveHeal, true);
                 resolveActive = true;
-
-                Debug.Log("[Active Resolve]: activated.");
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha3) && !courageActive)
             {
                 courageActive = true;
                 passiveCourageIntervalTimer = 0f;
-                Debug.Log("[Active Courage]: activated.");
             }
         }
 
@@ -150,8 +146,8 @@ namespace Guardian.Modules.Guardian
             {
                 if (hitsForJustice + 1 > hitsUntilJustice)
                 {
-                    ApplyJustice(1, false);
                     hitsForJustice = 0;
+                    ApplyJustice(1, false);
                 }
             }
 
@@ -161,8 +157,8 @@ namespace Guardian.Modules.Guardian
 
                 if (passiveResolveIntervalTimer <= 0)
                 {
-                    ApplyResolve(passiveResolveHeal, false);
                     passiveResolveIntervalTimer = passiveResolveInterval;
+                    ApplyResolve(passiveResolveHeal, false);
                 }
             }
 
@@ -172,11 +168,9 @@ namespace Guardian.Modules.Guardian
 
                 if (passiveCourageIntervalTimer <= 0 && activeCourageCount > 0)
                 {
-                    ApplyCourage(false);
                     passiveCourageIntervalTimer = 1f;
                     activeCourageCount--;
-
-                    Debug.Log("[Active Courage]: procced.");
+                    ApplyCourage(false);
                 }
             }
             else
@@ -185,10 +179,8 @@ namespace Guardian.Modules.Guardian
 
                 if (passiveCourageIntervalTimer <= 0)
                 {
-                    ApplyCourage(false);
                     passiveCourageIntervalTimer = passiveCourageInterval;
-
-                    Debug.Log("[Passive Courage]: procced.");
+                    ApplyCourage(false);
                 }
             }
         }
@@ -247,25 +239,31 @@ namespace Guardian.Modules.Guardian
 
         private void ApplyCourage(bool aoe)
         {          
-            if (aoe)
+            // Test
+            if (SharedPluginWrapper.enabled)
             {
-                List<HurtBox> hurtBoxes = new List<HurtBox>();
-                hurtBoxes = new SphereSearch { radius = virtueRadius, mask = LayerIndex.entityPrecise.mask, origin = transform.position }
-                    .RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.all).FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes().ToList();
-
-                foreach (HurtBox hurtBox in hurtBoxes)
-                {
-                    if (hurtBox.healthComponent.body && hurtBox.healthComponent.body.teamComponent.teamIndex == TeamIndex.Player)
-                    {
-                        hurtBox.healthComponent.body.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
-                    }
-                }
-            }      
-            else
-            {
-                Util.PlaySound("PlayCourageActivation", characterBody.gameObject);
-                characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
+                characterBody.AddTimedBuff(SharedPlugin.Modules.Buffs.aegisBuff, 10f, 5);
             }
+
+            //if (aoe)
+            //{
+            //    List<HurtBox> hurtBoxes = new List<HurtBox>();
+            //    hurtBoxes = new SphereSearch { radius = virtueRadius, mask = LayerIndex.entityPrecise.mask, origin = transform.position }
+            //        .RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.all).FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes().ToList();
+
+            //    foreach (HurtBox hurtBox in hurtBoxes)
+            //    {
+            //        if (hurtBox.healthComponent.body && hurtBox.healthComponent.body.teamComponent.teamIndex == TeamIndex.Player)
+            //        {
+            //            hurtBox.healthComponent.body.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
+            //        }
+            //    }
+            //}      
+            //else
+            //{
+            //    Util.PlaySound("PlayCourageActivation", characterBody.gameObject);
+            //    characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
+            //}
         }
 
         public void IncrementJustice()
@@ -316,25 +314,9 @@ namespace Guardian.Modules.Guardian
             return new float[] { justiceCooldownTimer, justiceCooldown, resolveCooldownTimer, resolveCooldown, courageCooldownTimer, courageCooldown };
         }
 
-        public void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+
+        public void HealthComponent_Guardian_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            // Aegis - block all damage except DoT and Void Reaver explosion
-            if (self.body.HasBuff(GuardianPlugin.Modules.Buffs.aegisBuff) && damageInfo.damageType != DamageType.DoT && damageInfo.damageType != DamageType.VoidDeath)
-            {
-                // Shattered Aegis
-
-                // Clear and reapply stacks
-                ClearAndReapplyTimedBuffs(GuardianPlugin.Modules.Buffs.aegisBuff, self.body, 5);
-
-                // Visual effect
-                EffectData effectData = new EffectData { origin = damageInfo.position, rotation = Util.QuaternionSafeLookRotation((damageInfo.force != Vector3.zero ? damageInfo.force : Random.onUnitSphere)) };
-                EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/BearProc"), effectData, true);
-
-                // Block
-                Util.PlaySound("PlayCourageBlock", self.gameObject);
-                damageInfo.rejected = true;
-            }
-
             // Justice - deal 15% increased damage and inflict burning
             if (damageInfo.attacker.GetComponent<CharacterBody>().HasBuff(GuardianPlugin.Modules.Buffs.justiceBuff) && damageInfo.damageType != DamageType.DoT)
             {

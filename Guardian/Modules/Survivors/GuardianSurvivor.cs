@@ -29,7 +29,7 @@ namespace GuardianPlugin.Modules.Survivors
             bodyName = "HenryBody",
             bodyNameToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_NAME",
             bodyColor = Color.blue,
-            characterPortrait = Modules.Assets.LoadCharacterIcon("texCharacterIcon"),
+            characterPortrait = Modules.Assets.LoadCharacterIcon("texCharacterIconCore"),
             crosshair = Modules.Assets.LoadCrosshair("Standard"),
             damage = 12f,
             healthGrowth = 27f,
@@ -110,17 +110,17 @@ namespace GuardianPlugin.Modules.Survivors
             string prefix = GuardianPlugin.developerPrefix;
 
             #region Primary
-            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.Mace1)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_MACECHAIN_NAME", prefix + "_GUARDIAN_BODY_PRIMARY_MACECHAIN_DESCRIPTION", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianMaceOne"), true));
-            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.Shoot)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_LONGBOW_NAME", prefix + "_GUARDIAN_BODY_PRIMARY_LONGBOW_DESCRIPTION", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texDragonhunterLongbow"), true));
+            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.Mace1)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_NAME", prefix + "_GUARDIAN_BODY_PRIMARY_DESCRIPTION", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore1"), true));
+            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.Shoot)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_NAME_DH", prefix + "_GUARDIAN_BODY_PRIMARY_DESCRIPTION_DH", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryDH"), true));
             #endregion
 
             #region Secondary
             SkillDef zealotsDefenseSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = prefix + "_GUARDIAN_BODY_SECONDARY_ZEALOTSDEFENSE_NAME",
-                skillNameToken = prefix + "_GUARDIAN_BODY_SECONDARY_ZEALOTSDEFENSE_NAME",
-                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SECONDARY_ZEALOTSDEFENSE_DESCRIPTION",
-                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianZealot"),
+                skillName = prefix + "_GUARDIAN_BODY_SECONDARY_NAME",
+                skillNameToken = prefix + "_GUARDIAN_BODY_SECONDARY_NAME",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SECONDARY_DESCRIPTION",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texSecondaryCore"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.ZealotsDefense)),
                 activationStateMachineName = "Weapon",
                 baseMaxStock = 1,
@@ -141,10 +141,10 @@ namespace GuardianPlugin.Modules.Survivors
 
             SkillDef trueShotSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = prefix + "_GUARDIAN_BODY_SECONDARY_LONGBOW_NAME",
-                skillNameToken = prefix + "_GUARDIAN_BODY_SECONDARY_LONGBOW_NAME",
-                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SECONDARY_LONGBOW_DESCRIPTION",
-                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texDragonhunterTrueShot"),
+                skillName = prefix + "_GUARDIAN_BODY_SECONDARY_NAME_DH",
+                skillNameToken = prefix + "_GUARDIAN_BODY_SECONDARY_NAME_DH",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SECONDARY_DESCRIPTION_DH",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texSecondaryDH"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Shoot)),
                 activationStateMachineName = "Weapon",
                 baseMaxStock = 1,
@@ -169,10 +169,10 @@ namespace GuardianPlugin.Modules.Survivors
             #region Utility
             SkillDef shieldSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = prefix + "_GUARDIAN_BODY_UTILITY_SHIELD_NAME",
-                skillNameToken = prefix + "_GUARDIAN_BODY_UTILITY_SHIELD_NAME",
-                skillDescriptionToken = prefix + "_GUARDIAN_BODY_UTILITY_SHIELD_DESCRIPTION",
-                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianAbsorption"),
+                skillName = prefix + "_GUARDIAN_BODY_UTILITY_NAME",
+                skillNameToken = prefix + "_GUARDIAN_BODY_UTILITY_NAME",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_UTILITY_DESCRIPTION",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texUtilityCore"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.ShieldOfAbsorption)),
                 activationStateMachineName = "Weapon",
                 baseMaxStock = 1,
@@ -193,10 +193,10 @@ namespace GuardianPlugin.Modules.Survivors
 
             SkillDef trapsSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = prefix + "_GUARDIAN_BODY_UTILITY_TRAPS_NAME",
-                skillNameToken = prefix + "_GUARDIAN_BODY_UTILITY_TRAPS_NAME",
-                skillDescriptionToken = prefix + "_GUARDIAN_BODY_UTILITY_TRAPS_DESCRIPTION",
-                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texDragonhunterTraps"),
+                skillName = prefix + "_GUARDIAN_BODY_UTILITY_NAME_DH",
+                skillNameToken = prefix + "_GUARDIAN_BODY_UTILITY_NAME_DH",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_UTILITY_DESCRIPTION_DH",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texUtilityDH"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Roll)),
                 activationStateMachineName = "Slide",
                 baseMaxStock = 1,
@@ -221,10 +221,10 @@ namespace GuardianPlugin.Modules.Survivors
             #region Special
             SkillDef sanctuarySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = prefix + "_GUARDIAN_BODY_SPECIAL_SHIELD_NAME",
-                skillNameToken = prefix + "_GUARDIAN_BODY_SPECIAL_SHIELD_NAME",
-                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SPECIAL_SHIELD_DESCRIPTION",
-                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardianSanctuary"),
+                skillName = prefix + "_GUARDIAN_BODY_SPECIAL_NAME",
+                skillNameToken = prefix + "_GUARDIAN_BODY_SPECIAL_NAME",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SPECIAL_DESCRIPTION",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texSpecialCore"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.ThrowBomb)),
                 activationStateMachineName = "Slide",
                 baseMaxStock = 1,
@@ -245,10 +245,10 @@ namespace GuardianPlugin.Modules.Survivors
 
             SkillDef dragonsMawSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = prefix + "_GUARDIAN_BODY_SPECIAL_TRAP_NAME",
-                skillNameToken = prefix + "_GUARDIAN_BODY_SPECIAL_TRAP_NAME",
-                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SPECIAL_TRAP_DESCRIPTION",
-                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texDragonhunterMaw"),
+                skillName = prefix + "_GUARDIAN_BODY_SPECIAL_NAME_DH",
+                skillNameToken = prefix + "_GUARDIAN_BODY_SPECIAL_NAME_DH",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SPECIAL_DESCRIPTION_DH",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texSpecialDH"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.ThrowBomb)),
                 activationStateMachineName = "Slide",
                 baseMaxStock = 1,
@@ -285,9 +285,9 @@ namespace GuardianPlugin.Modules.Survivors
 
             // Core
             SkillDef passiveCore = ScriptableObject.CreateInstance<SkillDef>();
-            passiveCore.skillNameToken = prefix + "_GUARDIAN_BODY_PASSIVE_NAME_CORE";
-            passiveCore.skillDescriptionToken = prefix + "_GUARDIAN_BODY_PASSIVE_DESCRIPTION_CORE";
-            passiveCore.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texGuardian");
+            passiveCore.skillNameToken = prefix + "_GUARDIAN_BODY_PASSIVE_NAME";
+            passiveCore.skillDescriptionToken = prefix + "_GUARDIAN_BODY_PASSIVE_DESCRIPTION";
+            passiveCore.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texCharacterIconCore");
             passiveCore.activationState = new EntityStates.SerializableEntityStateType(typeof(EntityStates.BaseState));
             passiveCore.activationStateMachineName = "Weapon";
             passiveCore.keywordTokens = new[] { prefix + "_GUARDIAN_BODY_KEYWORD_JUSTICE", prefix + "_GUARDIAN_BODY_KEYWORD_RESOLVE", prefix + "_GUARDIAN_BODY_KEYWORD_COURAGE" };
@@ -301,9 +301,9 @@ namespace GuardianPlugin.Modules.Survivors
 
             // Dragonhunter
             SkillDef passiveDragonhunter = ScriptableObject.CreateInstance<SkillDef>();
-            passiveDragonhunter.skillNameToken = prefix + "_GUARDIAN_BODY_PASSIVE_NAME_DRAGONHUNTER";
-            passiveDragonhunter.skillDescriptionToken = prefix + "_GUARDIAN_BODY_PASSIVE_DESCRIPTION_DRAGONHUNTER";
-            passiveDragonhunter.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texDragonhunter");
+            passiveDragonhunter.skillNameToken = prefix + "_GUARDIAN_BODY_PASSIVE_NAME_DH";
+            passiveDragonhunter.skillDescriptionToken = prefix + "_GUARDIAN_BODY_PASSIVE_DESCRIPTION_DH";
+            passiveDragonhunter.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texCharacterIconDH");
             passiveDragonhunter.activationState = new EntityStates.SerializableEntityStateType(typeof(EntityStates.BaseState));
             passiveDragonhunter.activationStateMachineName = "Weapon";
             passiveDragonhunter.keywordTokens = new[] { prefix + "_GUARDIAN_BODY_KEYWORD_JUSTICE", prefix + "_GUARDIAN_BODY_KEYWORD_RESOLVE", prefix + "_GUARDIAN_BODY_KEYWORD_COURAGE" };
@@ -317,9 +317,9 @@ namespace GuardianPlugin.Modules.Survivors
 
             // Firebrand
             SkillDef passiveFirebrand = ScriptableObject.CreateInstance<SkillDef>();
-            passiveFirebrand.skillNameToken = prefix + "_GUARDIAN_BODY_PASSIVE_NAME_FIREBRAND";
-            passiveFirebrand.skillDescriptionToken = prefix + "_GUARDIAN_BODY_PASSIVE_DESCRIPTION_FIREBRAND";
-            passiveFirebrand.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texFirebrand");
+            passiveFirebrand.skillNameToken = prefix + "_GUARDIAN_BODY_PASSIVE_NAME_FB";
+            passiveFirebrand.skillDescriptionToken = prefix + "_GUARDIAN_BODY_PASSIVE_DESCRIPTION_FB";
+            passiveFirebrand.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texCharacterIconFB");
             passiveFirebrand.activationState = new EntityStates.SerializableEntityStateType(typeof(EntityStates.BaseState));
             passiveFirebrand.activationStateMachineName = "Weapon";
             passiveFirebrand.keywordTokens = new[] { prefix + "_GUARDIAN_BODY_KEYWORD_JUSTICE", prefix + "_GUARDIAN_BODY_KEYWORD_RESOLVE", prefix + "_GUARDIAN_BODY_KEYWORD_COURAGE" };
@@ -331,7 +331,23 @@ namespace GuardianPlugin.Modules.Survivors
                 viewableNode = new ViewablesCatalog.Node(passiveFirebrand.skillNameToken, isFolder: false)
             };
 
-            passiveSkillFamily.variants = new SkillFamily.Variant[] { coreVariant, dragonhunterVariant, firebrandVariant };
+            // Willbender
+            SkillDef passiveWillbender = ScriptableObject.CreateInstance<SkillDef>();
+            passiveWillbender.skillNameToken = prefix + "_GUARDIAN_BODY_PASSIVE_NAME_WB";
+            passiveWillbender.skillDescriptionToken = prefix + "_GUARDIAN_BODY_PASSIVE_DESCRIPTION_WB";
+            passiveWillbender.icon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texCharacterIconWB");
+            passiveWillbender.activationState = new EntityStates.SerializableEntityStateType(typeof(EntityStates.BaseState));
+            passiveWillbender.activationStateMachineName = "Weapon";
+            passiveWillbender.keywordTokens = new[] { prefix + "_GUARDIAN_BODY_KEYWORD_JUSTICE", prefix + "_GUARDIAN_BODY_KEYWORD_RESOLVE", prefix + "_GUARDIAN_BODY_KEYWORD_COURAGE" };
+
+            SkillFamily.Variant willbenderVariant = new SkillFamily.Variant()
+            {
+                skillDef = passiveWillbender,
+                unlockableDef = null,
+                viewableNode = new ViewablesCatalog.Node(passiveWillbender.skillNameToken, isFolder: false)
+            };
+
+            passiveSkillFamily.variants = new SkillFamily.Variant[] { coreVariant, dragonhunterVariant, firebrandVariant, willbenderVariant };
             genericSkill._skillFamily = passiveSkillFamily;
 
             // bodyPrefab.GetComponent<VirtueController>().SetupVirtues(new SkillDef[] { passiveCore, passiveDragonhunter, passiveFirebrand }, genericSkill);
@@ -353,7 +369,7 @@ namespace GuardianPlugin.Modules.Survivors
 
             #region Core
             SkinDef coreSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_CORE_SKIN_NAME",
-                Assets.mainAssetBundle.LoadAsset<Sprite>("texGuardian"),
+                Assets.mainAssetBundle.LoadAsset<Sprite>("texCharacterIconCore"),
                 defaultRenderers,
                 mainRenderer,
                 model);
@@ -391,7 +407,7 @@ namespace GuardianPlugin.Modules.Survivors
             });
 
             SkinDef dragonhunterSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_DRAGONHUNTER_SKIN_NAME",
-                Assets.mainAssetBundle.LoadAsset<Sprite>("texDragonhunter"),
+                Assets.mainAssetBundle.LoadAsset<Sprite>("texCharacterIconDH"),
                 dragonhunterRendererInfos,
                 mainRenderer,
                 model,
@@ -425,7 +441,7 @@ namespace GuardianPlugin.Modules.Survivors
             });
 
             SkinDef firebrandSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_DRAGONHUNTER_SKIN_NAME",
-                Assets.subAssetBundle.LoadAsset<Sprite>("texFirebrand"),
+                Assets.subAssetBundle.LoadAsset<Sprite>("texCharacterIconFB"),
                 firebrandRendererInfos,
                 mainRenderer,
                 model,
@@ -446,6 +462,40 @@ namespace GuardianPlugin.Modules.Survivors
             };
 
             skins.Add(firebrandSkin);
+            #endregion
+
+            #region Willbender
+            Material willbenderMat = Modules.Assets.CreateMaterial("matHenryAlt");
+            CharacterModel.RendererInfo[] willbenderRendererInfos = SkinRendererInfos(defaultRenderers, new Material[]
+            {
+                willbenderMat,
+                willbenderMat,
+                willbenderMat,
+                willbenderMat
+            });
+
+            SkinDef willbenderSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_WILLBENDER_SKIN_NAME",
+                Assets.subAssetBundle.LoadAsset<Sprite>("texCharacterIconWB"),
+                willbenderRendererInfos,
+                mainRenderer,
+                model,
+                masterySkinUnlockableDef);
+
+            willbenderSkin.meshReplacements = new SkinDef.MeshReplacement[]
+            {
+                new SkinDef.MeshReplacement
+                {
+                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenrySwordAlt"),
+                    renderer = defaultRenderers[0].renderer
+                },
+                new SkinDef.MeshReplacement
+                {
+                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenryAlt"),
+                    renderer = defaultRenderers[instance.mainRendererIndex].renderer
+                }
+            };
+
+            skins.Add(willbenderSkin);
             #endregion
 
             skinController.skins = skins.ToArray();

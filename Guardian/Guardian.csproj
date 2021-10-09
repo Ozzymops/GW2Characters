@@ -19,7 +19,6 @@
     <None Remove="GuardianSoundbank.bnk" />
     <None Remove="Modules\Survivors\Henry.cs~RF6221a098.TMP" />
     <None Remove="old_guardianassetbundle" />
-    <None Remove="sharedassetbundle" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,7 +29,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="guardianassetbundle" />
-    <EmbeddedResource Include="sharedassetbundle" />
   </ItemGroup>
 
   <ItemGroup>
@@ -137,6 +135,10 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>
