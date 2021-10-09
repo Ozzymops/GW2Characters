@@ -4,6 +4,7 @@ namespace GuardianPlugin.Modules
 {
     internal static class StaticValues
     {
+        // Henry, remove later
         internal static string descriptionText = "Henry is a skilled fighter who makes use of a wide arsenal of weaponry to take down his foes.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine
              + "< ! > Sword is a good all-rounder while Boxing Gloves are better for laying a beatdown on more powerful foes." + Environment.NewLine + Environment.NewLine
              + "< ! > Pistol is a powerful anti air, with its low cooldown and high damage." + Environment.NewLine + Environment.NewLine
@@ -11,22 +12,31 @@ namespace GuardianPlugin.Modules
              + "< ! > Bomb can be used to wipe crowds with ease." + Environment.NewLine + Environment.NewLine;
 
         internal const float swordDamageCoefficient = 2.8f;
-
         internal const float gunDamageCoefficient = 4.2f;
-
         internal const float bombDamageCoefficient = 16f;
 
         // Core
-        internal const float maceDamageCoefficient = 1.0f;
-        internal const float zealotsDefenseDamageCoefficient = 2.0f;
-        internal const float shieldDamageCoefficient = 1.25f;
+        internal const float corePrimaryDamageCoefficient = 1.0f;
+        internal const float coreSecondaryDamageCoefficient = 2.0f;
+        internal const float coreUtilityCoefficient = 1.25f;
+        internal const float coreSpecialCoefficient = 1.25f;
 
         // Dragonhunter
-        internal const float bowDamageCoefficient = 2.5f;
-        internal const float trueShotDamageCoefficient = 3.0f;
-        internal const float trapsDamageCoefficient = 1.25f;
-        internal const float dragonsMawDamageCoefficient = 1.5f;
+        internal const float dhPrimaryDamageCoefficient = 2.0f;
+        internal const float dhSecondaryDamageCoefficient = 3.0f;
+        internal const float dhUtilityCoefficient = 1.25f;
+        internal const float dhSpecialCoefficient = 1.25f;
 
         // Firebrand
+        internal const float fbPrimaryDamageCoefficient = 1.0f;
+        internal const float fbSecondaryDamageCoefficient = 1.0f;
+        internal const float fbUtilityCoefficient = 1.0f;
+        internal const float fbSpecialCoefficient = 1.0f;
+
+        // Willbender
+        internal const float wbPrimaryDamageCoefficient = 1.0f;
+        internal const float wbSecondaryDamageCoefficient = 1.0f;
+        internal const float wbUtilityCoefficient = 1.0f;
+        internal const float wbSpecialCoefficient = 1.0f;
     }
 }

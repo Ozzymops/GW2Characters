@@ -16,7 +16,7 @@ namespace GuardianPlugin.SkillStates
             this.hitboxName = "Sword";
 
             this.damageType = DamageType.Generic;
-            this.damageCoefficient = Modules.StaticValues.maceDamageCoefficient * 2.5f;
+            this.damageCoefficient = Modules.StaticValues.corePrimaryDamageCoefficient * 2.5f;
             this.procCoefficient = 1f;
             this.pushForce = 400f;
             this.bonusForce = Vector3.zero;

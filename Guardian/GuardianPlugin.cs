@@ -92,6 +92,12 @@ namespace GuardianPlugin
                 {
                     self.armor += 300f;
                 }
+
+                if (self.HasBuff(Modules.Buffs.shieldBuff))
+                {
+                    self.armor += 50f;
+                    self.moveSpeed *= 0.8f;
+                }
             }
         }
     }

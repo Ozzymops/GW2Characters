@@ -8,7 +8,7 @@ namespace GuardianPlugin.SkillStates
 {
     public class ZealotsDefense : BaseSkillState
     {
-        public static float damageCoefficient = Modules.StaticValues.zealotsDefenseDamageCoefficient;
+        public static float damageCoefficient = Modules.StaticValues.coreSecondaryDamageCoefficient;
         public static float procCoefficient = 0.5f;
         public static float baseDuration = 1.0f;
         public static float force = 800f;
