@@ -36,7 +36,10 @@ namespace GuardianPlugin.Modules.Survivors
         internal virtual void Initialize()
         {
             instance = this;
+            Debug.Log("Set up instance");
+
             InitializeCharacter();
+            Debug.Log("Initialized character");
         }
 
         internal virtual void InitializeCharacter()
@@ -48,20 +51,40 @@ namespace GuardianPlugin.Modules.Survivors
             {
                 InitializeUnlockables();
 
+                Debug.Log("Trying bodyPrefab");
+
                 bodyPrefab = Modules.Prefabs.CreatePrefab(bodyName + "Body", "mdl" + bodyName, bodyInfo);
                 bodyPrefab.GetComponent<EntityStateMachine>().mainStateType = new EntityStates.SerializableEntityStateType(characterMainState);
 
+                Debug.Log("Created bodyPrefab");
+
                 Modules.Prefabs.SetupCharacterModel(bodyPrefab, customRendererInfos, mainRendererIndex);
 
-                displayPrefab = Modules.Prefabs.CreateDisplayPrefab(bodyName + "Display", bodyPrefab, bodyInfo);
+                Debug.Log("Set up Character Model");
+
+                // displayPrefab = Modules.Prefabs.CreateDisplayPrefab(bodyName + "Display", bodyPrefab, bodyInfo);
+                displayPrefab = Modules.Prefabs.CreateDisplayPrefab("DisplayGuardian", bodyPrefab, bodyInfo);
+
+                Debug.Log("Set up Display Prefab");
 
                 Modules.Prefabs.RegisterNewSurvivor(bodyPrefab, displayPrefab, Color.grey, "GUARDIAN", characterUnlockableDef, sortPosition);
 
+                Debug.Log("Registered new survivor");
+
                 InitializeHitboxes();
+                Debug.Log("Initialized hitboxes");
+
                 InitializeSkills();
+                Debug.Log("Initialized skills");
+
                 InitializeSkins();
+                Debug.Log("Initialized skins");
+
                 InitializeItemDisplays();
+                Debug.Log("Initialized item displays");
+
                 InitializeDoppelganger();
+                Debug.Log("Initialized doppelganger");
             }
         }
 

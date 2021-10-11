@@ -40,12 +40,6 @@ namespace GuardianPlugin.Modules
 
         internal static void Initialize()
         {
-            if (assetbundleName == "myassetbundle" || subAssetbundleName == "myassetbundle")
-            {
-                Debug.LogError("AssetBundle name hasn't been changed- not loading any assets to avoid conflicts");
-                return;
-            }
-
             LoadAssetBundle();
             LoadSoundbank();
             PopulateAssets();
@@ -293,8 +287,13 @@ namespace GuardianPlugin.Modules
 
             if (!tempMat)
             {
-                Debug.LogError("Failed to load material: " + materialName + " - Check to see that the name in your Unity project matches the one in this code");
-                return commandoMat;
+                tempMat = tempMat = Assets.subAssetBundle.LoadAsset<Material>(materialName);
+
+                if (!tempMat)
+                {
+                    Debug.LogError("Failed to load material in subAssetBundle: " + materialName + ". Check to see that the name in your Unity project matches the one in this code.");
+                    return commandoMat;
+                }              
             }
 
             mat.name = materialName;

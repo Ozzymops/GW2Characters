@@ -198,13 +198,29 @@ namespace GuardianPlugin.Modules
             GuardianPlugin.DestroyImmediate(main.transform.Find("CameraPivot").gameObject);
             GuardianPlugin.DestroyImmediate(main.transform.Find("AimOrigin").gameObject);
 
+            bool bundleTest = false;
+
             if (Modules.Assets.mainAssetBundle.LoadAsset<GameObject>(modelName) == null)
             {
-                Debug.LogError("Trying to load a null model- check to see if the name in your code matches the name of the object in Unity");
-                return null;
+                Debug.LogError("Trying to load a null model- trying subAssetBundle...");
+
+                if (Modules.Assets.subAssetBundle.LoadAsset<GameObject>(modelName) == null)
+                {
+                    Debug.LogError("Trying to load a null model from subAssetBundle - check to see if the name in your code matches the name of the object in Unity.");
+                    return null;
+                }
+
+                bundleTest = true;
             }
 
-            return GameObject.Instantiate(Modules.Assets.mainAssetBundle.LoadAsset<GameObject>(modelName));
+            if (bundleTest)
+            {
+                return GameObject.Instantiate(Modules.Assets.subAssetBundle.LoadAsset<GameObject>(modelName));
+            }
+            else
+            {
+                return GameObject.Instantiate(Modules.Assets.mainAssetBundle.LoadAsset<GameObject>(modelName));
+            }
         }
 
         internal static void SetupCharacterModel(GameObject prefab, CustomRendererInfo[] rendererInfo, int mainRendererIndex)
@@ -465,6 +481,8 @@ internal class BodyInfo
     internal Vector3 aimOriginPosition = new Vector3(0f, 1.8f, 0f);
     internal Vector3 modelBasePosition = new Vector3(0f, -0.92f, 0f);
     internal Vector3 cameraPivotPosition = new Vector3(0f, 1.6f, 0f);
+
+    Guardian.Modules.DebugKanker kanker0 = new Guardian.Modules.DebugKanker("Passed BodyInfo constructor");
 }
 
 // for simplifying rendererinfo creation

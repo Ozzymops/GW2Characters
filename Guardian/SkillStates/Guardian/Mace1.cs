@@ -12,7 +12,7 @@ namespace GuardianPlugin.SkillStates
 
         public override void OnEnter()
         {
-            this.hitboxName = "Sword";
+            this.hitboxName = "Mace";
 
             this.damageType = DamageType.Generic;
             this.damageCoefficient = Modules.StaticValues.corePrimaryDamageCoefficient;

@@ -13,7 +13,7 @@ namespace GuardianPlugin.Modules.Survivors
     [R2APISubmoduleDependency(nameof(LoadoutAPI))]
     internal class GuardianSurvivor : SurvivorBase
     {
-        internal override string bodyName { get; set; } = "Henry";
+        internal override string bodyName { get; set; } = "Guardian"; // Henry
 
         internal override GameObject bodyPrefab { get; set; }
         internal override GameObject displayPrefab { get; set; }
@@ -26,7 +26,7 @@ namespace GuardianPlugin.Modules.Survivors
         {
             armor = 40f,
             armorGrowth = 0f,
-            bodyName = "HenryBody",
+            bodyName = "GuardianBody", // HenryBody
             bodyNameToken = GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_NAME",
             bodyColor = Color.blue,
             characterPortrait = Modules.Assets.LoadCharacterIcon("texCharacterIconCore"),
@@ -41,24 +41,27 @@ namespace GuardianPlugin.Modules.Survivors
             podPrefab = Resources.Load<GameObject>("Prefabs/NetworkedObjects/SurvivorPod")
         };
 
-        internal static Material henryMat = Modules.Assets.CreateMaterial("matHenry");
+        // CharacterModel setup
+        internal static Material guardianMat = Modules.Assets.CreateMaterial("matGuardian");
+        internal static Material maceMat = Modules.Assets.CreateMaterial("matMace");
+        internal static Material shieldMat = Modules.Assets.CreateMaterial("matShield");
         internal override int mainRendererIndex { get; set; } = 2;
 
         internal override CustomRendererInfo[] customRendererInfos { get; set; } = new CustomRendererInfo[] {
                 new CustomRendererInfo
                 {
-                    childName = "SwordModel",
-                    material = henryMat,
+                    childName = "meshMace",
+                    material = maceMat,
                 },
                 new CustomRendererInfo
                 {
-                    childName = "GunModel",
-                    material = henryMat,
+                    childName = "meshShield",
+                    material = shieldMat,
                 },
                 new CustomRendererInfo
                 {
-                    childName = "Model",
-                    material = henryMat
+                    childName = "meshGuardian",
+                    material = guardianMat
                 }};
 
         internal override Type characterMainState { get; set; } = typeof(EntityStates.GenericCharacterMain);
@@ -68,7 +71,7 @@ namespace GuardianPlugin.Modules.Survivors
         internal override List<ItemDisplayRuleSet.KeyAssetRuleGroup> itemDisplayRules { get; set; }
 
         internal override UnlockableDef characterUnlockableDef { get; set; }
-        private static UnlockableDef masterySkinUnlockableDef;
+        // private static UnlockableDef masterySkinUnlockableDef;
 
         internal override void InitializeCharacter()
         {
@@ -86,7 +89,7 @@ namespace GuardianPlugin.Modules.Survivors
 
         internal override void InitializeUnlockables()
         {
-            masterySkinUnlockableDef = Modules.Unlockables.AddUnlockable<Achievements.MasteryAchievement>(true);
+            // masterySkinUnlockableDef = Modules.Unlockables.AddUnlockable<Achievements.MasteryAchievement>(true);
         }
 
         internal override void InitializeDoppelganger()
@@ -99,8 +102,8 @@ namespace GuardianPlugin.Modules.Survivors
             ChildLocator childLocator = bodyPrefab.GetComponentInChildren<ChildLocator>();
             GameObject model = childLocator.gameObject;
 
-            Transform hitboxTransform = childLocator.FindChild("SwordHitbox");
-            Modules.Prefabs.SetupHitbox(model, hitboxTransform, "Sword");
+            Transform hitboxTransform = childLocator.FindChild("MaceHitbox");
+            Modules.Prefabs.SetupHitbox(model, hitboxTransform, "Mace");
         }
 
         internal override void InitializeSkills()
@@ -355,150 +358,150 @@ namespace GuardianPlugin.Modules.Survivors
 
         internal override void InitializeSkins()
         {
-            GameObject model = bodyPrefab.GetComponentInChildren<ModelLocator>().modelTransform.gameObject;
-            CharacterModel characterModel = model.GetComponent<CharacterModel>();
+            //GameObject model = bodyPrefab.GetComponentInChildren<ModelLocator>().modelTransform.gameObject;
+            //CharacterModel characterModel = model.GetComponent<CharacterModel>();
 
-            ModelSkinController skinController = model.AddComponent<ModelSkinController>();
-            ChildLocator childLocator = model.GetComponent<ChildLocator>();
+            //ModelSkinController skinController = model.AddComponent<ModelSkinController>();
+            //ChildLocator childLocator = model.GetComponent<ChildLocator>();
 
-            SkinnedMeshRenderer mainRenderer = characterModel.mainSkinnedMeshRenderer;
+            //SkinnedMeshRenderer mainRenderer = characterModel.mainSkinnedMeshRenderer;
 
-            CharacterModel.RendererInfo[] defaultRenderers = characterModel.baseRendererInfos;
+            //CharacterModel.RendererInfo[] defaultRenderers = characterModel.baseRendererInfos;
 
-            List<SkinDef> skins = new List<SkinDef>();
+            //List<SkinDef> skins = new List<SkinDef>();
 
-            #region Core
-            SkinDef coreSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_CORE_SKIN_NAME",
-                Assets.mainAssetBundle.LoadAsset<Sprite>("texCharacterIconCore"),
-                defaultRenderers,
-                mainRenderer,
-                model);
+            //#region Core
+            //SkinDef coreSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_CORE_SKIN_NAME",
+            //    Assets.mainAssetBundle.LoadAsset<Sprite>("texCharacterIconCore"),
+            //    defaultRenderers,
+            //    mainRenderer,
+            //    model);
 
-            coreSkin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
-                new SkinDef.MeshReplacement
-                {
-                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenrySword"),
-                    renderer = defaultRenderers[0].renderer
-                },
-                new SkinDef.MeshReplacement
-                {
-                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenryGun"),
-                    renderer = defaultRenderers[1].renderer
-                },
-                new SkinDef.MeshReplacement
-                {
-                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenry"),
-                    renderer = defaultRenderers[instance.mainRendererIndex].renderer
-                }
-            };
+            //coreSkin.meshReplacements = new SkinDef.MeshReplacement[]
+            //{
+            //    new SkinDef.MeshReplacement
+            //    {
+            //        mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenrySword"),
+            //        renderer = defaultRenderers[0].renderer
+            //    },
+            //    new SkinDef.MeshReplacement
+            //    {
+            //        mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenryGun"),
+            //        renderer = defaultRenderers[1].renderer
+            //    },
+            //    new SkinDef.MeshReplacement
+            //    {
+            //        mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenry"),
+            //        renderer = defaultRenderers[instance.mainRendererIndex].renderer
+            //    }
+            //};
 
-            skins.Add(coreSkin);
-            #endregion
+            //skins.Add(coreSkin);
+            //#endregion
 
-            #region Dragonhunter
-            Material dragonhunterMat = Modules.Assets.CreateMaterial("matHenryAlt");
-            CharacterModel.RendererInfo[] dragonhunterRendererInfos = SkinRendererInfos(defaultRenderers, new Material[]
-            {
-                dragonhunterMat,
-                dragonhunterMat,
-                dragonhunterMat,
-                dragonhunterMat
-            });
+            //#region Dragonhunter
+            //Material dragonhunterMat = Modules.Assets.CreateMaterial("matHenryAlt");
+            //CharacterModel.RendererInfo[] dragonhunterRendererInfos = SkinRendererInfos(defaultRenderers, new Material[]
+            //{
+            //    dragonhunterMat,
+            //    dragonhunterMat,
+            //    dragonhunterMat,
+            //    dragonhunterMat
+            //});
 
-            SkinDef dragonhunterSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_DRAGONHUNTER_SKIN_NAME",
-                Assets.mainAssetBundle.LoadAsset<Sprite>("texCharacterIconDH"),
-                dragonhunterRendererInfos,
-                mainRenderer,
-                model,
-                masterySkinUnlockableDef);
+            //SkinDef dragonhunterSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_DRAGONHUNTER_SKIN_NAME",
+            //    Assets.mainAssetBundle.LoadAsset<Sprite>("texCharacterIconDH"),
+            //    dragonhunterRendererInfos,
+            //    mainRenderer,
+            //    model,
+            //    masterySkinUnlockableDef);
 
-            dragonhunterSkin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
-                new SkinDef.MeshReplacement
-                {
-                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenrySwordAlt"),
-                    renderer = defaultRenderers[0].renderer
-                },
-                new SkinDef.MeshReplacement
-                {
-                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenryAlt"),
-                    renderer = defaultRenderers[instance.mainRendererIndex].renderer
-                }
-            };
+            //dragonhunterSkin.meshReplacements = new SkinDef.MeshReplacement[]
+            //{
+            //    new SkinDef.MeshReplacement
+            //    {
+            //        mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenrySwordAlt"),
+            //        renderer = defaultRenderers[0].renderer
+            //    },
+            //    new SkinDef.MeshReplacement
+            //    {
+            //        mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenryAlt"),
+            //        renderer = defaultRenderers[instance.mainRendererIndex].renderer
+            //    }
+            //};
 
-            skins.Add(dragonhunterSkin);
-            #endregion
+            //skins.Add(dragonhunterSkin);
+            //#endregion
 
-            #region Firebrand
-            Material firebrandMat = Modules.Assets.CreateMaterial("matHenryAlt");
-            CharacterModel.RendererInfo[] firebrandRendererInfos = SkinRendererInfos(defaultRenderers, new Material[]
-            {
-                firebrandMat,
-                firebrandMat,
-                firebrandMat,
-                firebrandMat
-            });
+            //#region Firebrand
+            //Material firebrandMat = Modules.Assets.CreateMaterial("matHenryAlt");
+            //CharacterModel.RendererInfo[] firebrandRendererInfos = SkinRendererInfos(defaultRenderers, new Material[]
+            //{
+            //    firebrandMat,
+            //    firebrandMat,
+            //    firebrandMat,
+            //    firebrandMat
+            //});
 
-            SkinDef firebrandSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_DRAGONHUNTER_SKIN_NAME",
-                Assets.subAssetBundle.LoadAsset<Sprite>("texCharacterIconFB"),
-                firebrandRendererInfos,
-                mainRenderer,
-                model,
-                masterySkinUnlockableDef);
+            //SkinDef firebrandSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_DRAGONHUNTER_SKIN_NAME",
+            //    Assets.subAssetBundle.LoadAsset<Sprite>("texCharacterIconFB"),
+            //    firebrandRendererInfos,
+            //    mainRenderer,
+            //    model,
+            //    masterySkinUnlockableDef);
 
-            firebrandSkin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
-                new SkinDef.MeshReplacement
-                {
-                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenrySwordAlt"),
-                    renderer = defaultRenderers[0].renderer
-                },
-                new SkinDef.MeshReplacement
-                {
-                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenryAlt"),
-                    renderer = defaultRenderers[instance.mainRendererIndex].renderer
-                }
-            };
+            //firebrandSkin.meshReplacements = new SkinDef.MeshReplacement[]
+            //{
+            //    new SkinDef.MeshReplacement
+            //    {
+            //        mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenrySwordAlt"),
+            //        renderer = defaultRenderers[0].renderer
+            //    },
+            //    new SkinDef.MeshReplacement
+            //    {
+            //        mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenryAlt"),
+            //        renderer = defaultRenderers[instance.mainRendererIndex].renderer
+            //    }
+            //};
 
-            skins.Add(firebrandSkin);
-            #endregion
+            //skins.Add(firebrandSkin);
+            //#endregion
 
-            #region Willbender
-            Material willbenderMat = Modules.Assets.CreateMaterial("matHenryAlt");
-            CharacterModel.RendererInfo[] willbenderRendererInfos = SkinRendererInfos(defaultRenderers, new Material[]
-            {
-                willbenderMat,
-                willbenderMat,
-                willbenderMat,
-                willbenderMat
-            });
+            //#region Willbender
+            //Material willbenderMat = Modules.Assets.CreateMaterial("matHenryAlt");
+            //CharacterModel.RendererInfo[] willbenderRendererInfos = SkinRendererInfos(defaultRenderers, new Material[]
+            //{
+            //    willbenderMat,
+            //    willbenderMat,
+            //    willbenderMat,
+            //    willbenderMat
+            //});
 
-            SkinDef willbenderSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_WILLBENDER_SKIN_NAME",
-                Assets.subAssetBundle.LoadAsset<Sprite>("texCharacterIconWB"),
-                willbenderRendererInfos,
-                mainRenderer,
-                model,
-                masterySkinUnlockableDef);
+            //SkinDef willbenderSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_WILLBENDER_SKIN_NAME",
+            //    Assets.subAssetBundle.LoadAsset<Sprite>("texCharacterIconWB"),
+            //    willbenderRendererInfos,
+            //    mainRenderer,
+            //    model,
+            //    masterySkinUnlockableDef);
 
-            willbenderSkin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
-                new SkinDef.MeshReplacement
-                {
-                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenrySwordAlt"),
-                    renderer = defaultRenderers[0].renderer
-                },
-                new SkinDef.MeshReplacement
-                {
-                    mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenryAlt"),
-                    renderer = defaultRenderers[instance.mainRendererIndex].renderer
-                }
-            };
+            //willbenderSkin.meshReplacements = new SkinDef.MeshReplacement[]
+            //{
+            //    new SkinDef.MeshReplacement
+            //    {
+            //        mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenrySwordAlt"),
+            //        renderer = defaultRenderers[0].renderer
+            //    },
+            //    new SkinDef.MeshReplacement
+            //    {
+            //        mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenryAlt"),
+            //        renderer = defaultRenderers[instance.mainRendererIndex].renderer
+            //    }
+            //};
 
-            skins.Add(willbenderSkin);
-            #endregion
+            //skins.Add(willbenderSkin);
+            //#endregion
 
-            skinController.skins = skins.ToArray();
+            //skinController.skins = skins.ToArray();
         }
 
         internal override void SetItemDisplays()

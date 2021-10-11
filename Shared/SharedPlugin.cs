@@ -140,6 +140,15 @@ namespace ExamplePlugin
                 }
             }
 
+            // Fury - increase critical strike damage by 20%
+            if (attackerBody.HasBuff(Buffs.furyBuff))
+            {
+                if (damageInfo.crit)
+                {
+                    damageInfo.damage *= 1.2f;
+                }
+            }
+
             // Original code
             orig(self, damageInfo);
         }
