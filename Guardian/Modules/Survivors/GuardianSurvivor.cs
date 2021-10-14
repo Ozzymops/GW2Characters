@@ -45,23 +45,54 @@ namespace GuardianPlugin.Modules.Survivors
         internal static Material guardianMat = Modules.Assets.CreateMaterial("matGuardian");
         internal static Material maceMat = Modules.Assets.CreateMaterial("matMace");
         internal static Material shieldMat = Modules.Assets.CreateMaterial("matShield");
+        internal static Material armorMat = Modules.Assets.CreateMaterial("matArmor");
         internal override int mainRendererIndex { get; set; } = 2;
 
         internal override CustomRendererInfo[] customRendererInfos { get; set; } = new CustomRendererInfo[] {
                 new CustomRendererInfo
                 {
-                    childName = "meshMace",
+                    childName = "Mace",
                     material = maceMat,
                 },
                 new CustomRendererInfo
                 {
-                    childName = "meshShield",
+                    childName = "Shield",
                     material = shieldMat,
                 },
                 new CustomRendererInfo
                 {
-                    childName = "meshGuardian",
+                    childName = "Head",
                     material = guardianMat
+                },
+                new CustomRendererInfo
+                {
+                    childName = "Torso",
+                    material = armorMat
+                },
+                new CustomRendererInfo
+                {
+                    childName = "Helmet",
+                    material = armorMat
+                },
+                new CustomRendererInfo
+                {
+                    childName = "Arm.L",
+                    material = armorMat
+                },
+                new CustomRendererInfo
+                {
+                    childName = "Arm.R",
+                    material = armorMat
+                },
+                new CustomRendererInfo
+                {
+                    childName = "Leg.L",
+                    material = armorMat
+                },
+                new CustomRendererInfo
+                {
+                    childName = "Leg.R",
+                    material = armorMat
                 }};
 
         internal override Type characterMainState { get; set; } = typeof(EntityStates.GenericCharacterMain);
@@ -358,46 +389,27 @@ namespace GuardianPlugin.Modules.Survivors
 
         internal override void InitializeSkins()
         {
-            //GameObject model = bodyPrefab.GetComponentInChildren<ModelLocator>().modelTransform.gameObject;
-            //CharacterModel characterModel = model.GetComponent<CharacterModel>();
+            GameObject model = bodyPrefab.GetComponentInChildren<ModelLocator>().modelTransform.gameObject;
+            CharacterModel characterModel = model.GetComponent<CharacterModel>();
 
-            //ModelSkinController skinController = model.AddComponent<ModelSkinController>();
-            //ChildLocator childLocator = model.GetComponent<ChildLocator>();
+            ModelSkinController skinController = model.AddComponent<ModelSkinController>();
+            ChildLocator childLocator = model.GetComponent<ChildLocator>();
 
-            //SkinnedMeshRenderer mainRenderer = characterModel.mainSkinnedMeshRenderer;
+            SkinnedMeshRenderer mainRenderer = characterModel.mainSkinnedMeshRenderer;
 
-            //CharacterModel.RendererInfo[] defaultRenderers = characterModel.baseRendererInfos;
+            CharacterModel.RendererInfo[] defaultRenderers = characterModel.baseRendererInfos;
 
-            //List<SkinDef> skins = new List<SkinDef>();
+            List<SkinDef> skins = new List<SkinDef>();
 
-            //#region Core
-            //SkinDef coreSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_CORE_SKIN_NAME",
-            //    Assets.mainAssetBundle.LoadAsset<Sprite>("texCharacterIconCore"),
-            //    defaultRenderers,
-            //    mainRenderer,
-            //    model);
+            #region Core
+            SkinDef coreSkin = Modules.Skins.CreateSkinDef(GuardianPlugin.developerPrefix + "_GUARDIAN_BODY_CORE_SKIN_NAME",
+                Assets.mainAssetBundle.LoadAsset<Sprite>("texCharacterIconCore"),
+                defaultRenderers,
+                mainRenderer,
+                model);
 
-            //coreSkin.meshReplacements = new SkinDef.MeshReplacement[]
-            //{
-            //    new SkinDef.MeshReplacement
-            //    {
-            //        mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenrySword"),
-            //        renderer = defaultRenderers[0].renderer
-            //    },
-            //    new SkinDef.MeshReplacement
-            //    {
-            //        mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenryGun"),
-            //        renderer = defaultRenderers[1].renderer
-            //    },
-            //    new SkinDef.MeshReplacement
-            //    {
-            //        mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshHenry"),
-            //        renderer = defaultRenderers[instance.mainRendererIndex].renderer
-            //    }
-            //};
-
-            //skins.Add(coreSkin);
-            //#endregion
+            skins.Add(coreSkin);
+            #endregion
 
             //#region Dragonhunter
             //Material dragonhunterMat = Modules.Assets.CreateMaterial("matHenryAlt");
@@ -501,7 +513,7 @@ namespace GuardianPlugin.Modules.Survivors
             //skins.Add(willbenderSkin);
             //#endregion
 
-            //skinController.skins = skins.ToArray();
+            skinController.skins = skins.ToArray();
         }
 
         internal override void SetItemDisplays()
