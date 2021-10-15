@@ -8,159 +8,191 @@ namespace Guardian.Modules.Guardian
 {
     public class GuardianHUD : MonoBehaviour
     {
-        private bool activateHUD;
-        private int hudType;
+        private bool activateScript;
+
+        private enum HUDType { Core, Dragonhunter, Firebrand, Willbender };
+        private HUDType hudType = HUDType.Core;
+        private string[] prefabName = new string[] { "GuardianHUD_Core", "GuardianHUD_Dragonhunter", "GuardianHUD_Firebrand", "GuardianHUD_Willbender" };
+
         private HUD hud;
         private VirtueController virtueController;
         private GameObject customHUD;
 
-        private Image justiceSlot;
-        private Image resolveSlot;
-        private Image courageSlot;
+        #region Images/Texts
+        private Color visibleTextColor = new Color(Color.white.r, Color.white.g, Color.white.b, 1f);
+        private Color transparentTextColor = new Color(Color.white.r, Color.white.g, Color.white.b, 0f);
+
+        private Image justiceFill;
+        private Image resolveFill;
+        private Image courageFill;
         private Text justiceText;
         private Text resolveText;
         private Text courageText;
+
+        #region Special
+        private Image dhFill;
+        private Image fbFill;
+        private Image wbFill;
+        private Text dhText;
+        private Text fbText;
+        private Text wbText;
+        #endregion
+        
+        #endregion
 
         private void Awake()
         {
             if (GetComponent<CharacterBody>().baseNameToken.Contains("GUARDIAN"))
             {
-                hudType = 0;
-                hud = this.GetComponent<HUD>();
+                activateScript = true;              
+            }
+
+            if (activateScript)
+            {
+                Debug.Log("GW2 GuardianHUD: Guardian player detected, enabling custom HUD.");
+
+                hud = GetComponent<HUD>();
                 virtueController = GetComponent<VirtueController>();
 
-                if (virtueController == null)
-                {
-                    Debug.LogError("GuardianHUD: no virtue controller found!");
-                }
-
-                activateHUD = true;
-                Debug.LogWarning("Enabled guardian HUD.");
-
-                On.RoR2.UI.HUD.Awake += BuildHUD;
+                On.RoR2.UI.HUD.Awake += CreateHUD;
                 On.RoR2.UI.HUD.Update += UpdateHUD;
             }
         }
 
         private void OnDestroy()
         {
-            On.RoR2.UI.HUD.Awake -= BuildHUD;
+            On.RoR2.UI.HUD.Awake -= CreateHUD;
             On.RoR2.UI.HUD.Update -= UpdateHUD;
         }
 
-        public void BuildHUD(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
+        private void CreateHUD(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
         {
             orig(self);
             hud = self;
 
-            string prefabString = "";
-
             switch (hudType)
             {
-                case 0: // Core
-                    prefabString = "GuardianHUDCore";
+                case HUDType.Core:
+                    customHUD = Instantiate(GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<GameObject>(prefabName[0]), hud.mainContainer.transform);
+                    Debug.Log("GW2 GuardianHUD: Core HUD loaded.");
                     break;
 
-                case 1: // DH
-                    prefabString = "GuardianHUDDH";
+                case HUDType.Dragonhunter:
+                    customHUD = Instantiate(GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<GameObject>(prefabName[1]), hud.mainContainer.transform);
+                    Debug.Log("GW2 GuardianHUD: Dragonhunter HUD loaded.");
+                    break;
+
+                case HUDType.Firebrand:
+                    customHUD = Instantiate(GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<GameObject>(prefabName[2]), hud.mainContainer.transform);
+                    Debug.Log("GW2 GuardianHUD: Firebrand HUD loaded.");
+                    break;
+
+                case HUDType.Willbender:
+                    customHUD = Instantiate(GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<GameObject>(prefabName[3]), hud.mainContainer.transform);
+                    Debug.Log("GW2 GuardianHUD: Willbender HUD loaded.");
+                    break;
+
+                default:
+                    customHUD = Instantiate(GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<GameObject>(prefabName[0]), hud.mainContainer.transform);
+                    Debug.Log("GW2 GuardianHUD: HUDType was not set correctly, defaulting to Core HUD.");
                     break;
             }
 
-            customHUD = Instantiate(GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<GameObject>(prefabString), hud.mainContainer.transform);
-
-            justiceSlot = customHUD.transform.GetChild(1).GetChild(0).GetComponent<Image>();
-            resolveSlot = customHUD.transform.GetChild(2).GetChild(0).GetComponent<Image>();
-            courageSlot = customHUD.transform.GetChild(3).GetChild(0).GetComponent<Image>();
-            justiceText = customHUD.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Text>();
-            resolveText = customHUD.transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<Text>();
-            courageText = customHUD.transform.GetChild(3).GetChild(0).GetChild(0).GetComponent<Text>();
+            justiceFill = customHUD.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>();
+            resolveFill = customHUD.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Image>();
+            courageFill = customHUD.transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<Image>();
+            justiceText = customHUD.transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<Text>();
+            resolveText = customHUD.transform.GetChild(1).GetChild(0).GetChild(1).GetComponent<Text>();
+            courageText = customHUD.transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<Text>();
         }
 
-        public void UpdateHUD(On.RoR2.UI.HUD.orig_Update orig, RoR2.UI.HUD self)
+        private void UpdateHUD(On.RoR2.UI.HUD.orig_Update orig, RoR2.UI.HUD self)
         {
             orig(self);
 
-            bool[] virtueBools = virtueController.GetBools();
-            float[] virtueFloats = virtueController.GetCooldowns();
+            bool[] virtuesActivated = virtueController.GetBools();
+            float[] virtueCooldowns = virtueController.GetCooldowns();
 
-            if (virtueBools.Length != 3)
+            #region General
+
+            #region Justice
+            if (virtuesActivated[0])
             {
-                Debug.LogWarning("[UpdateHUD] virtueBools did not return three booleans!");
-            }
-
-            if (virtueFloats.Length != 6)
-            {
-                Debug.LogWarning("[UpdateHUD] virtueFloats did not return six floats!");
-            }
-
-            // Justice
-            if (virtueBools[0])
-            {
-                justiceText.color = new Color(Color.white.r, Color.white.g, Color.white.b, 1f);
-
-                if (virtueFloats[0] <= 4f)
-                {
-                    justiceText.text = virtueFloats[0].ToString("0.0");
-                }
-                else
-                {
-                    justiceText.text = virtueFloats[0].ToString("0");
-                }
-          
-                justiceSlot.fillAmount = 1f - (virtueFloats[0] / virtueFloats[1]);
+                justiceText.color = visibleTextColor;
+                justiceText.text = HandleCooldownText(virtueCooldowns[0]);
+                justiceFill.fillAmount = HandleFillAmount(virtueCooldowns[0], virtueCooldowns[1]);
             }
             else
             {
-                justiceText.color = new Color(Color.white.r, Color.white.g, Color.white.b, 0f);
+                justiceText.color = transparentTextColor;
                 justiceText.text = "0";
-                justiceSlot.fillAmount = 1f;
+                justiceFill.fillAmount = 1f;
             }
+            #endregion
 
-            // Resolve
-            if (virtueBools[1])
+            #region Resolve
+            if (virtuesActivated[1])
             {
-                resolveText.color = new Color(Color.white.r, Color.white.g, Color.white.b, 1f);
-
-                if (virtueFloats[2] <= 4f)
-                {
-                    resolveText.text = virtueFloats[2].ToString("0.0");
-                }
-                else
-                {
-                    resolveText.text = virtueFloats[2].ToString("0");
-                }
-
-                resolveSlot.fillAmount = 1f - (virtueFloats[2] / virtueFloats[3]);
+                resolveText.color = visibleTextColor;
+                resolveText.text = HandleCooldownText(virtueCooldowns[2]);
+                resolveFill.fillAmount = HandleFillAmount(virtueCooldowns[2], virtueCooldowns[3]);
             }
             else
             {
-                resolveText.color = new Color(Color.white.r, Color.white.g, Color.white.b, 0f);
+                resolveText.color = transparentTextColor;
                 resolveText.text = "0";
-                resolveSlot.fillAmount = 1f;
+                resolveFill.fillAmount = 1f;
             }
+            #endregion
 
-            // Courage
-            if (virtueBools[2])
+            #region Courage
+            if (virtuesActivated[2])
             {
-                courageText.color = new Color(Color.white.r, Color.white.g, Color.white.b, 1f);
-
-                if (virtueFloats[4] <= 4f)
-                {
-                    courageText.text = virtueFloats[4].ToString("0.0");
-                }
-                else
-                {
-                    courageText.text = virtueFloats[4].ToString("0");
-                }
-
-                courageSlot.fillAmount = 1f - (virtueFloats[4] / virtueFloats[5]);
+                courageText.color = visibleTextColor;
+                courageText.text = HandleCooldownText(virtueCooldowns[4]);
+                courageFill.fillAmount = HandleFillAmount(virtueCooldowns[4], virtueCooldowns[5]);
             }
             else
             {
-                courageText.color = new Color(Color.white.r, Color.white.g, Color.white.b, 0f);
+                courageText.color = transparentTextColor;
                 courageText.text = "0";
-                courageSlot.fillAmount = 1f;
+                courageFill.fillAmount = 1f;
             }
+            #endregion
+
+            #endregion
+
+            #region Special
+            if (hudType == HUDType.Dragonhunter)
+            {
+                // get Hunter's Verdict cooldown
+            }
+            else if (hudType == HUDType.Firebrand)
+            {
+                // get Tome charges
+            }
+            else if (hudType == HUDType.Willbender)
+            {
+                
+            }
+            #endregion
+        }
+
+        private string HandleCooldownText(float cooldown)
+        {
+            if (cooldown <= 3.0f)
+            {
+                return cooldown.ToString("0.0");
+            }
+            else
+            {
+                return cooldown.ToString("0");
+            }
+        }
+
+        private float HandleFillAmount(float cooldown, float maxCooldown)
+        {
+            return (1f - (cooldown / maxCooldown));
         }
     }
 }
