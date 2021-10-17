@@ -16,6 +16,7 @@ namespace Guardian.Modules.Guardian
 
         private HUD hud;
         private VirtueController virtueController;
+        private TraitController traitController;
         private GameObject customHUD;
 
         #region Images/Texts
@@ -29,13 +30,20 @@ namespace Guardian.Modules.Guardian
         private Text resolveText;
         private Text courageText;
 
+        private Image adeptTrait;
+        private Image masterTrait;
+        private Image grandmasterTrait;
+
         #region Special
-        private Image dhFill;
-        private Image fbFill;
-        private Image wbFill;
-        private Text dhText;
-        private Text fbText;
-        private Text wbText;
+        private Image dhPullBack;
+        private Image dhPullFill;
+        private Text dhPullText;
+
+        private Image[] fbTomePulseAnim;
+        private Image fbChargesBack;
+        private Image fbChargesFill;
+
+        private Image[] wbEmanatingVirtuePulseAnim;
         #endregion
         
         #endregion
@@ -53,9 +61,60 @@ namespace Guardian.Modules.Guardian
 
                 hud = GetComponent<HUD>();
                 virtueController = GetComponent<VirtueController>();
+                traitController = GetComponent<TraitController>();
 
                 On.RoR2.UI.HUD.Awake += CreateHUD;
                 On.RoR2.UI.HUD.Update += UpdateHUD;
+            }
+        }
+
+        private void Update()
+        {
+            // DEBUGGING
+            if (hudType == HUDType.Firebrand)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha4))
+                {
+                    fbTomePulseAnim[0].enabled = true;
+                    fbTomePulseAnim[1].enabled = true;
+                    fbTomePulseAnim[2].enabled = true;
+                    fbTomePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                    fbTomePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                    fbTomePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                }
+
+                if (Input.GetKeyDown(KeyCode.Alpha5))
+                {
+                    fbTomePulseAnim[0].enabled = false;
+                    fbTomePulseAnim[1].enabled = false;
+                    fbTomePulseAnim[2].enabled = false;
+                    fbTomePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                    fbTomePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                    fbTomePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                }
+            }
+
+            if (hudType == HUDType.Willbender)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha4))
+                {
+                    wbEmanatingVirtuePulseAnim[0].enabled = true;
+                    wbEmanatingVirtuePulseAnim[1].enabled = true;
+                    wbEmanatingVirtuePulseAnim[2].enabled = true;
+                    wbEmanatingVirtuePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                    wbEmanatingVirtuePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                    wbEmanatingVirtuePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                }
+
+                if (Input.GetKeyDown(KeyCode.Alpha5))
+                {
+                    wbEmanatingVirtuePulseAnim[0].enabled = false;
+                    wbEmanatingVirtuePulseAnim[1].enabled = false;
+                    wbEmanatingVirtuePulseAnim[2].enabled = false;
+                    wbEmanatingVirtuePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                    wbEmanatingVirtuePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                    wbEmanatingVirtuePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                }
             }
         }
 
@@ -79,16 +138,35 @@ namespace Guardian.Modules.Guardian
 
                 case HUDType.Dragonhunter:
                     customHUD = Instantiate(GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<GameObject>(prefabName[1]), hud.mainContainer.transform);
+                    dhPullBack = customHUD.transform.GetChild(0).GetChild(1).GetChild(0).GetComponent<Image>();
+                    dhPullFill = customHUD.transform.GetChild(0).GetChild(1).GetChild(1).GetComponent<Image>();
+                    dhPullText = customHUD.transform.GetChild(0).GetChild(1).GetChild(2).GetComponent<Text>();
                     Debug.Log("GW2 GuardianHUD: Dragonhunter HUD loaded.");
                     break;
 
                 case HUDType.Firebrand:
                     customHUD = Instantiate(GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<GameObject>(prefabName[2]), hud.mainContainer.transform);
+                    fbTomePulseAnim = new Image[] { customHUD.transform.GetChild(0).GetChild(0).GetChild(3).GetComponent<Image>(),
+                                                    customHUD.transform.GetChild(0).GetChild(1).GetChild(3).GetComponent<Image>(),
+                                                    customHUD.transform.GetChild(0).GetChild(2).GetChild(3).GetComponent<Image>() };
+                    fbChargesBack = customHUD.transform.GetChild(0).GetChild(3).GetChild(0).GetComponent<Image>();
+                    fbChargesFill = customHUD.transform.GetChild(0).GetChild(3).GetChild(1).GetComponent<Image>();
+
+                    fbTomePulseAnim[0].enabled = false;
+                    fbTomePulseAnim[1].enabled = false;
+                    fbTomePulseAnim[2].enabled = false;
+                    fbTomePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                    fbTomePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                    fbTomePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+
                     Debug.Log("GW2 GuardianHUD: Firebrand HUD loaded.");
                     break;
 
                 case HUDType.Willbender:
                     customHUD = Instantiate(GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<GameObject>(prefabName[3]), hud.mainContainer.transform);
+                    wbEmanatingVirtuePulseAnim = new Image[] { customHUD.transform.GetChild(0).GetChild(0).GetChild(3).GetComponent<Image>(),
+                                                               customHUD.transform.GetChild(0).GetChild(1).GetChild(3).GetComponent<Image>(),
+                                                               customHUD.transform.GetChild(0).GetChild(2).GetChild(3).GetComponent<Image>() };
                     Debug.Log("GW2 GuardianHUD: Willbender HUD loaded.");
                     break;
 
@@ -98,12 +176,16 @@ namespace Guardian.Modules.Guardian
                     break;
             }
 
-            justiceFill = customHUD.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>();
-            resolveFill = customHUD.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Image>();
-            courageFill = customHUD.transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<Image>();
-            justiceText = customHUD.transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<Text>();
-            resolveText = customHUD.transform.GetChild(1).GetChild(0).GetChild(1).GetComponent<Text>();
-            courageText = customHUD.transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<Text>();
+            justiceFill = customHUD.transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<Image>();
+            resolveFill = customHUD.transform.GetChild(0).GetChild(1).GetChild(1).GetComponent<Image>();
+            courageFill = customHUD.transform.GetChild(0).GetChild(2).GetChild(1).GetComponent<Image>();
+            justiceText = customHUD.transform.GetChild(0).GetChild(0).GetChild(2).GetComponent<Text>();
+            resolveText = customHUD.transform.GetChild(0).GetChild(1).GetChild(2).GetComponent<Text>();
+            courageText = customHUD.transform.GetChild(0).GetChild(2).GetChild(2).GetComponent<Text>();
+
+            adeptTrait = customHUD.transform.GetChild(1).GetChild(0).GetComponent<Image>();
+            masterTrait = customHUD.transform.GetChild(1).GetChild(1).GetComponent<Image>();
+            grandmasterTrait = customHUD.transform.GetChild(1).GetChild(2).GetComponent<Image>();
         }
 
         private void UpdateHUD(On.RoR2.UI.HUD.orig_Update orig, RoR2.UI.HUD self)
@@ -112,6 +194,8 @@ namespace Guardian.Modules.Guardian
 
             bool[] virtuesActivated = virtueController.GetBools();
             float[] virtueCooldowns = virtueController.GetCooldowns();
+
+            bool[] traitsActivated = traitController.GetTraits();
 
             #region General
 
@@ -165,15 +249,54 @@ namespace Guardian.Modules.Guardian
             #region Special
             if (hudType == HUDType.Dragonhunter)
             {
+                // if tethered, show Hunter's Verdict
                 // get Hunter's Verdict cooldown
+                // will hide for now :)
+                dhPullBack.enabled = false;
+                dhPullFill.enabled = false;
+                dhPullText.enabled = false;
             }
             else if (hudType == HUDType.Firebrand)
             {
                 // get Tome charges
+                // if in Tome, fill charges and drain charges
+                // not handled with fill! will be handled with sizing
+                // whill hide for now :)
+                fbChargesBack.enabled = true;
+                fbChargesFill.enabled = true;
             }
             else if (hudType == HUDType.Willbender)
             {
                 
+            }
+            #endregion
+
+            #region Traits
+            if (traitsActivated[0])
+            {
+                adeptTrait.enabled = true;
+            }
+            else
+            {
+                adeptTrait.enabled = false;
+            }
+
+            if (traitsActivated[1])
+            {
+                masterTrait.enabled = true;
+            }
+            else
+            {
+                masterTrait.enabled = false;
+            }
+
+            if (traitsActivated[2])
+            {
+                grandmasterTrait.enabled = true;
+            }
+            else
+            {
+                grandmasterTrait.enabled = false;
             }
             #endregion
         }
