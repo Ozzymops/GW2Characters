@@ -31,8 +31,11 @@ namespace Guardian.Modules.Guardian
         private Text courageText;
 
         private Image adeptTrait;
+        private Image adeptTraitFill;
         private Image masterTrait;
+        private Image masterTraitFill;
         private Image grandmasterTrait;
+        private Image grandmasterTraitFill;
 
         #region Special
         private Image dhPullBack;
@@ -50,7 +53,7 @@ namespace Guardian.Modules.Guardian
 
         private void Awake()
         {
-            if (GetComponent<CharacterBody>().baseNameToken.Contains("GUARDIAN"))
+            if (GetComponent<CharacterBody>().baseNameToken.StartsWith("OZZ"))
             {
                 activateScript = true;              
             }
@@ -70,52 +73,55 @@ namespace Guardian.Modules.Guardian
 
         private void Update()
         {
-            // DEBUGGING
-            if (hudType == HUDType.Firebrand)
+            if (activateScript)
             {
-                if (Input.GetKeyDown(KeyCode.Alpha4))
+                // DEBUGGING
+                if (hudType == HUDType.Firebrand)
                 {
-                    fbTomePulseAnim[0].enabled = true;
-                    fbTomePulseAnim[1].enabled = true;
-                    fbTomePulseAnim[2].enabled = true;
-                    fbTomePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
-                    fbTomePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
-                    fbTomePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                    if (Input.GetKeyDown(KeyCode.Alpha4))
+                    {
+                        fbTomePulseAnim[0].enabled = true;
+                        fbTomePulseAnim[1].enabled = true;
+                        fbTomePulseAnim[2].enabled = true;
+                        fbTomePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                        fbTomePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                        fbTomePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.Alpha5))
+                    {
+                        fbTomePulseAnim[0].enabled = false;
+                        fbTomePulseAnim[1].enabled = false;
+                        fbTomePulseAnim[2].enabled = false;
+                        fbTomePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                        fbTomePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                        fbTomePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                    }
                 }
 
-                if (Input.GetKeyDown(KeyCode.Alpha5))
+                if (hudType == HUDType.Willbender)
                 {
-                    fbTomePulseAnim[0].enabled = false;
-                    fbTomePulseAnim[1].enabled = false;
-                    fbTomePulseAnim[2].enabled = false;
-                    fbTomePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
-                    fbTomePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
-                    fbTomePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
-                }
-            }
+                    if (Input.GetKeyDown(KeyCode.Alpha4))
+                    {
+                        wbEmanatingVirtuePulseAnim[0].enabled = true;
+                        wbEmanatingVirtuePulseAnim[1].enabled = true;
+                        wbEmanatingVirtuePulseAnim[2].enabled = true;
+                        wbEmanatingVirtuePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                        wbEmanatingVirtuePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                        wbEmanatingVirtuePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                    }
 
-            if (hudType == HUDType.Willbender)
-            {
-                if (Input.GetKeyDown(KeyCode.Alpha4))
-                {
-                    wbEmanatingVirtuePulseAnim[0].enabled = true;
-                    wbEmanatingVirtuePulseAnim[1].enabled = true;
-                    wbEmanatingVirtuePulseAnim[2].enabled = true;
-                    wbEmanatingVirtuePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
-                    wbEmanatingVirtuePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
-                    wbEmanatingVirtuePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Pulse", 0, 0f);
+                    if (Input.GetKeyDown(KeyCode.Alpha5))
+                    {
+                        wbEmanatingVirtuePulseAnim[0].enabled = false;
+                        wbEmanatingVirtuePulseAnim[1].enabled = false;
+                        wbEmanatingVirtuePulseAnim[2].enabled = false;
+                        wbEmanatingVirtuePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                        wbEmanatingVirtuePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                        wbEmanatingVirtuePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
+                    }
                 }
-
-                if (Input.GetKeyDown(KeyCode.Alpha5))
-                {
-                    wbEmanatingVirtuePulseAnim[0].enabled = false;
-                    wbEmanatingVirtuePulseAnim[1].enabled = false;
-                    wbEmanatingVirtuePulseAnim[2].enabled = false;
-                    wbEmanatingVirtuePulseAnim[0].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
-                    wbEmanatingVirtuePulseAnim[1].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
-                    wbEmanatingVirtuePulseAnim[2].GetComponent<Animator>().Play("Base Layer.Idle", 0, 0f);
-                }
-            }
+            }          
         }
 
         private void OnDestroy()
@@ -133,6 +139,8 @@ namespace Guardian.Modules.Guardian
             {
                 case HUDType.Core:
                     customHUD = Instantiate(GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<GameObject>(prefabName[0]), hud.mainContainer.transform);
+                    adeptTraitFill = customHUD.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Image>();
+                    masterTraitFill = customHUD.transform.GetChild(1).GetChild(1).GetChild(0).GetComponent<Image>();
                     Debug.Log("GW2 GuardianHUD: Core HUD loaded.");
                     break;
 
@@ -186,25 +194,46 @@ namespace Guardian.Modules.Guardian
             adeptTrait = customHUD.transform.GetChild(1).GetChild(0).GetComponent<Image>();
             masterTrait = customHUD.transform.GetChild(1).GetChild(1).GetComponent<Image>();
             grandmasterTrait = customHUD.transform.GetChild(1).GetChild(2).GetComponent<Image>();
+
+            adeptTrait.enabled = false;
+            masterTrait.enabled = false;
+            grandmasterTrait.enabled = false;
+
+            if (adeptTraitFill)
+            {
+                adeptTraitFill.enabled = false;
+            }
+
+            if (masterTraitFill)
+            {
+                masterTraitFill.enabled = false;
+            }
+
+            if (grandmasterTraitFill)
+            {
+                grandmasterTraitFill.enabled = false;
+            }
         }
 
         private void UpdateHUD(On.RoR2.UI.HUD.orig_Update orig, RoR2.UI.HUD self)
         {
             orig(self);
 
-            bool[] virtuesActivated = virtueController.GetBools();
-            float[] virtueCooldowns = virtueController.GetCooldowns();
+            bool[] virtues = virtueController.GetActivatedVirtues();
+            float[] virtueCD = virtueController.GetCooldowns();
 
-            bool[] traitsActivated = traitController.GetTraits();
+            bool[] traits = traitController.GetTraits();
+            bool[] traitsCon = traitController.GetConditionalTraits();
+            float[] traitsCD = traitsCD = traitController.GetCooldowns();
 
             #region General
 
             #region Justice
-            if (virtuesActivated[0])
+            if (!virtues[0])
             {
                 justiceText.color = visibleTextColor;
-                justiceText.text = HandleCooldownText(virtueCooldowns[0]);
-                justiceFill.fillAmount = HandleFillAmount(virtueCooldowns[0], virtueCooldowns[1]);
+                justiceText.text = HandleCooldownText(virtueCD[0]);
+                justiceFill.fillAmount = HandleFillAmount(virtueCD[0], virtueCD[1]);
             }
             else
             {
@@ -215,11 +244,11 @@ namespace Guardian.Modules.Guardian
             #endregion
 
             #region Resolve
-            if (virtuesActivated[1])
+            if (!virtues[1])
             {
                 resolveText.color = visibleTextColor;
-                resolveText.text = HandleCooldownText(virtueCooldowns[2]);
-                resolveFill.fillAmount = HandleFillAmount(virtueCooldowns[2], virtueCooldowns[3]);
+                resolveText.text = HandleCooldownText(virtueCD[2]);
+                resolveFill.fillAmount = HandleFillAmount(virtueCD[2], virtueCD[3]);
             }
             else
             {
@@ -230,11 +259,11 @@ namespace Guardian.Modules.Guardian
             #endregion
 
             #region Courage
-            if (virtuesActivated[2])
+            if (!virtues[2])
             {
                 courageText.color = visibleTextColor;
-                courageText.text = HandleCooldownText(virtueCooldowns[4]);
-                courageFill.fillAmount = HandleFillAmount(virtueCooldowns[4], virtueCooldowns[5]);
+                courageText.text = HandleCooldownText(virtueCD[4]);
+                courageFill.fillAmount = HandleFillAmount(virtueCD[4], virtueCD[5]);
             }
             else
             {
@@ -272,31 +301,61 @@ namespace Guardian.Modules.Guardian
             #endregion
 
             #region Traits
-            if (traitsActivated[0])
+            if (traits[0])
             {
                 adeptTrait.enabled = true;
-            }
-            else
-            {
-                adeptTrait.enabled = false;
+
+                if (adeptTraitFill)
+                {
+                    adeptTraitFill.enabled = true;
+
+                    if (!traitsCon[0])
+                    {
+                        adeptTraitFill.fillAmount = HandleFillAmount(traitsCD[0], traitsCD[1]);
+                    }
+                    else
+                    {
+                        adeptTraitFill.fillAmount = 1f;
+                    }
+                }
             }
 
-            if (traitsActivated[1])
+            if (traits[1])
             {
                 masterTrait.enabled = true;
-            }
-            else
-            {
-                masterTrait.enabled = false;
+
+                if (masterTraitFill)
+                {
+                    masterTraitFill.enabled = true;
+
+                    if (!traitsCon[1])
+                    {
+                        masterTraitFill.fillAmount = HandleFillAmount(traitsCD[2], traitsCD[3]);
+                    }
+                    else
+                    {
+                        masterTraitFill.fillAmount = 1f;
+                    }
+                }
             }
 
-            if (traitsActivated[2])
+            if (traits[2])
             {
                 grandmasterTrait.enabled = true;
-            }
-            else
-            {
-                grandmasterTrait.enabled = false;
+
+                if (grandmasterTraitFill)
+                {
+                    grandmasterTraitFill.enabled = true;
+
+                    if (!traitsCon[2])
+                    {
+                        grandmasterTraitFill.fillAmount = HandleFillAmount(traitsCD[4], traitsCD[5]);
+                    }
+                    else
+                    {
+                        grandmasterTraitFill.fillAmount = 1f;
+                    }
+                }
             }
             #endregion
         }

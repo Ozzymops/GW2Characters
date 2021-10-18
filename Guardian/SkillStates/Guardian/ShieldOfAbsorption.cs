@@ -1,4 +1,5 @@
 ﻿using EntityStates;
+using Guardian.Modules.Guardian;
 using R2API.Utils;
 using RoR2;
 using RoR2.Projectile;
@@ -96,6 +97,11 @@ namespace GuardianPlugin.SkillStates
             shieldObject.GetComponent<Guardian.Modules.SkillHelpers.ShieldBubble>().SetState(2);
 
             base.characterBody.ClearTimedBuffs(Modules.Buffs.shieldOfAbsorptionBuff);
+
+            if (NetworkServer.active && base.characterBody.GetComponent<TraitController>().GetTrait(2) && base.characterBody.GetComponent<TraitController>().GetTraitType() == 0)
+            {
+                base.characterBody.healthComponent.HealFraction(0.025f, new ProcChainMask());
+            }
         }
 
         public override InterruptPriority GetMinimumInterruptPriority()

@@ -135,6 +135,11 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+    <Folder Include="SkillStates\Guardian\Special\" />
+    <Folder Include="SkillStates\Guardian\Utility\" />
+    <Folder Include="SkillStates\Guardian\Secondary\" />
+    <Folder Include="SkillStates\Guardian\Primary\" />
+    <Folder Include="SkillStates\Guardian\Virtue\" />
   </ItemGroup>
 
   <ItemGroup>

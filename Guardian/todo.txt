@@ -1,4 +1,5 @@
 [GUARDIAN - CORE]
+- Fix Virtues / UI
 - Add virtue visual and sound effects
 
 - Skill: Shield of Absorption - engineer shield, but parented to Guardian, pulses Aegis to allies inside

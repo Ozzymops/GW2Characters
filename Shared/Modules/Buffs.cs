@@ -53,5 +53,31 @@ namespace SharedPlugin.Modules
 
             return buffDef;
         }
+
+        public static void HandleTimedBuffs(BuffDef buffDef, CharacterBody body, int maxStacks)
+        {
+            int buffCount = 0;
+            float buffTimer = 0f;
+
+            foreach (CharacterBody.TimedBuff buff in body.timedBuffs)
+            {
+                if (buff.buffIndex == buffDef.buffIndex)
+                {
+                    if (buffTimer > buff.timer || buffTimer == 0f)
+                    {
+                        buffTimer = buff.timer;
+                    }
+
+                    buffCount++;
+                }
+            }
+
+            body.ClearTimedBuffs(buffDef);
+
+            for (int i = 1; i < buffCount; i++)
+            {
+                body.AddTimedBuff(buffDef, buffTimer, maxStacks);
+            }
+        }
     }
 }

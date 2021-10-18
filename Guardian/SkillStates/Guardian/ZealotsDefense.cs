@@ -1,8 +1,10 @@
 ﻿using EntityStates;
+using Guardian.Modules.Guardian;
 using RoR2;
 using RoR2.Projectile;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace GuardianPlugin.SkillStates
 {
@@ -42,6 +44,11 @@ namespace GuardianPlugin.SkillStates
         public override void OnExit()
         {
             base.OnExit();
+
+            if (NetworkServer.active && base.characterBody.GetComponent<TraitController>().GetTrait(2) && base.characterBody.GetComponent<TraitController>().GetTraitType() == 0)
+            {
+                base.characterBody.healthComponent.HealFraction(0.025f, new ProcChainMask());
+            }
         }
 
         private void Fire()

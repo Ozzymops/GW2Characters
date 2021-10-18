@@ -20,6 +20,7 @@ namespace GuardianPlugin.Modules
         internal const float coreSecondaryDamageCoefficient = 2.0f;
         internal const float coreUtilityCoefficient = 1.25f;
         internal const float coreSpecialCoefficient = 1.25f;
+        internal const float coreShatteredAegisCoefficient = 1f;
 
         // Dragonhunter
         internal const float dhPrimaryDamageCoefficient = 2.0f;

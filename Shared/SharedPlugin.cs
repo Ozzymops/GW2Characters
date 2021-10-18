@@ -81,57 +81,42 @@ namespace ExamplePlugin
                 }
 
                 // Torment - DoT, inflicts extra damage if moving
+                if (self.HasBuff(Buffs.tormentDebuff))
+                {
+
+                }
             }
         }
 
         public void HealthComponent_Shared_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
-
-            // Aegis - negate an attack
-            if (self.body.HasBuff(Buffs.aegisBuff))
+            // Aegis
+            if (self.body.HasBuff(Buffs.aegisBuff) && damageInfo.damageType != DamageType.DoT && damageInfo.damageType != DamageType.VoidDeath)
             {
-                if (damageInfo.damageType != DamageType.DoT && damageInfo.damageType != DamageType.VoidDeath)
-                {
-                    // Clear and reapply Aegis stacks minus one
-                    ClearAndReapplyTimedBuffs(Buffs.aegisBuff, self.body, 5);
+                Buffs.HandleTimedBuffs(Buffs.aegisBuff, self.body, 5);
 
-                    // "Blocked!" effect
-                    EffectData effectData = new EffectData { origin = damageInfo.position, rotation = Util.QuaternionSafeLookRotation((damageInfo.force != Vector3.zero ? damageInfo.force : Random.onUnitSphere)) };
-                    EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/BearProc"), effectData, true);
+                EffectData effectData = new EffectData { origin = damageInfo.position, rotation = Util.QuaternionSafeLookRotation((damageInfo.force != Vector3.zero ? damageInfo.force : Random.onUnitSphere)) };
+                EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/BearProc"), effectData, true);
 
-                    damageInfo.rejected = true;
-                }
+                damageInfo.rejected = true;
             }
 
-            // Protection - reduce incoming strike damage by 33%
-            if (self.body.HasBuff(Buffs.protectionBuff))
+            // Protection
+            if (self.body.HasBuff(Buffs.protectionBuff) && damageInfo.damageType != DamageType.DoT && damageInfo.damageType != DamageType.VoidDeath)
             {
-                if (damageInfo.damageType != DamageType.DoT && damageInfo.damageType != DamageType.VoidDeath)
-                {
-                    damageInfo.damage *= 0.66f;
-                }
+                damageInfo.damage *= 0.66f;
             }
 
-            // Might - increase outgoing strike damage by 2% up to 50% at 25 stacks
-            if (attackerBody.HasBuff(Buffs.mightBuff))
-            {
-                damageInfo.damage *= (1f + (0.02f * attackerBody.GetBuffCount(Buffs.mightBuff)));
-            }
-
-            // Vulnerability - increase incoming strike damage by 2% up to 50% at 25 stacks
+            // Vulnerability
             if (self.body.HasBuff(Buffs.vulnerabilityDebuff))
             {
-                if (damageInfo.damageType != DamageType.DoT && damageInfo.damageType != DamageType.VoidDeath)
-                {
-                    damageInfo.damage *= (1f + (0.02f * self.body.GetBuffCount(Buffs.vulnerabilityDebuff)));
-                }
+                damageInfo.damage *= (1f + (0.02f * self.body.GetBuffCount(Buffs.vulnerabilityDebuff))); // 0% - 50%
             }
 
-            // Weakness - 50% chance at "Glancing Blows", dealing 50% reduced damage that cannot critically strike
-            if (attackerBody.HasBuff(Buffs.weaknessDebuff))
+            // Weakness
+            if (damageInfo.attacker.GetComponent<CharacterBody>().HasBuff(Buffs.mightBuff))
             {
-                bool glancingBlow = Util.CheckRoll(50, attackerBody.master);
+                bool glancingBlow = Util.CheckRoll(50, damageInfo.attacker.GetComponent<CharacterBody>().master);
 
                 if (glancingBlow)
                 {
@@ -140,8 +125,14 @@ namespace ExamplePlugin
                 }
             }
 
-            // Fury - increase critical strike damage by 20%
-            if (attackerBody.HasBuff(Buffs.furyBuff))
+            // Might
+            if (damageInfo.attacker.GetComponent<CharacterBody>().HasBuff(Buffs.mightBuff))
+            {
+                damageInfo.damage *= (1f + (0.02f * damageInfo.attacker.GetComponent<CharacterBody>().GetBuffCount(Buffs.mightBuff))); // 0% - 50%
+            }
+
+            // Fury
+            if (damageInfo.attacker.GetComponent<CharacterBody>().HasBuff(Buffs.furyBuff))
             {
                 if (damageInfo.crit)
                 {
@@ -149,34 +140,7 @@ namespace ExamplePlugin
                 }
             }
 
-            // Original code
             orig(self, damageInfo);
-        }
-
-        private void ClearAndReapplyTimedBuffs(BuffDef buffDef, CharacterBody body, int maxStacks)
-        {
-            int buffCount = 0;
-            float buffTimer = 0f;
-
-            foreach (CharacterBody.TimedBuff buff in body.timedBuffs)
-            {
-                if (buff.buffIndex == buffDef.buffIndex)
-                {
-                    if (buffTimer > buff.timer || buffTimer == 0f)
-                    {
-                        buffTimer = buff.timer;
-                    }
-
-                    buffCount++;
-                }
-            }
-
-            body.ClearTimedBuffs(buffDef);
-
-            for (int i = 1; i < buffCount; i++)
-            {
-                body.AddTimedBuff(buffDef, buffTimer, maxStacks);
-            }
         }
     }
 }

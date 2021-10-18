@@ -11,186 +11,277 @@ namespace Guardian.Modules.Guardian
 {
     public class VirtueController : MonoBehaviour
     {
-        private bool scriptEnabled;
+        private bool activateScript;
 
+        private enum VirtueType { Core, Dragonhunter, Firebrand, Willbender };
+        private VirtueType virtueType = VirtueType.Core;
         private CharacterBody characterBody;
-        private HealthComponent healthComponent;
 
-        private float virtueRadius = 15f;
+        #region Shared
+        private bool justice;
+        private bool resolve;
+        private bool courage;
 
-        private int hitsForJustice;
-        private int hitsUntilJustice = 2;
-        private bool justiceActive;
-        private float justiceCooldown = 15f;
-        private float justiceCooldownTimer;
+        private float justiceTimer;
+        private float justiceCooldown;
+        private float resolveTimer;
+        private float resolveCooldown;
+        private float courageTimer;
+        private float courageCooldown;
+        #endregion
 
-        private float passiveResolveInterval = 2f;
-        private float passiveResolveIntervalTimer;
-        private float passiveResolveHeal = 2.5f;
-        private float activeResolveHeal = 15f;
-        private bool resolveActive;
-        private float resolveCooldown = 20f;
-        private float resolveCooldownTimer;
+        #region Core Virtues
+        private float core_areaRadius = 15f;
 
-        private float passiveCourageInterval = 10f;
-        private float passiveCourageIntervalTimer;
-        private int activeCourageCount;
-        private int activeCourageCountMax = 4;
-        private bool courageActive;
-        private float courageCooldown = 30f;
-        private float courageCooldownTimer;
+        private float core_justiceCooldown = 10f;
+        private float core_hitsUntilJustice;
+        private float core_hitsForJustice = 2;
+
+        private float core_resolveCooldown = 20f;
+        private float core_passiveResolveHealPercent = 2f;
+        private float core_passiveResolveTimer;
+        private float core_passiveResolveCooldown = 2f;
+        private float core_activeResolveHealPercent = 15f;
+
+        private float core_courageCooldown = 30f;
+        private float core_passiveCourageTimer;
+        private float core_passiveCourageCooldown = 10f;
+        private int core_activeCourageStacksCurrent;
+        private int core_activeCourageStacksMax = 4;
+        #endregion
 
         private void Awake()
         {
-            characterBody = GetComponent<CharacterBody>();
-            healthComponent = GetComponent<HealthComponent>();
-
-            if (characterBody.baseNameToken.Contains("GUARDIAN"))
+            if (GetComponent<CharacterBody>().baseNameToken.StartsWith("OZZ"))
             {
-                hitsForJustice = 0;
-                passiveResolveIntervalTimer = passiveResolveInterval;
-                passiveCourageIntervalTimer = passiveCourageInterval;
-                activeCourageCount = activeCourageCountMax;
+                activateScript = true;
+            }
 
-                justiceCooldownTimer = justiceCooldown;
-                resolveCooldownTimer = resolveCooldown;
-                courageCooldownTimer = courageCooldown;
+            if (activateScript)
+            {
+                Debug.Log("GW2 VirtueController: Guardian player detected, enabling Virtues.");
 
-                scriptEnabled = true;
+                characterBody = GetComponent<CharacterBody>();
 
-                On.RoR2.HealthComponent.TakeDamage += HealthComponent_Guardian_TakeDamage;
+                // check Virtue type from Passive
+
+                switch (virtueType)
+                {
+                    case VirtueType.Core:
+                        justiceCooldown = core_justiceCooldown;
+                        resolveCooldown = core_resolveCooldown;
+                        courageCooldown = core_courageCooldown;
+
+                        core_activeCourageStacksCurrent = core_activeCourageStacksMax;
+                        break;
+
+                    default:
+                        // default to Core
+                        justiceCooldown = core_justiceCooldown;
+                        resolveCooldown = core_resolveCooldown;
+                        courageCooldown = core_courageCooldown;
+
+                        core_activeCourageStacksCurrent = core_activeCourageStacksMax;
+                        break;
+                }
+
+                justice = true;
+                resolve = true;
+                courage = true;
+
+                justiceTimer = justiceCooldown;
+                resolveTimer = resolveCooldown;
+                courageTimer = courageCooldown;
+
+                core_hitsUntilJustice = 0;
+
+                core_passiveResolveTimer = core_passiveResolveCooldown;
+                core_passiveCourageTimer = core_passiveCourageCooldown;
+
+                On.RoR2.HealthComponent.TakeDamage += AegisBuff;
+                On.RoR2.HealthComponent.TakeDamage += JusticeBuff;
             }
         }
 
         private void OnDestroy()
         {
-            On.RoR2.HealthComponent.TakeDamage -= HealthComponent_Guardian_TakeDamage;
+            On.RoR2.HealthComponent.TakeDamage -= AegisBuff;
+            On.RoR2.HealthComponent.TakeDamage -= JusticeBuff;
         }
 
         private void Update()
         {
-            if (scriptEnabled)
+            if (activateScript)
             {
-                Controls();
-                Cooldowns();
-                PassiveEffects();
+                #region Passive Effects
+                if (justice)
+                {
+                    if (core_hitsUntilJustice > core_hitsForJustice)
+                    {
+                        Virtue_Justice_Core(1, false);
+                        core_hitsUntilJustice = 0;
+                    }
+                }
+
+                if (resolve)
+                {
+                    core_passiveResolveTimer -= 1f * Time.deltaTime;
+
+                    if (core_passiveResolveTimer <= 0)
+                    {
+                        Virtue_Resolve_Core(core_passiveResolveHealPercent, false);
+                        core_passiveResolveTimer = core_passiveResolveCooldown;
+                    }
+                }
+
+                if (courage)
+                {
+                    core_passiveCourageTimer -= 1f * Time.deltaTime;
+
+                    if (core_passiveCourageTimer <= 0)
+                    {
+                        Virtue_Courage_Core(false);
+                        core_passiveCourageTimer = core_passiveCourageCooldown;
+                    }
+                }
+                #endregion
+
+                #region Cooldowns
+                if (!justice)
+                {
+                    justiceTimer -= 1f * Time.deltaTime;
+
+                    if (justiceTimer <= 0f)
+                    {
+                        switch (virtueType)
+                        {
+                            case VirtueType.Core:
+                                core_hitsForJustice = 0;
+                                break;
+
+                            default:
+                                break;
+                        }
+
+                        justice = true;
+                        justiceTimer = justiceCooldown;
+                    }
+                }
+
+                if (!resolve)
+                {
+                    resolveTimer -= 1f * Time.deltaTime;
+
+                    if (resolveTimer <= 0f)
+                    {
+                        switch (virtueType)
+                        {
+                            case VirtueType.Core:
+                                core_passiveResolveTimer = 0f;
+                                break;
+
+                            default:
+                                break;
+                        }
+
+                        resolve = true;
+                        resolveTimer = resolveCooldown;
+                    }
+                }
+
+                if (!courage)
+                {
+                    courageTimer -= 1f * Time.deltaTime;
+
+                    if (virtueType == VirtueType.Core)
+                    {
+                        if (core_activeCourageStacksCurrent > 0)
+                        {
+                            core_passiveCourageTimer -= 1f * Time.deltaTime;
+
+                            if (core_passiveCourageTimer <= 0)
+                            {
+                                Virtue_Courage_Core(true);
+                                core_passiveCourageTimer = .5f;
+                                core_activeCourageStacksCurrent--;
+                            }
+                        }
+                        else
+                        {
+                            courageTimer -= 1f * Time.deltaTime;
+                        }
+                    }
+                    else
+                    {
+                        courageTimer -= 1f * Time.deltaTime;
+                    }
+
+                    if (courageTimer <= 0f)
+                    {
+                        switch (virtueType)
+                        {
+                            case VirtueType.Core:
+                                core_passiveCourageTimer = 0f;
+                                break;
+
+                            default:
+                                break;
+                        }
+
+                        courage = true;
+                        courageTimer = courageCooldown;
+                    }
+                }
+                #endregion
+
+                #region Controls
+                if (Input.GetKey(KeyCode.Alpha1) && justice)
+                {
+                    if (virtueType == VirtueType.Core)
+                    {
+                        // Play sound
+                        // Play UI animation
+                        Virtue_Justice_Core(5, true);
+                    }
+
+                    justice = false;
+                }
+
+                if (Input.GetKey(KeyCode.Alpha2) && resolve)
+                {
+                    if (virtueType == VirtueType.Core)
+                    {
+                        // Play sound
+                        // Play UI animation
+                        Virtue_Resolve_Core(core_activeResolveHealPercent, true);
+                    }
+
+                    resolve = false;
+                }
+
+                if (Input.GetKey(KeyCode.Alpha3) && courage)
+                {
+                    if (virtueType == VirtueType.Core)
+                    {
+                        // Play sound
+                        // Play UI animation
+                        core_passiveCourageTimer = 0f;
+                        core_activeCourageStacksCurrent = core_activeCourageStacksMax;
+                    }
+
+                    courage = false;
+                }
+                #endregion
             }
         }
 
-        private void Controls()
+        #region Justice Functions
+        public void Virtue_Justice_Core(int stacks, bool isArea)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1) && !justiceActive)
-            {
-                Util.PlaySound("PlayJusticeActivation", characterBody.gameObject);
-                ApplyJustice(5, true);
-                justiceActive = true;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha2) && !resolveActive)
-            {
-                Util.PlaySound("PlayResolveActivation", characterBody.gameObject);
-                ApplyResolve(activeResolveHeal, true);
-                resolveActive = true;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha3) && !courageActive)
-            {
-                courageActive = true;
-                passiveCourageIntervalTimer = 0f;
-            }
-        }
-
-        private void Cooldowns()
-        {
-            if (justiceActive)
-            {
-                justiceCooldownTimer -= 1f * Time.deltaTime;
-
-                if (justiceCooldownTimer <= 0)
-                {
-                    hitsForJustice = 0;
-                    justiceActive = false;
-                    justiceCooldownTimer = justiceCooldown;
-                }
-            }
-
-            if (resolveActive)
-            {
-                resolveCooldownTimer -= 1f * Time.deltaTime;
-
-                if (resolveCooldownTimer <= 0)
-                {
-                    passiveResolveIntervalTimer = passiveResolveInterval;
-                    resolveActive = false;
-                    resolveCooldownTimer = resolveCooldown;
-                }
-            }
-
-            if (courageActive)
-            {
-                courageCooldownTimer -= 1f * Time.deltaTime;
-
-                if (courageCooldownTimer <= 0)
-                {
-                    passiveCourageIntervalTimer = passiveCourageInterval;
-                    activeCourageCount = activeCourageCountMax;
-                    courageActive = false;
-                    courageCooldownTimer = courageCooldown;
-                }
-            }
-        }
-
-        private void PassiveEffects()
-        {
-            if (!justiceActive)
-            {
-                if (hitsForJustice + 1 > hitsUntilJustice)
-                {
-                    hitsForJustice = 0;
-                    ApplyJustice(1, false);
-                }
-            }
-
-            if (!resolveActive)
-            {
-                passiveResolveIntervalTimer -= 1f * Time.deltaTime;
-
-                if (passiveResolveIntervalTimer <= 0)
-                {
-                    passiveResolveIntervalTimer = passiveResolveInterval;
-                    ApplyResolve(passiveResolveHeal, false);
-                }
-            }
-
-            if (courageActive)
-            {
-                passiveCourageIntervalTimer -= 1f * Time.deltaTime;
-
-                if (passiveCourageIntervalTimer <= 0 && activeCourageCount > 0)
-                {
-                    passiveCourageIntervalTimer = 1f;
-                    activeCourageCount--;
-                    ApplyCourage(false);
-                }
-            }
-            else
-            {
-                passiveCourageIntervalTimer -= 1f * Time.deltaTime;
-
-                if (passiveCourageIntervalTimer <= 0)
-                {
-                    passiveCourageIntervalTimer = passiveCourageInterval;
-                    ApplyCourage(false);
-                }
-            }
-        }
-
-        private void ApplyJustice(int stacks, bool aoe)
-        {
-            if (aoe)
+            if (isArea)
             {
                 List<HurtBox> hurtBoxes = new List<HurtBox>();
-                hurtBoxes = new SphereSearch { radius = virtueRadius, mask = LayerIndex.entityPrecise.mask, origin = transform.position }
+                hurtBoxes = new SphereSearch { radius = core_areaRadius, mask = LayerIndex.entityPrecise.mask, origin = transform.position }
                     .RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.all).FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes().ToList();
 
                 foreach (HurtBox hurtBox in hurtBoxes)
@@ -199,7 +290,7 @@ namespace Guardian.Modules.Guardian
                     {
                         for (int i = 0; i < stacks; i++)
                         {
-                            hurtBox.healthComponent.body.AddTimedBuff(GuardianPlugin.Modules.Buffs.justiceBuff, 9.9f, 5);
+                            hurtBox.healthComponent.body.AddTimedBuff(GuardianPlugin.Modules.Buffs.justiceBuff, 10f, 5);
                         }
                     }
                 }
@@ -208,19 +299,57 @@ namespace Guardian.Modules.Guardian
             {
                 for (int i = 0; i < stacks; i++)
                 {
-                    characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.justiceBuff, 9.9f, 5);
+                    characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.justiceBuff, 10f, 5);
                 }
             }
         }
 
-        private void ApplyResolve(float percent, bool aoe)
+        public void Virtue_Justice_Core_Increment()
         {
-            percent /= 100;      
+            if (justice)
+            {
+                core_hitsUntilJustice++;
+            }
+        }
 
-            if (aoe)
+        public void Virtue_Justice_Core_Renew()
+        {
+            if (!justice)
+            {
+                justiceTimer = 0f;
+            }
+        }
+
+        private void Virtue_Justice_DH()
+        {
+            // Spear of Justice
+        }
+
+        private void Virtue_Justice_DH_Pull()
+        {
+            // Hunter's Verdict
+        }
+
+        private void Virtue_Justice_FB()
+        {
+            // swap to Tome of Justice
+        }
+
+        private void Virtue_Justice_WB()
+        {
+            // Rushing Justice
+        }
+        #endregion
+
+        #region Resolve Functions
+        public void Virtue_Resolve_Core(float percent, bool isArea)
+        {
+            percent /= 100;
+
+            if (isArea)
             {
                 List<HurtBox> hurtBoxes = new List<HurtBox>();
-                hurtBoxes = new SphereSearch { radius = virtueRadius, mask = LayerIndex.entityPrecise.mask, origin = transform.position }
+                hurtBoxes = new SphereSearch { radius = core_areaRadius, mask = LayerIndex.entityPrecise.mask, origin = transform.position }
                     .RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.all).FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes().ToList();
 
                 foreach (HurtBox hurtBox in hurtBoxes)
@@ -233,152 +362,151 @@ namespace Guardian.Modules.Guardian
             }
             else
             {
-                healthComponent.HealFraction(percent, new ProcChainMask());
+                characterBody.healthComponent.HealFraction(percent, new ProcChainMask());
             }
         }
 
-        private void ApplyCourage(bool aoe)
-        {          
-            // Test
+        private void Virtue_Resolve_DH()
+        {
+            // Wings of Resolve
+        }
+
+        private void Virtue_Resolve_FB()
+        {
+            // swap to Tome of Resolve
+        }
+
+        private void Virtue_Resolve_WB()
+        {
+            // Flowing Resolve
+        }
+        #endregion
+
+        #region Courage Functions
+        public void Virtue_Courage_Core(bool isArea)
+        {
             if (SharedPluginWrapper.enabled)
             {
-                characterBody.AddTimedBuff(SharedPlugin.Modules.Buffs.aegisBuff, 10f, 5);
-            }
+                if (isArea)
+                {
+                    List<HurtBox> hurtBoxes = new List<HurtBox>();
+                    hurtBoxes = new SphereSearch { radius = core_areaRadius, mask = LayerIndex.entityPrecise.mask, origin = transform.position }
+                        .RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.all).FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes().ToList();
 
-            //if (aoe)
-            //{
-            //    List<HurtBox> hurtBoxes = new List<HurtBox>();
-            //    hurtBoxes = new SphereSearch { radius = virtueRadius, mask = LayerIndex.entityPrecise.mask, origin = transform.position }
-            //        .RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.all).FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes().ToList();
-
-            //    foreach (HurtBox hurtBox in hurtBoxes)
-            //    {
-            //        if (hurtBox.healthComponent.body && hurtBox.healthComponent.body.teamComponent.teamIndex == TeamIndex.Player)
-            //        {
-            //            hurtBox.healthComponent.body.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
-            //        }
-            //    }
-            //}      
-            //else
-            //{
-            //    Util.PlaySound("PlayCourageActivation", characterBody.gameObject);
-            //    characterBody.AddTimedBuff(GuardianPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
-            //}
-        }
-
-        public void IncrementJustice()
-        {
-            if (!justiceActive)
-            {
-                hitsForJustice++;
+                    foreach (HurtBox hurtBox in hurtBoxes)
+                    {
+                        if (hurtBox.healthComponent.body && hurtBox.healthComponent.body.teamComponent.teamIndex == TeamIndex.Player)
+                        {
+                            hurtBox.healthComponent.body.AddTimedBuff(SharedPlugin.Modules.Buffs.aegisBuff, 10f, 5);
+                        }
+                    }
+                }
+                else
+                {
+                    characterBody.AddTimedBuff(SharedPlugin.Modules.Buffs.aegisBuff, 10f, 5);
+                }
             }
         }
 
-        public void RenewJustice()
+        private void Virtue_Courage_DH()
         {
-            if (justiceActive)
-            {
-                justiceCooldownTimer = 0f;
-            }
+            // Shield of Courage
         }
 
-        public void ReduceCooldownsAndIntervals()
+        private void Virtue_Courage_FB()
         {
-            justiceCooldown *= 0.66f;
-            resolveCooldown *= 0.66f;
-            courageCooldown *= 0.66f;
-
-            passiveResolveInterval *= 0.66f;
-            passiveCourageInterval *= 0.66f;
-
-            justiceCooldownTimer = 0f;
-            resolveCooldownTimer = 0f;
-            courageCooldownTimer = 0f;
+            // swap to Tome of Courage
         }
 
-        /// <summary>
-        /// Get VirtueController active virtues
-        /// </summary>
-        /// <returns>justice, resolve, courage</returns>
-        public bool[] GetBools()
+        private void Virtue_Courage_WB()
         {
-            return new bool[] { justiceActive, resolveActive, courageActive };
+            // Crashing Courage
+        }
+        #endregion
+
+        public bool[] GetActivatedVirtues()
+        {
+            return new bool[] { justice, resolve, courage };
         }
 
-        /// <summary>
-        /// Get current and maximum VirtueController cooldowns
-        /// </summary>
-        /// <returns>justice timer, justice cooldown, resolve timer, resolve cooldown, courage timer, courage cooldown</returns>
         public float[] GetCooldowns()
         {
-            return new float[] { justiceCooldownTimer, justiceCooldown, resolveCooldownTimer, resolveCooldown, courageCooldownTimer, courageCooldown };
+            return new float[] { justiceTimer, justiceCooldown, resolveTimer, resolveCooldown, courageTimer, courageCooldown };
         }
 
+        #region Hooks
 
-        public void HealthComponent_Guardian_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        private void AegisBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            // Justice - deal 15% increased damage and inflict burning
+            if (self.body.baseNameToken.StartsWith("OZZ") && SharedPluginWrapper.enabled && self.body.GetComponent<TraitController>().GetTrait(0) &&
+                self.body.HasBuff(SharedPlugin.Modules.Buffs.aegisBuff) && damageInfo.damageType != DamageType.DoT && damageInfo.damageType != DamageType.VoidDeath)
+            {
+                DamageInfo shatteredAegisInfo = new DamageInfo();
+                shatteredAegisInfo.damage = self.body.damage * GuardianPlugin.Modules.StaticValues.coreShatteredAegisCoefficient;
+                shatteredAegisInfo.attacker = self.gameObject;
+                shatteredAegisInfo.inflictor = self.gameObject;
+                shatteredAegisInfo.force = Vector3.zero;
+                shatteredAegisInfo.crit = false;
+                shatteredAegisInfo.procCoefficient = 0f;
+                shatteredAegisInfo.damageType = DamageType.BypassArmor;
+
+                List<HurtBox> hurtBoxes = new List<HurtBox>();
+                hurtBoxes = new SphereSearch { radius = 5f, mask = LayerIndex.entityPrecise.mask, origin = self.transform.position }
+                    .RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.all).FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes().ToList();
+
+                foreach (HurtBox hurtBox in hurtBoxes)
+                {
+                    if (hurtBox.healthComponent.body && hurtBox.healthComponent.body.teamComponent.teamIndex != TeamIndex.Player)
+                    {
+                        shatteredAegisInfo.position = hurtBox.transform.position;
+                        GlobalEventManager.instance.OnHitEnemy(shatteredAegisInfo, hurtBox.gameObject);
+                        GlobalEventManager.instance.OnHitAll(shatteredAegisInfo, hurtBox.gameObject);
+
+                        hurtBox.healthComponent.TakeDamage(shatteredAegisInfo);
+                    }
+                }
+            }
+
+            orig(self, damageInfo);
+
+            if (self.body.baseNameToken.StartsWith("OZZ") && SharedPluginWrapper.enabled && self.body.GetComponent<TraitController>().GetTrait(0) && self.body.GetComponent<TraitController>().GetConditionalTrait(0) && self.isHealthLow)
+            {
+                self.GetComponent<TraitController>().Core_AegisCooldown();
+                self.GetComponent<VirtueController>().Virtue_Courage_Core(false);
+            }
+        }
+
+        private void JusticeBuff(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        {
             if (damageInfo.attacker.GetComponent<CharacterBody>().HasBuff(GuardianPlugin.Modules.Buffs.justiceBuff) && damageInfo.damageType != DamageType.DoT)
             {
-                // Clear and reapply stacks
-                ClearAndReapplyTimedBuffs(GuardianPlugin.Modules.Buffs.justiceBuff, damageInfo.attacker.GetComponent<CharacterBody>(), 5);
+                SharedPlugin.Modules.Buffs.HandleTimedBuffs(GuardianPlugin.Modules.Buffs.justiceBuff, damageInfo.attacker.GetComponent<CharacterBody>(), 5);
 
-                // Visual Effect
-
-                // Extra damage & burning
-                damageInfo.damage *= 1.15f;
                 damageInfo.damageType = DamageType.IgniteOnHit;
-            }
 
-            if (damageInfo.attacker.GetComponent<CharacterBody>().baseNameToken.Contains("GUARDIAN"))
+                if (damageInfo.attacker.GetComponent<CharacterBody>().baseNameToken.StartsWith("OZZ") && damageInfo.attacker.GetComponent<TraitController>().GetTrait(1))
+                {
+                    damageInfo.damage *= 1.15f;
+                }
+            }
+            else if (damageInfo.attacker.GetComponent<CharacterBody>().baseNameToken.StartsWith("OZZ"))
             {
-                // Justice stacks
                 if (damageInfo.damageType != DamageType.DoT)
                 {
-                    damageInfo.attacker.GetComponent<VirtueController>().IncrementJustice();
-                }
-
-                // Renewed Justice
-                if (!self.alive && damageInfo.attacker.GetComponent<TraitController>().GetTraits()[1])
-                {
-                    damageInfo.attacker.GetComponent<VirtueController>().RenewJustice();
+                    damageInfo.attacker.GetComponent<VirtueController>().Virtue_Justice_Core_Increment();
                 }
             }
 
-            // Original code
             orig(self, damageInfo);
-        }
 
-        /// <summary>
-        /// Remove and reapply all stacks minus one of a certain timed buff
-        /// </summary>
-        /// <param name="buffDef"></param>
-        /// <param name="body"></param>
-        /// <param name="maxStacks"></param>
-        private void ClearAndReapplyTimedBuffs(BuffDef buffDef, CharacterBody body, int maxStacks)
-        {
-            int buffCount = 0;
-            float buffTimer = 0f;
-
-            foreach (CharacterBody.TimedBuff buff in body.timedBuffs)
+            if (damageInfo.attacker.GetComponent<CharacterBody>().baseNameToken.StartsWith("OZZ") && damageInfo.attacker.GetComponent<TraitController>().GetTrait(1) &&
+                damageInfo.attacker.GetComponent<TraitController>().GetConditionalTrait(1) && !damageInfo.attacker.GetComponent<VirtueController>().GetActivatedVirtues()[0] && !self.alive)
             {
-                if (buff.buffIndex == buffDef.buffIndex)
-                {
-                    if (buffTimer > buff.timer || buffTimer == 0f)
-                    {
-                        buffTimer = buff.timer;
-                    }
-
-                    buffCount++;
-                }
-            }
-
-            body.ClearTimedBuffs(buffDef);
-
-            for (int i = 1; i < buffCount; i++)
-            {
-                body.AddTimedBuff(buffDef, buffTimer, maxStacks);
+                damageInfo.attacker.GetComponent<TraitController>().Core_JusticeCooldown();
+                damageInfo.attacker.GetComponent<VirtueController>().Virtue_Justice_Core_Renew();
             }
         }
+
+        #endregion
     }
 }
