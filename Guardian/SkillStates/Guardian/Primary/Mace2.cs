@@ -1,9 +1,10 @@
 ﻿using GuardianPlugin.SkillStates.BaseStates;
+using GuardianPlugin.SkillStates.Primary;
 using RoR2;
 using RoR2.Skills;
 using UnityEngine;
 
-namespace GuardianPlugin.SkillStates
+namespace GuardianPlugin.SkillStates.Primary
 {
     public class Mace2 : BaseMeleeAttack
     {

@@ -144,7 +144,7 @@ namespace GuardianPlugin.Modules.Survivors
             string prefix = GuardianPlugin.developerPrefix;
 
             #region Primary
-            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.Mace1)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_NAME", prefix + "_GUARDIAN_BODY_PRIMARY_DESCRIPTION", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore1"), true));
+            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.Primary.Mace1)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_NAME", prefix + "_GUARDIAN_BODY_PRIMARY_DESCRIPTION", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore1"), true));
             Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.Shoot)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_NAME_DH", prefix + "_GUARDIAN_BODY_PRIMARY_DESCRIPTION_DH", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryDH"), true));
             #endregion
 
@@ -155,7 +155,7 @@ namespace GuardianPlugin.Modules.Survivors
                 skillNameToken = prefix + "_GUARDIAN_BODY_SECONDARY_NAME",
                 skillDescriptionToken = prefix + "_GUARDIAN_BODY_SECONDARY_DESCRIPTION",
                 skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texSecondaryCore"),
-                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.ZealotsDefense)),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Secondary.ZealotsDefense)),
                 activationStateMachineName = "Weapon",
                 baseMaxStock = 1,
                 baseRechargeInterval = 4f,
@@ -207,7 +207,7 @@ namespace GuardianPlugin.Modules.Survivors
                 skillNameToken = prefix + "_GUARDIAN_BODY_UTILITY_NAME",
                 skillDescriptionToken = prefix + "_GUARDIAN_BODY_UTILITY_DESCRIPTION",
                 skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texUtilityCore"),
-                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.ShieldOfAbsorption)),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Utility.ShieldOfAbsorption)),
                 activationStateMachineName = "Weapon",
                 baseMaxStock = 1,
                 baseRechargeInterval = 8f,

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace GuardianPlugin.SkillStates
+namespace GuardianPlugin.SkillStates.Secondary
 {
     public class ZealotsDefense : BaseSkillState
     {

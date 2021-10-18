@@ -1,4 +1,5 @@
 ﻿using GuardianPlugin.SkillStates;
+using GuardianPlugin.SkillStates.Primary;
 using GuardianPlugin.SkillStates.BaseStates;
 using System.Collections.Generic;
 using System;

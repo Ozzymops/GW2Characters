@@ -1,5 +1,5 @@
 ﻿using GuardianPlugin;
-using GuardianPlugin.SkillStates;
+using GuardianPlugin.SkillStates.Primary;
 using EntityStates;
 using RoR2;
 using RoR2.Skills;

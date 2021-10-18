@@ -8,7 +8,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace GuardianPlugin.SkillStates
+namespace GuardianPlugin.SkillStates.Utility
 {
     public class ShieldOfAbsorption : BaseSkillState
     {
