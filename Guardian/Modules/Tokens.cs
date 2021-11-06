@@ -86,29 +86,44 @@ namespace GuardianPlugin.Modules
             #endregion
 
             #region Passives
-            // CORE
+
+            #region Virtues
             LanguageAPI.Add(prefix + "PASSIVE_NAME", "Virtues");
             LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION", "<style=cUserSetting>Automatically swaps loadout to Core.</style>\n" +
                                                             $"<style=cSub>Virtue of Justice</style>: gain {StaticValues.virtueCoreActivatedJusticeStacks} stacks of Justice, inflicting <style=cIsDamage>Burning</style> on hit.\n" +
                                                             $"<style=cSub>Virtue of Resolve</style>: regenerate <style=cIsHealing>{StaticValues.virtueCoreActivatedResolveHeal}% health</style> of your and your allies' health and <style=cIsHealing>remove two debuffs</style>.\n" +
                                                             $"<style=cSub>Virtue of Courage</style>: gain {StaticValues.virtueCoreActivatedCourageTicks} stacks of <style=cIsUtility>Aegis</style> over {StaticValues.virtueCoreActivatedCourageTicks * StaticValues.virtueCoreActivatedCourageTimer} seconds.");
 
-            // DH
+            #endregion
+
+            #region Projected Virtues
             LanguageAPI.Add(prefix + "PASSIVE_NAME_DH", "Projected Virtues");
             LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_DH", "<style=cUserSetting>Automatically swaps loadout to Dragonhunter.</style>\n" +
-                                                               $"<style=cSub>Spear of Justice</style>: throw a spear of light, inflicting <style=cIsDamage>{StaticValues.virtueDHSpearDamage}%</style> damage and tethering yourself to enemies, <style=cIsDamage>Burning</style> them every second. Chains into <style=cIsUtility>Hunter's Verdict</style>.\n" +
+                                                               $"<style=cSub>Spear of Justice</style>: throw a spear of light, inflicting <style=cIsDamage>{StaticValues.virtueDHSpearDamage}%</style> damage and tethering yourself to hit targets, <style=cIsDamage>Burning</style> them every second. Chains into <style=cIsUtility>Hunter's Verdict</style>.\n" +
                                                                "<style=cSub>Hunter's Verdict</style>: <style=cIsUtility>pull</style> tethered enemies to your location.\n" +
-                                                               $"<style=cSub>Wings of Resolve</style>: <style=cIsUtility>leap forward</style>, regenerating <style=cIsHealing>{StaticValues.virtueDHWingsHeal}% health</style> and <style=cIsUtility>launching nearby enemies away</style> on landing.\n" +
+                                                               $"<style=cSub>Wings of Resolve</style>: <style=cIsUtility>leap forward</style>, regenerating <style=cIsHealing>{StaticValues.virtueDHWingsHeal}% health</style> and <style=cIsUtility>launching nearby foes away</style> on landing.\n" +
                                                                $"<style=cSub>Shield of Courage</style>: project a shield in front of you, <style=cIsUtility>blocking every attack from the front</style> for {StaticValues.virtueDHShieldDuration} seconds. <style=cIsHealth>You are still vulnerable from the sides and behind</style>.");
 
-            // FB
+            LanguageAPI.Add(prefix + "PASSIVE_NAME_DH_SPEAR", "Spear of Justice");
+            LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_DH_SPEAR", $"Throw a piercing spear of light for <style=cIsDamage>{StaticValues.virtueDHSpearDamage}%</style> damage, <style=cIsUtility>tethering</style> hit targets to you, pulsing <style=cIsDamage>Burning</style> to them.");
+
+            LanguageAPI.Add(prefix + "PASSIVE_NAME_DH_PULL", "Hunter's Verdict");
+            LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_DH_PULL", $"<style=cIsUtility>Pull</style> tethered foes toward you, removing the tether.");
+
+            LanguageAPI.Add(prefix + "PASSIVE_NAME_DH_WINGS", "Wings of Resolve");
+            LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_DH_WINGS", $"<style=cIsUtility>Sprout wings and leap forward</style>, healing yourself and nearby allies for <style=cIsHealing>{StaticValues.virtueDHWingsHeal}%</style> and <style=cIsUtility>launching</style> nearby foes away upon landing.");
+
+            LanguageAPI.Add(prefix + "PASSIVE_NAME_DH_SHIELD", "Shield of Courage");
+            LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_DH_SHIELD", $"<style=cIsUtility>Form a shield in front of you, blocking any attack from the front</style> for {StaticValues.virtueDHShieldDuration} seconds. Inflict <style=cIsDamage>Burning</style> on foes that try to pass through the shield. <style=cIsHealth>You are still vulnerable from the sides and behind.</style>");
+            #endregion
+
+            #region Tomes
             LanguageAPI.Add(prefix + "PASSIVE_NAME_FB", "Tomes of Virtue");
             LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_FB", "<style=cUserSetting>Automatically swaps loadout to Firebrand.</style>\n" + 
                                                                "<style=cSub>Tome of Justice</style>: read from the Tome of Justice, accessing multiple <style=cIsDamage>damaging</style> skills.\n" +
                                                                "<style=cSub>Tome of Resolve</style>: read from the Tome of Resolve, accessing multiple <style=cIsHealing>healing</style> skills.\n" +
                                                                "<style=cSub>Tome of Courage</style>: read from the Tome of Courage, accessing multiple <style=cIsUtility>supportive</style> skills.");
 
-            #region Tomes
             LanguageAPI.Add(prefix + "PRIMARY_NAME_FB_JUSTICETOME", "Chapter 1, Searing Spell");
             LanguageAPI.Add(prefix + "PRIMARY_DESCRIPTION_FB_JUSTICETOME", $"Fueled by tales of the desolation in Istan, incite a great swelling of heat before you, dealing <style=cIsDamage>{StaticValues.virtueFBJusticePrimaryDamage}%</style> damage and inflicting <style=cIsDamage>Burning</style>.");
 
@@ -120,14 +135,48 @@ namespace GuardianPlugin.Modules
 
             LanguageAPI.Add(prefix + "SPECIAL_NAME_FB_JUSTICETOME", "Epilogue, Ashes of the Just");
             LanguageAPI.Add(prefix + "SPECIAL_DESCRIPTION_FB_JUSTICETOME", $"Recall the memory of fallen heroes, granting allies the searing blades of Justice, dealing <style=cIsDamage>{StaticValues.virtueFBJusticeSpecialDamage}%</style> damage and inflicting <style=cIsDamage>Burning</style> around you. <style=cIsUtility>Grant yourself and allies five stacks of Justice</style>.");
+
+            LanguageAPI.Add(prefix + "PRIMARY_NAME_FB_RESOLVETOME", "Chapter 1, Desert Bloom");
+            LanguageAPI.Add(prefix + "PRIMARY_DESCRIPTION_FB_RESOLVETOME", $"Tales of desert blooms create a wave of healing for your allies, healing for <style=cIsHealing>{StaticValues.virtueFBResolvePrimaryHeal}%</style>.");
+
+            LanguageAPI.Add(prefix + "SECONDARY_NAME_FB_RESOLVETOME", "Chapter 2, Radiant Recovery");
+            LanguageAPI.Add(prefix + "SECONDARY_DESCRIPTION_FB_RESOLVETOME", $"Release magic from pages detailing the rebuilding of Vabbi, cleansing <style=cIsHealing>{StaticValues.virtueFBResolveSecondaryCleanses}</style> debuffs on nearby allies. Allies are healed for <style=cIsHealing>{StaticValues.virtueFBResolveSecondaryHeal}%</style> per debuff cleansed.");
+
+            LanguageAPI.Add(prefix + "UTILITY_NAME_FB_RESOLVETOME", "Chapter 3, Azure Sun");
+            LanguageAPI.Add(prefix + "UTILITY_DESCRIPTION_FB_RESOLVETOME", $"Inspired by countless poems describing the comforting powers of the water-reflected sun, grant <style=cIsHealing>Regeneration</style>, <style=cIsUtility>Swiftness</style> and <style=cIsUtility>Protection</style> to your allies.");
+
+            LanguageAPI.Add(prefix + "SPECIAL_NAME_FB_RESOLVETOME", "Epilogue, Eternal Oasis");
+            LanguageAPI.Add(prefix + "SPECIAL_DESCRIPTION_FB_RESOLVETOME", $"Purify your allies with the waters of Amnoon, greatly healing them for <style=cIsHealing>{StaticValues.virtueFBResolveSpecialHeal}%</style> and cleansing all debuffs.");
+
+            LanguageAPI.Add(prefix + "PRIMARY_NAME_FB_COURAGETOME", "Chapter 1, Unfliching Charge");
+            LanguageAPI.Add(prefix + "PRIMARY_DESCRIPTION_FB_COURAGETOME", $"Roused by tales of mythical Sunspear charges, grant <style=cIsUtility>Aegis</style> to nearby allies.");
+
+            LanguageAPI.Add(prefix + "SECONDARY_NAME_FB_COURAGETOME", "Chapter 2, Daring Challenge");
+            LanguageAPI.Add(prefix + "SECONDARY_DESCRIPTION_FB_COURAGETOME", $"As the tales recount of Turai, <style=cIsUtility>pull your enemies towards you</style> by issuing an insightfully inciting challenge, dealing <style=cIsDamage>{StaticValues.virtueFBCourageSecondaryDamage}%</style> damage and inflicting <style=cIsUtility>Torpor</style>.");
+
+            LanguageAPI.Add(prefix + "UTILITY_NAME_FB_COURAGETOME", "Chapter 3, Valiant Bulwark");
+            LanguageAPI.Add(prefix + "UTILITY_DESCRIPTION_FB_COURAGETOME", $"Manifest the shimmering purity of the desert sun by <style=cIsUtility>projecting a projectile-reflecting shield around you</style> for five seconds.");
+
+            LanguageAPI.Add(prefix + "SPECIAL_NAME_FB_COURAGETOME", "Epilogue, Unbroken Lines");
+            LanguageAPI.Add(prefix + "SPECIAL_DESCRIPTION_FB_COURAGETOME", $"Recalling the memory of heroes past, enchant nearby allies with formidable defenses, <style=cIsHealth>resisting death</style> for {StaticValues.virtueFBCourageSpecialInvulnerabilityDuration} seconds.");
             #endregion
 
-            // WB
+            #region Emanating Virtues
             LanguageAPI.Add(prefix + "PASSIVE_NAME_WB", "Emanating Virtues");
             LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_WB", "<style=cUserSetting>Automatically swaps loadout to Willbender.</style>\n" + 
                                                                $"<style=cSub>Rushing Justice</style>: <style=cIsUtility>rush forward</style>, striking your target for <style=cIsDamage>{StaticValues.virtueWBJusticeDamage}%</style> damage and leaving a <style=cIsDamage>claw-shaped pattern of flames</style> under the target.\n" +
                                                                $"<style=cSub>Flowing Resolve</style>: <style=cIsUtility>rush foward, evading attacks</style> while temporarily <style=cIsHealing>{StaticValues.virtueWBResolveHeal}%</style> life-steal from your attacks, leaving a <style=cIsDamage>line of flames</style> in your wake.\n" +
                                                                $"<style=cSub>Crashing Courage</style>: <style=cIsUtility>teleport forward</style> while temporarily gaining <style=cIsUtility>Aegis</style> every three attacks, leaving a <style=cIsDamage>ring of flames</style> after teleporting.");
+
+            LanguageAPI.Add(prefix + "PASSIVE_NAME_WB_RUSH", "Rushing Justice");
+            LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_WB_RUSH", $"<style=cIsUtility>Rush forward</style> and strike your target for <style=cIsDamage>{StaticValues.virtueWBJusticeDamage}%</style> damage, leaving a <style=cIsDamage>claw-shaped pattern of flames</style> under the target for {StaticValues.virtueWBJusticeDuration} seconds.");
+
+            LanguageAPI.Add(prefix + "PASSIVE_NAME_WB_FLOW", "Flowing Resolve");
+            LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_WB_FLOW", $"<style=cIsUtility>Rush forward</style> while evading attacks, gaining a <style=cIsHealing>{StaticValues.virtueWBResolveHeal}%</style> life-steal from attacks and leaving a <style=cIsDamage>line of flames</style> in your wake for {StaticValues.virtueWBResolveDuration} seconds.");
+
+            LanguageAPI.Add(prefix + "PASSIVE_NAME_WB_CRASH", "Crashing Courage");
+            LanguageAPI.Add(prefix + "PASSIVE_DESCRIPTION_WB_CRASH", $"<style=cIsUtility>Teleport towards your target</style> and crash down for <style=cIsDamage>{StaticValues.virtueWBCourageDamage}%</style> damage, gaining <style=cIsUtility>Aegis</style> from attacks and leaving a <style=cIsDamage>ring of fire</style> on your position for {StaticValues.virtueWBCourageDuration} seconds.");
+            #endregion
 
             #endregion
 

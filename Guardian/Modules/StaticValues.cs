@@ -104,6 +104,7 @@ namespace GuardianPlugin.Modules
         #region Emanating Virtues
         internal const float virtueWBJusticeDamage = 200f;
         internal const float virtueWBResolveHeal = 2.5f;
+        internal const float virtueWBCourageDamage = 300f;
         internal const float virtueWBJusticeDuration = 5.0f;
         internal const float virtueWBResolveDuration = 5.0f;
         internal const float virtueWBCourageDuration = 5.0f;

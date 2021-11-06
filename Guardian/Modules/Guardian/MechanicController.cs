@@ -12,7 +12,7 @@ namespace Guardian.Modules.Guardian
 {
     public class MechanicController : MonoBehaviour
     {
-        private bool debugging = true;
+        private bool debugging = false;
 
         private bool setup = false;
         private int eliteSpecialisation = 0;
@@ -36,6 +36,8 @@ namespace Guardian.Modules.Guardian
         #endregion
 
         #region Dragonhunter
+        private bool spearTethered;
+        private SkillDef[] projectedVirtues;
         #endregion
 
         #region Firebrand
@@ -50,6 +52,7 @@ namespace Guardian.Modules.Guardian
         #endregion
 
         #region Willbender
+        private SkillDef[] emanatingVirtues;
         #endregion
 
         public void Setup(int es, CharacterBody cb, AttackChainController ac)
@@ -66,7 +69,6 @@ namespace Guardian.Modules.Guardian
                 {
                     case 0: // Core
                         SetupVirtues();
-                        SetupTomes();
                         break;
 
                     case 1: // Dragonhunter
@@ -96,7 +98,97 @@ namespace Guardian.Modules.Guardian
 
         private void SetupProjectedVirtues()
         {
+            spearTethered = false;
 
+            SkillDef spearOfJusticeSkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_DH_SPEAR",
+                skillNameToken = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_DH_SPEAR",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_PASSIVE_DESCRIPTION_DH_SPEAR",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texJusticeDH1"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Justice.SpearOfJustice)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+
+            SkillDef huntersVerdictSkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_DH_PULL",
+                skillNameToken = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_DH_PULL",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_PASSIVE_DESCRIPTION_DH_PULL",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texJusticeDH2"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Justice.HuntersVerdict)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+
+            SkillDef wingsOfResolveSkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_DH_WINGS",
+                skillNameToken = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_DH_WINGS",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_PASSIVE_DESCRIPTION_DH_WINGS",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texResolveDH"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Resolve.WingsOfResolve)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+
+            SkillDef shieldOfCourageSkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_DH_SHIELD",
+                skillNameToken = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_DH_SHIELD",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_PASSIVE_DESCRIPTION_DH_SHIELD",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texCourageDH"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Courage.ShieldOfCourage)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+
+            projectedVirtues = new SkillDef[] { spearOfJusticeSkillDef, huntersVerdictSkillDef, wingsOfResolveSkillDef, shieldOfCourageSkillDef };
         }
 
         private void SetupTomes()
@@ -112,7 +204,7 @@ namespace Guardian.Modules.Guardian
                 skillNameToken = "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_JUSTICETOME",
                 skillDescriptionToken = "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB_JUSTICETOME",
                 skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texJusticeFB2"),
-                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Primary.Mace1)),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Justice.SearingSpell)),
                 activationStateMachineName = "Weapon",
                 baseMaxStock = 1,
                 baseRechargeInterval = 0f,
@@ -134,7 +226,7 @@ namespace Guardian.Modules.Guardian
                 skillNameToken = "OZZ_GUARDIAN_BODY_SECONDARY_NAME_FB_JUSTICETOME",
                 skillDescriptionToken = "OZZ_GUARDIAN_BODY_SECONDARY_DESCRIPTION_FB_JUSTICETOME",
                 skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texJusticeFB3"),
-                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Primary.Mace1)),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Justice.IgnitingBurst)),
                 activationStateMachineName = "Weapon",
                 baseMaxStock = 1,
                 baseRechargeInterval = 0f,
@@ -156,7 +248,7 @@ namespace Guardian.Modules.Guardian
                 skillNameToken = "OZZ_GUARDIAN_BODY_UTILITY_NAME_FB_JUSTICETOME",
                 skillDescriptionToken = "OZZ_GUARDIAN_BODY_UTILITY_DESCRIPTION_FB_JUSTICETOME",
                 skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texJusticeFB4"),
-                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Primary.Mace1)),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Justice.ScorchedAftermath)),
                 activationStateMachineName = "Weapon",
                 baseMaxStock = 1,
                 baseRechargeInterval = 0f,
@@ -178,7 +270,31 @@ namespace Guardian.Modules.Guardian
                 skillNameToken = "OZZ_GUARDIAN_BODY_SPECIAL_NAME_FB_JUSTICETOME",
                 skillDescriptionToken = "OZZ_GUARDIAN_BODY_SPECIAL_DESCRIPTION_FB_JUSTICETOME",
                 skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texJusticeFB5"),
-                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Primary.Mace1)),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Justice.AshesOfTheJust)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+            #endregion
+
+            #region Tome of Resolve
+            SkillDef tomeResolvePrimarySkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_RESOLVETOME",
+                skillNameToken = "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_RESOLVETOME",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB_RESOLVETOME",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texResolveFB2"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Resolve.DesertBloom)),
                 activationStateMachineName = "Weapon",
                 baseMaxStock = 1,
                 baseRechargeInterval = 0f,
@@ -194,16 +310,240 @@ namespace Guardian.Modules.Guardian
                 stockToConsume = 0
             });
 
+            SkillDef tomeResolveSecondarySkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_SECONDARY_NAME_FB_RESOLVETOME",
+                skillNameToken = "OZZ_GUARDIAN_BODY_SECONDARY_NAME_FB_RESOLVETOME",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_SECONDARY_DESCRIPTION_FB_RESOLVETOME",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texResolveFB3"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Resolve.RadiantRecovery)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+
+            SkillDef tomeResolveUtilitySkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_UTILITY_NAME_FB_RESOLVETOME",
+                skillNameToken = "OZZ_GUARDIAN_BODY_UTILITY_NAME_FB_RESOLVETOME",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_UTILITY_DESCRIPTION_FB_RESOLVETOME",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texResolveFB4"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Resolve.AzureSun)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+
+            SkillDef tomeResolveSpecialSkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_SPECIAL_NAME_FB_RESOLVETOME",
+                skillNameToken = "OZZ_GUARDIAN_BODY_SPECIAL_NAME_FB_RESOLVETOME",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_SPECIAL_DESCRIPTION_FB_RESOLVETOME",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texResolveFB5"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Resolve.EternalOasis)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+            #endregion
+
+            #region Tome of Courage
+            SkillDef tomeCouragePrimarySkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_COURAGETOME",
+                skillNameToken = "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_COURAGETOME",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB_COURAGETOME",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texCourageFB2"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Courage.UnflinchingCharge)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+
+            SkillDef tomeCourageSecondarySkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_SECONDARY_NAME_FB_COURAGETOME",
+                skillNameToken = "OZZ_GUARDIAN_BODY_SECONDARY_NAME_FB_COURAGETOME",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_SECONDARY_DESCRIPTION_FB_COURAGETOME",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texCourageFB3"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Courage.DaringChallenge)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+
+            SkillDef tomeCourageUtilitySkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_UTILITY_NAME_FB_COURAGETOME",
+                skillNameToken = "OZZ_GUARDIAN_BODY_UTILITY_NAME_FB_COURAGETOME",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_UTILITY_DESCRIPTION_FB_COURAGETOME",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texCourageFB4"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Courage.ValiantBulwark)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+
+            SkillDef tomeCourageSpecialSkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_SPECIAL_NAME_FB_COURAGETOME",
+                skillNameToken = "OZZ_GUARDIAN_BODY_SPECIAL_NAME_FB_COURAGETOME",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_SPECIAL_DESCRIPTION_FB_COURAGETOME",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texCourageFB5"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Courage.UnbrokenLines)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+            #endregion
+
             tomeOfJustice = new SkillDef[] { tomeJusticePrimarySkillDef, tomeJusticeSecondarySkillDef, tomeJusticeUtilitySkillDef, tomeJusticeSpecialSkillDef };
+            tomeOfResolve = new SkillDef[] { tomeResolvePrimarySkillDef, tomeResolveSecondarySkillDef, tomeResolveUtilitySkillDef, tomeResolveSpecialSkillDef };
+            tomeOfCourage = new SkillDef[] { tomeCouragePrimarySkillDef, tomeCourageSecondarySkillDef, tomeCourageUtilitySkillDef, tomeCourageSpecialSkillDef };
             
             SkillLocator skillLocator = this.GetComponent<CharacterBody>().skillLocator;
             skillLoadout = new SkillDef[] { skillLocator.primary.skillDef, skillLocator.secondary.skillDef, skillLocator.utility.skillDef, skillLocator.special.skillDef };
-            #endregion
         }
 
         private void SetupEmanatingVirtues()
         {
+            SkillDef rushingJusticeSkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_WB_RUSH",
+                skillNameToken = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_WB_RUSH",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_PASSIVE_DESCRIPTION_WB_RUSH",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texJusticeWB"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Justice.RushingJustice)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
 
+            SkillDef flowingResolveSkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_WB_FLOW",
+                skillNameToken = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_WB_FLOW",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_PASSIVE_DESCRIPTION_WB_FLOW",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texResolveWB"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Resolve.FlowingResolve)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+
+            SkillDef crashingCourageSkillDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_WB_CRASH",
+                skillNameToken = "OZZ_GUARDIAN_BODY_PASSIVE_NAME_WB_CRASH",
+                skillDescriptionToken = "OZZ_GUARDIAN_BODY_PASSIVE_DESCRIPTION_WB_CRASH",
+                skillIcon = Assets.subAssetBundle.LoadAsset<Sprite>("texCourageWB"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(GuardianPlugin.SkillStates.Virtue.Courage.CrashingCourage)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+
+            emanatingVirtues = new SkillDef[] { rushingJusticeSkillDef, flowingResolveSkillDef, crashingCourageSkillDef };
         }
 
         private void Update()

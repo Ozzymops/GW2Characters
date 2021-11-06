@@ -135,8 +135,6 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
-    <Folder Include="SkillStates\Guardian\Special\" />
-    <Folder Include="SkillStates\Guardian\Virtue\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -33,9 +33,9 @@ namespace Guardian.Modules.Guardian
                                                       GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore2"),
                                                       GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore3")};
 
-                        chainSkills = new SkillDef[] { GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace1)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN1", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN1", chainSprites[0], true),
-                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace2)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN2", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN2", chainSprites[1], true),
-                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace3)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN3", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN3", chainSprites[2], true)};
+                        chainSkills = new SkillDef[] { GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(TrueStrike)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN1", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN1", chainSprites[0], true),
+                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(PureStrike)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN2", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN2", chainSprites[1], true),
+                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(FaithfulStrike)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN3", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN3", chainSprites[2], true)};
                         break;
 
                     case 2: // Firebrand
@@ -43,9 +43,9 @@ namespace Guardian.Modules.Guardian
                                                       GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryFB2"),
                                                       GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryFB3")};
 
-                        chainSkills = new SkillDef[] { GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace1)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_CHAIN1", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB_CHAIN1", chainSprites[0], true),
-                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace2)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_CHAIN2", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB_CHAIN2", chainSprites[1], true),
-                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace3)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_CHAIN3", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB_CHAIN3", chainSprites[2], true)};
+                        chainSkills = new SkillDef[] { GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(TrueStrike)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_CHAIN1", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB_CHAIN1", chainSprites[0], true),
+                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(PureStrike)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_CHAIN2", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB_CHAIN2", chainSprites[1], true),
+                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(FaithfulStrike)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_CHAIN3", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB_CHAIN3", chainSprites[2], true)};
                         break;
 
                     case 3: // Willbender
@@ -53,9 +53,9 @@ namespace Guardian.Modules.Guardian
                                                       GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryWB2"),
                                                       GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryWB3")};
 
-                        chainSkills = new SkillDef[] { GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace1)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_WB_CHAIN1", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_WB_CHAIN1", chainSprites[0], true),
-                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace2)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_WB_CHAIN2", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_WB_CHAIN2", chainSprites[1], true),
-                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace3)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_WB_CHAIN3", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_WB_CHAIN3", chainSprites[2], true)};
+                        chainSkills = new SkillDef[] { GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(TrueStrike)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_WB_CHAIN1", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_WB_CHAIN1", chainSprites[0], true),
+                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(PureStrike)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_WB_CHAIN2", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_WB_CHAIN2", chainSprites[1], true),
+                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(FaithfulStrike)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_WB_CHAIN3", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_WB_CHAIN3", chainSprites[2], true)};
                         break;
 
                     default:

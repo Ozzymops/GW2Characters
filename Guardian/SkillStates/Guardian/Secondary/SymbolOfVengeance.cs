@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 
 namespace GuardianPlugin.SkillStates.Secondary
 {
-    public class ZealotsDefense : BaseSkillState
+    public class SymbolOfVengeance : BaseSkillState
     {
         public static float damageCoefficient = Modules.StaticValues.coreSecondaryDamage / 100f;
         public static float procCoefficient = 0.5f;
@@ -107,7 +107,7 @@ namespace GuardianPlugin.SkillStates.Secondary
                         {
                             EntityState.Destroy(projectile.gameObject);
                         }
-                    }            
+                    }
                 }
             }
 

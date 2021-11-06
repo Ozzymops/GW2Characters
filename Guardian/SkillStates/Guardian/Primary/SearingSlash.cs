@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace GuardianPlugin.SkillStates.Primary
 {
-    public class Mace1 : BaseMeleeAttack
+    // a.k.a. Axe Chain 3
+    public class SearingSlash : BaseMeleeAttack
     {
         private bool hitEnemy;
 
@@ -74,28 +75,28 @@ namespace GuardianPlugin.SkillStates.Primary
             switch (characterBody.GetComponent<Guardian.Modules.Guardian.AttackChainController>().chainCount)
             {
                 case 0:
-                    this.outer.SetNextState(new Mace1
+                    this.outer.SetNextState(new TrueStrike
                     {
                         swingIndex = index
                     });
                     break;
 
                 case 1:
-                    this.outer.SetNextState(new Mace2
+                    this.outer.SetNextState(new PureStrike
                     {
                         swingIndex = index
                     });
                     break;
 
                 case 2:
-                    this.outer.SetNextState(new Mace3
+                    this.outer.SetNextState(new FaithfulStrike
                     {
                         swingIndex = index
                     });
                     break;
 
                 default:
-                    this.outer.SetNextState(new Mace1
+                    this.outer.SetNextState(new TrueStrike
                     {
                         swingIndex = index
                     });

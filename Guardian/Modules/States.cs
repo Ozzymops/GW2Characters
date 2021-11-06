@@ -16,9 +16,9 @@ namespace GuardianPlugin.Modules
         {
             entityStates.Add(typeof(BaseMeleeAttack));
 
-            entityStates.Add(typeof(Mace1));
-            entityStates.Add(typeof(Mace2));
-            entityStates.Add(typeof(Mace3));
+            entityStates.Add(typeof(TrueStrike));
+            entityStates.Add(typeof(PureStrike));
+            entityStates.Add(typeof(FaithfulStrike));
 
             entityStates.Add(typeof(ZealotsDefense));
 

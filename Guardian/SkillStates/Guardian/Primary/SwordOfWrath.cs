@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace GuardianPlugin.SkillStates.Primary
 {
-    public class Mace2 : BaseMeleeAttack
+    // a.k.a. Sword Chain 1
+    public class SwordOfWrath : BaseMeleeAttack
     {
         private bool hitEnemy;
 
@@ -15,7 +16,7 @@ namespace GuardianPlugin.SkillStates.Primary
             this.hitboxName = "Mace";
 
             this.damageType = DamageType.Generic;
-            this.damageCoefficient = Modules.StaticValues.corePrimaryChain2Damage / 100f;
+            this.damageCoefficient = Modules.StaticValues.corePrimaryChain1Damage / 100f;
             this.procCoefficient = 1f;
             this.pushForce = 300f;
             this.bonusForce = Vector3.zero;
@@ -29,13 +30,13 @@ namespace GuardianPlugin.SkillStates.Primary
 
             this.swingSoundString = "HenrySwordSwing";
             this.hitSoundString = "";
-            this.muzzleString = "SwingRight";
+            this.muzzleString = "SwingLeft";
             this.swingEffectPrefab = Modules.Assets.swordSwingEffect;
             this.hitEffectPrefab = Modules.Assets.swordHitImpactEffect;
             this.impactSound = Modules.Assets.swordHitSoundEvent.index;
 
             this.layerString = "Gesture, Override";
-            this.animString = "Mace2";
+            this.animString = "Mace1";
             this.playbackRateString = "macePlaybackRate";
             this.crossfadeDuration = 0.05f;
 
@@ -74,28 +75,28 @@ namespace GuardianPlugin.SkillStates.Primary
             switch (characterBody.GetComponent<Guardian.Modules.Guardian.AttackChainController>().chainCount)
             {
                 case 0:
-                    this.outer.SetNextState(new Mace1
+                    this.outer.SetNextState(new TrueStrike
                     {
                         swingIndex = index
                     });
                     break;
 
                 case 1:
-                    this.outer.SetNextState(new Mace2
+                    this.outer.SetNextState(new PureStrike
                     {
                         swingIndex = index
                     });
                     break;
 
                 case 2:
-                    this.outer.SetNextState(new Mace3
+                    this.outer.SetNextState(new FaithfulStrike
                     {
                         swingIndex = index
                     });
                     break;
 
                 default:
-                    this.outer.SetNextState(new Mace1
+                    this.outer.SetNextState(new TrueStrike
                     {
                         swingIndex = index
                     });
