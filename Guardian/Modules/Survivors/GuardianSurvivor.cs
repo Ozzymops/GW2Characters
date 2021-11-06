@@ -41,58 +41,43 @@ namespace GuardianPlugin.Modules.Survivors
             podPrefab = Resources.Load<GameObject>("Prefabs/NetworkedObjects/SurvivorPod")
         };
 
-        // CharacterModel setup
-        internal static Material guardianMat = Modules.Assets.CreateMaterial("matGuardian");
-        internal static Material maceMat = Modules.Assets.CreateMaterial("matMace");
-        internal static Material shieldMat = Modules.Assets.CreateMaterial("matShield");
-        internal static Material armorMat = Modules.Assets.CreateMaterial("matArmor");
+        #region Materials
+        // to do: merge Armor, Helmet & Ankh in one material!
+        internal static Material guardianAnkhMat = Modules.Assets.CreateMaterial("GuardianAnkh");
+        internal static Material guardianBodyMat = Modules.Assets.CreateMaterial("GuardianBody");
+        internal static Material guardianCoreArmor = Modules.Assets.CreateMaterial("GuardianCoreArmor");
+        internal static Material guardianCoreHelmet = Modules.Assets.CreateMaterial("GuardianCoreHelmet");
+        internal static Material guardianMace = Modules.Assets.CreateMaterial("GuardianMace");
+        internal static Material guardianShield = Modules.Assets.CreateMaterial("GuardianShield");
+        #endregion
+
         internal override int mainRendererIndex { get; set; } = 2;
 
         internal override CustomRendererInfo[] customRendererInfos { get; set; } = new CustomRendererInfo[] {
                 new CustomRendererInfo
                 {
                     childName = "Mace",
-                    material = maceMat,
+                    material = guardianMace,
                 },
                 new CustomRendererInfo
                 {
                     childName = "Shield",
-                    material = shieldMat,
+                    material = guardianShield,
                 },
                 new CustomRendererInfo
                 {
-                    childName = "Head",
-                    material = guardianMat
+                    childName = "CoreHelmet",
+                    material = guardianCoreHelmet
                 },
                 new CustomRendererInfo
                 {
-                    childName = "Torso",
-                    material = armorMat
+                    childName = "CoreArmor",
+                    material = guardianCoreArmor
                 },
                 new CustomRendererInfo
                 {
-                    childName = "Helmet",
-                    material = armorMat
-                },
-                new CustomRendererInfo
-                {
-                    childName = "Arm.L",
-                    material = armorMat
-                },
-                new CustomRendererInfo
-                {
-                    childName = "Arm.R",
-                    material = armorMat
-                },
-                new CustomRendererInfo
-                {
-                    childName = "Leg.L",
-                    material = armorMat
-                },
-                new CustomRendererInfo
-                {
-                    childName = "Leg.R",
-                    material = armorMat
+                    childName = "Guardian",
+                    material = guardianBodyMat
                 }};
 
         internal override Type characterMainState { get; set; } = typeof(EntityStates.GenericCharacterMain);
@@ -112,10 +97,7 @@ namespace GuardianPlugin.Modules.Survivors
 
         internal void InitializeCustom()
         {
-            bodyPrefab.AddComponent<AttackChainController>();
-            bodyPrefab.AddComponent<GuardianHUD>();
-            bodyPrefab.AddComponent<VirtueController>();
-            bodyPrefab.AddComponent<TraitController>();
+            bodyPrefab.AddComponent<ProfessionController>();
         }
 
         internal override void InitializeUnlockables()
@@ -144,12 +126,105 @@ namespace GuardianPlugin.Modules.Survivors
             string prefix = GuardianPlugin.developerPrefix;
 
             #region Primary
-            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.Primary.Mace1)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_NAME", prefix + "_GUARDIAN_BODY_PRIMARY_DESCRIPTION", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore1"), true));
-            Modules.Skills.AddPrimarySkill(bodyPrefab, Modules.Skills.CreatePrimarySkillDef(new EntityStates.SerializableEntityStateType(typeof(SkillStates.Shoot)), "Weapon", prefix + "_GUARDIAN_BODY_PRIMARY_NAME_DH", prefix + "_GUARDIAN_BODY_PRIMARY_DESCRIPTION_DH", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryDH"), true));
+            SkillDef corePrimarySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = prefix + "_GUARDIAN_BODY_PRIMARY_NAME",
+                skillNameToken = prefix + "_GUARDIAN_BODY_PRIMARY_NAME",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_PRIMARY_DESCRIPTION",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore1"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Primary.Mace1)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0,
+                keywordTokens = new string[] { prefix + "_GUARDIAN_BODY_KEYWORD_ATTACKCHAIN" }
+            });
+
+            SkillDef dhPrimarySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = prefix + "_GUARDIAN_BODY_PRIMARY_NAME_DH",
+                skillNameToken = prefix + "_GUARDIAN_BODY_PRIMARY_NAME_DH",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_PRIMARY_DESCRIPTION_DH",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryDH"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Shoot)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0
+            });
+
+            SkillDef fbPrimarySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = prefix + "_GUARDIAN_BODY_PRIMARY_NAME_FB",
+                skillNameToken = prefix + "_GUARDIAN_BODY_PRIMARY_NAME_FB",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryFB1"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Primary.Mace1)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0,
+                keywordTokens = new string[] { prefix + "_GUARDIAN_BODY_KEYWORD_ATTACKCHAIN" }
+            });
+
+            SkillDef wbPrimarySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = prefix + "_GUARDIAN_BODY_PRIMARY_NAME_WB",
+                skillNameToken = prefix + "_GUARDIAN_BODY_PRIMARY_NAME_WB",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_PRIMARY_DESCRIPTION_WB",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryWB1"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Primary.Mace1)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Any,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 0,
+                stockToConsume = 0,
+                keywordTokens = new string[] { prefix + "_GUARDIAN_BODY_KEYWORD_ATTACKCHAIN" }
+            });
+
+            Modules.Skills.AddPrimarySkill(bodyPrefab, corePrimarySkillDef);
+            Modules.Skills.AddPrimarySkill(bodyPrefab, dhPrimarySkillDef);
+            Modules.Skills.AddPrimarySkill(bodyPrefab, fbPrimarySkillDef);
+            Modules.Skills.AddPrimarySkill(bodyPrefab, wbPrimarySkillDef);
             #endregion
 
             #region Secondary
-            SkillDef zealotsDefenseSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            SkillDef coreSecondarySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_GUARDIAN_BODY_SECONDARY_NAME",
                 skillNameToken = prefix + "_GUARDIAN_BODY_SECONDARY_NAME",
@@ -173,7 +248,7 @@ namespace GuardianPlugin.Modules.Survivors
                 stockToConsume = 1
             });
 
-            SkillDef trueShotSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            SkillDef dhSecondarySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_GUARDIAN_BODY_SECONDARY_NAME_DH",
                 skillNameToken = prefix + "_GUARDIAN_BODY_SECONDARY_NAME_DH",
@@ -197,11 +272,59 @@ namespace GuardianPlugin.Modules.Survivors
                 stockToConsume = 1
             });
 
-            Modules.Skills.AddSecondarySkills(bodyPrefab, new SkillDef[] { zealotsDefenseSkillDef, trueShotSkillDef });
+            SkillDef fbSecondarySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = prefix + "_GUARDIAN_BODY_SECONDARY_NAME_FB",
+                skillNameToken = prefix + "_GUARDIAN_BODY_SECONDARY_NAME_FB",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SECONDARY_DESCRIPTION_FB",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texSecondaryFB"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Shoot)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 4f,
+                beginSkillCooldownOnSkillEnd = true,
+                canceledFromSprinting = false,
+                forceSprintDuringState = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Skill,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = false,
+                rechargeStock = 1,
+                requiredStock = 1,
+                stockToConsume = 1
+            });
+
+            SkillDef wbSecondarySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = prefix + "_GUARDIAN_BODY_SECONDARY_NAME_WB",
+                skillNameToken = prefix + "_GUARDIAN_BODY_SECONDARY_NAME_WB",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SECONDARY_DESCRIPTION_WB",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texSecondaryWB"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Primary.Mace1)),
+                activationStateMachineName = "Weapon",
+                baseMaxStock = 1,
+                baseRechargeInterval = 4f,
+                beginSkillCooldownOnSkillEnd = true,
+                canceledFromSprinting = false,
+                forceSprintDuringState = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Skill,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = false,
+                rechargeStock = 1,
+                requiredStock = 1,
+                stockToConsume = 1
+            });
+
+            Modules.Skills.AddSecondarySkills(bodyPrefab, new SkillDef[] { coreSecondarySkillDef, dhSecondarySkillDef, fbSecondarySkillDef, wbSecondarySkillDef});
             #endregion
 
             #region Utility
-            SkillDef shieldSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            SkillDef coreUtilitySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_GUARDIAN_BODY_UTILITY_NAME",
                 skillNameToken = prefix + "_GUARDIAN_BODY_UTILITY_NAME",
@@ -225,7 +348,7 @@ namespace GuardianPlugin.Modules.Survivors
                 stockToConsume = 1
             });
 
-            SkillDef trapsSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            SkillDef dhUtilitySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_GUARDIAN_BODY_UTILITY_NAME_DH",
                 skillNameToken = prefix + "_GUARDIAN_BODY_UTILITY_NAME_DH",
@@ -246,14 +369,64 @@ namespace GuardianPlugin.Modules.Survivors
                 cancelSprintingOnActivation = false,
                 rechargeStock = 1,
                 requiredStock = 1,
+                stockToConsume = 1,
+                keywordTokens = new string[] { prefix + "_GUARDIAN_BODY_KEYWORD_DHTRAP" }
+            });
+
+            SkillDef fbUtilitySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = prefix + "_GUARDIAN_BODY_UTILITY_NAME_FB",
+                skillNameToken = prefix + "_GUARDIAN_BODY_UTILITY_NAME_FB",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_UTILITY_DESCRIPTION_FB",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texUtilityFB"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Roll)),
+                activationStateMachineName = "Slide",
+                baseMaxStock = 1,
+                baseRechargeInterval = 4f,
+                beginSkillCooldownOnSkillEnd = false,
+                canceledFromSprinting = false,
+                forceSprintDuringState = true,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.PrioritySkill,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = false,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = false,
+                rechargeStock = 1,
+                requiredStock = 1,
                 stockToConsume = 1
             });
 
-            Modules.Skills.AddUtilitySkills(bodyPrefab, new SkillDef[] { shieldSkillDef, trapsSkillDef});
+            SkillDef wbUtilitySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = prefix + "_GUARDIAN_BODY_UTILITY_NAME_WB",
+                skillNameToken = prefix + "_GUARDIAN_BODY_UTILITY_NAME_WB",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_UTILITY_DESCRIPTION_WB",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texUtilityWB1"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Roll)),
+                activationStateMachineName = "Slide",
+                baseMaxStock = 1,
+                baseRechargeInterval = 4f,
+                beginSkillCooldownOnSkillEnd = false,
+                canceledFromSprinting = false,
+                forceSprintDuringState = true,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.PrioritySkill,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = false,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = false,
+                rechargeStock = 1,
+                requiredStock = 1,
+                stockToConsume = 1,
+                keywordTokens = new string[] { prefix + "_GUARDIAN_BODY_KEYWORD_WBUTILITY" }
+            });
+
+            Modules.Skills.AddUtilitySkills(bodyPrefab, new SkillDef[] { coreUtilitySkillDef, dhUtilitySkillDef, fbUtilitySkillDef, wbUtilitySkillDef});
             #endregion
 
             #region Special
-            SkillDef sanctuarySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            SkillDef coreSpecialSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_GUARDIAN_BODY_SPECIAL_NAME",
                 skillNameToken = prefix + "_GUARDIAN_BODY_SPECIAL_NAME",
@@ -277,7 +450,7 @@ namespace GuardianPlugin.Modules.Survivors
                 stockToConsume = 1
             });
 
-            SkillDef dragonsMawSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            SkillDef dhSpecialSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_GUARDIAN_BODY_SPECIAL_NAME_DH",
                 skillNameToken = prefix + "_GUARDIAN_BODY_SPECIAL_NAME_DH",
@@ -301,7 +474,55 @@ namespace GuardianPlugin.Modules.Survivors
                 stockToConsume = 1
             });
 
-            Modules.Skills.AddSpecialSkills(bodyPrefab, new SkillDef[] { sanctuarySkillDef, dragonsMawSkillDef});
+            SkillDef fbSpecialSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = prefix + "_GUARDIAN_BODY_SPECIAL_NAME_FB",
+                skillNameToken = prefix + "_GUARDIAN_BODY_SPECIAL_NAME_FB",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SPECIAL_DESCRIPTION_FB",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texSpecialFB"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.ThrowBomb)),
+                activationStateMachineName = "Slide",
+                baseMaxStock = 1,
+                baseRechargeInterval = 10f,
+                beginSkillCooldownOnSkillEnd = false,
+                canceledFromSprinting = false,
+                forceSprintDuringState = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Skill,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 1,
+                stockToConsume = 1
+            });
+
+            SkillDef wbSpecialSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = prefix + "_GUARDIAN_BODY_SPECIAL_NAME_WB",
+                skillNameToken = prefix + "_GUARDIAN_BODY_SPECIAL_NAME_WB",
+                skillDescriptionToken = prefix + "_GUARDIAN_BODY_SPECIAL_DESCRIPTION_WB",
+                skillIcon = Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texSpecialWB"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.ThrowBomb)),
+                activationStateMachineName = "Slide",
+                baseMaxStock = 1,
+                baseRechargeInterval = 10f,
+                beginSkillCooldownOnSkillEnd = false,
+                canceledFromSprinting = false,
+                forceSprintDuringState = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Skill,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = false,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 1,
+                stockToConsume = 1
+            });
+
+            Modules.Skills.AddSpecialSkills(bodyPrefab, new SkillDef[] { coreSpecialSkillDef, dhSpecialSkillDef, fbSpecialSkillDef, wbSpecialSkillDef});
             #endregion
 
             GenericSkill genericSkill = bodyPrefab.AddComponent<GenericSkill>();

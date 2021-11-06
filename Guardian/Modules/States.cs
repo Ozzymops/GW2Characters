@@ -1,5 +1,7 @@
 ﻿using GuardianPlugin.SkillStates;
 using GuardianPlugin.SkillStates.Primary;
+using GuardianPlugin.SkillStates.Secondary;
+using GuardianPlugin.SkillStates.Utility;
 using GuardianPlugin.SkillStates.BaseStates;
 using System.Collections.Generic;
 using System;
@@ -13,15 +15,14 @@ namespace GuardianPlugin.Modules
         internal static void RegisterStates()
         {
             entityStates.Add(typeof(BaseMeleeAttack));
-            entityStates.Add(typeof(SlashCombo));
 
             entityStates.Add(typeof(Mace1));
             entityStates.Add(typeof(Mace2));
             entityStates.Add(typeof(Mace3));
 
-            entityStates.Add(typeof(Shoot));
+            entityStates.Add(typeof(ZealotsDefense));
 
-            entityStates.Add(typeof(Roll));
+            entityStates.Add(typeof(ShieldOfAbsorption));
 
             entityStates.Add(typeof(ThrowBomb));
         }

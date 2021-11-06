@@ -1,195 +1,93 @@
-[GUARDIAN - CORE]
-- Fix Virtues / UI
-- Add virtue visual and sound effects
+- StaticValues holds ALL damage, timer, healing, etc. values
+- Tokens
+- Condicleanse on Resolve
+- Fix fall damage!
 
-- Skill: Shield of Absorption - engineer shield, but parented to Guardian, pulses Aegis to allies inside
-- Skill: Sanctuary - engineer shield, but bigger, pulses healing to allies and burning to enemies inside
+- Redo animations (weird unassigned bone fuckery)
+- Synchronize skills with animations
+- Redo 'Zealot's Defense' skill
+- Create 'Shield of Absorption' skill
+- Create 'Sanctuary' skill
+- Sound effects
+- Consistent Tokens
+- Rebalance StaticValues numbers
 
-- Actual model with animations
-- Custom visual and sound effects
-- Fix flavour text (name, description, lore, etc.)
+[DRAGONHUNTER]
+- Swappable passive skill
+- Make passive skill influence selected loadout
+- Make Virtues & Traits swap depending on passive skill
+- Arrow prefab
+- Figure out how to implement Traps
+- Figure out how to make skill states swap outside of actual skills
+- Bow model + animations
+- SFX
+- Consistent Tokens
+- Rebalance numbers/traits
 
-[GUARDIAN - DRAGONHUNTER]
-- Find out how to make a swappable passive skill
-- Find out how to make passive influence entire loadout and stats
-- Find out how to make 'auxiliary' skills (virtue = skill instead of buff)
+[FIREBRAND]
+- Make passive skill temporarily swap skills
+- Skills with charges
+- Axe & Tome model + animations
+- SFX
+- Consistent Tokens
+- Rebalance numbers/traits
 
-- Justice: Spear of Justice - throw a spear and create a chain between Guardian and hit enemies
-- Resolve: Wings of Resolve - leap away and heal
-- Courage: Shield of Courage - Enforcer shield to the front
+[WILLBENDER]
+- Lasting effects after skill usage (fire fields)
+- Make skill temporarily swap after successful hit
+- Teleport to location
+- Sword models + animations
+- SFX
+- Consistent Tokens
+- Rebalance numbers/traits
 
-- Skill: Puncture Shot - fire an (huntress) arrow that pierces enemies, all pierced enemies take increased damage
-- Skill: True Shot - charge an (huntress) arrow that pierces enemies, dealing massive damage depending on charge
-- Skill: Test of Faith, Procession of Blades - lay down two traps, one punishes enemies trying to leave and the other punishes enemies staying within
-- Skill: Dragon's Maw - lay a trap that pulls enemies in and keeps them in
+[WARRIOR]
+- Weapon swapping
+- Adrenaline
+- Bursts
+- Skills
+- Model
+- Weapon models
+- Animations
+- SFX
+- Consistent Tokens
+- Rebalance numbers/traits
 
-- Actual model with animations
-- Custom visual and sound effects
+[BERSERKER]
+- Berserk Mode
+- Primal Bursts
+- Skills
+- Weapon models
+- Animations
+- SFX
+- Consistent Tokens
+- Rebalance numbers/traits
 
-[GUARDIAN - FIREBRAND]
-- Find out how to make virtue effect influence entire loadout (tomes)
+[SPELLBREAKER]
+- Full Counter
+- Magebane Tether
+- Figure out how to determine if foes aren't using skills
+- Reflect projectiles
+- Steal buffs
+- Steal Elite effect
+- Bursts
+- Skills
+- Weapon models 
+- Animations
+- SFX
+- Consistent Tokens
+- Rebalance numbers/traits
 
-- Justice: Tome of Justice - grants access to the following skills:
-	Chapter 1, Searing Spell - deal damage and inflict burning in front of the Guardian
-	Chapter 2, Igniting Burst - deal damage and inflict more burning around the Guardian, launching enemies
-	Chapter 3, Scorched Aftermath - deal damage and inflict burning and bleeding in a targeted sphere
-	Epilogue, Ashes of the Just - grant five stacks of Justice buff to self and nearby allies
+[BLADESWORN]
+- Adrenaline -> Flow
+- Dragon Trigger & Charging
+- Dragon Trigger Bursts
+- Skills
+- Concentration effects
+- Weapon models
+- Animations
+- SFX
+- Consistent Tokens
+- Rebalance numbers/traits
 
-- Resolve: Tome of Resolve - grants access to the following skills:
-	Chapter 1, Desert Bloom - heal self and allies in front of the Guardian
-	Chapter 2, Radiant Recovery - remove debuffs from self and allies around the Guardian
-	Chapter 3, Azure Sun - grant buffs to self and allies around the Guardian
-	Epilogue, Eternal Oasis - massively heal self and allies around the Guardian
-
-- Courage: Tome of Courage - grants access to the following skills:
-	Chapter 1, Unfliching Charge - grant Aegis to self and allies in front of the Guardian
-	Chapter 2, Daring Challenge - deal damage and inflict torpor around the Guardian, pulling enemies
-	Chapter 3, Valiant Bulwark - project a (engineer) shield around the Guardian
-	Epilogue, Unbroken Lines - grant invulnerability to self and allies around the Guardian
-
-- Skill: Axe Chain - attack chain consisting of:
-	Core Cleave: deal damage and inflict bleeding
-	Bleeding Edge: deal damage and inflict bleeding
-	Searing Slash: deal damage and inflict burning
-- Skill: Blazing Edge - spawn a spinning axe (like Heretic[2]), dealing damage in the area for a short while
-- Skill: Mantra of Solace - heal self and allies around the Guardian, has three charges
-- Skill: Mantra of Flame - deal damage and inflict burning around the Guardian, has three charges
-
-[GUARDIAN - WILLBENDER]
-- Justice: Rushing Justice - rush at foe and place fire field
-- Resolve: Flowing Resolve - rush at foe and leave fire field behind, gaining health on hit
-- Courage: Crashing Courage - teleport to location and leave fire field, gaining Aegis on hit
-
-- Skill: Sword Chain - attack chain consisting of:
-	Sword of Wrath: deal damage
-	Sword Arc: deal damage
-	Sword Wave: deal damage and launch multiple projectiles
-- Skill: Executioner's Calling - deal damage. If hit, strike again for massive damage, executing low health foes.
-- Skill: Roiling Light - dodge backwards, gaining Aegis. Gain access to Quick Retribution for a short while.
-	Quick Retribution - lunge forward and stab your foe, stunning them.
-- Skill: Heaven's Palm - slam the ground, dealing damage to nearby enemies and launching nearby enemies away.
-
-[WARRIOR - CORE]
-- Weapon swap
-- Adrenaline and Bursts
-
-Greatsword:
-- Skill: Greatsword Chain - attack chain consisting of:
-	Swing: deal 200% damage
-	Slice: deal 250% damage
-	Strike: deal 350% damage and gain adrenaline
-- Skill: Bladetrail - throw your sword so that it returns to you, dealing 200% damage. Gain adrenaline
-- Skill: Whirlwind Attack - whirl forward, cleaving foes along your path for 300% damage. Gain adrenaline
-- Skill: Hundred Blades - rapidly strike with your greatsword, dealing 9*200% damage with the final hit dealing 400% damage. Gain adrenaline
-- Burst: Arcing Slice - spin around, dealing 300%/500%/700% damage to foes around you. Gain Fury and Might*2/Might*5/Might*10. Execute low health enemies
-
-Hammer:
-- Skill: Hammer Chain - attack chain consisting of:
-	Swing: deal 150% damage
-	Bash: deal 200% damage
-	Smash: deal 300% damage and gain adrenaline
-- Skill: Fierce Blow - weaken your foe with a fierce blow dealing 350% damage. Deals 200% extra damage to stunned foes. Gain adrenaline
-- Skill: Staggering Blow - launch nearby enemies away, dealing 250% damage. Gain adrenaline
-- Skill: Backbreaker - stun your foe for five seconds, dealing 500% damage. Stun weakened foes for an extra five seconds. Gain adrenaline and refresh Fierce Blow on hit
-- Burst: Earthshaker - leap to a target location, dealing 300%/500%/700% damage in the area and stunning foes for three/five/ten seconds. Gain Might*2/Might*5/Might*10
-
-Rifle:
-- Skill: Fierce Shot - fire a shot at your target, dealing 200% damage. Gain Might*1 if striking a Vulnerable target. Gain adrenaline
-- Skill: Volley - fire a volley of shots at your target, dealing 5*250% damage. Gain adrenaline
-- Skill: Brutal Shot - fire a shot and evade backwards, dealing 150% damage and stunning your foe. Gain adrenaline
-- Skill: Explosive Shell - fire an explosive round, dealing 500% damage in a small radius, inflicting Vulnerability*5. Gain adrenaline
-- Burst: Kill Shot - fire a powerful shot, dealing 400%/600%/800% damage. Gain Might*2/Might*5/Might*10
-
-Traits:
-- Level  5: Halve weapon swap cooldown
-- Level 10: Gain 10% health per stack of Might gained (10 Might is 100% health)
-- Level 15: Bursts have a 100% critical strike chance, all adrenaline gains are doubled
-
-[WARRIOR - BERSERKER]
-- Berserk Mode: can no longer Burst normally, instead entering Berserk Mode when full on adrenaline
-			    Berserk Mode grants access to Bursts for 10 seconds, reduces adrenaline needed to Burst to 10 (from 30)
-				grants 33% attack speed and 15% increased damage and critical strike chance
-
-Sword/Torch:
-- Skill: Sword Chain - attack chain consisting of:
-	Sever Artery: deal 150% damage, inflict bleeding
-	Gash: deal 200% damage, inflict bleeding
-	Hamstring: deal 250% damage, inflict bleeding and cripple. Gain adrenaline
-- Skill: Blaze Breaker - smash your torch into the ground, creating a shockwave of fire, burning foes. Gain adrenaline
-- Skill: Savage Leap - lunge forward and stab your foe, crippling them. Gain adrenaline
-- Skill: Flames of War - light yourself on fire and become a mobile fire field, burning foes, exploding on end of skill. Gain adrenaline
-- Burst: Flaming Flurry - lash out with a flurry of strikes that block missiles and shoot eight fireballs in front of you. Gain Might*5
-
-Axe/Axe
-- Skill: Axe Chain - attack chain consisting of:
-	Chop: deal 200% damage
-	Double Chop: deal 2*200% damage
-	Triple Chop: deal 3*300% damage. Gain adrenaline
-- Skill: Throw Axe - throw an axe for 300% damage, executing low health enemies. Gain adrenaline
-- Skill: Cyclone Axe - spin around and attack all nearby foes for 300% damage. Gain Fury and adrenaline
-- Skill: Whirling Axe - spin and attack nearby foes for 10*250% damage. Gain adrenaline
-- Burst: Decapitate - deal 1000% damage. Gain Might*5 and recharge this skill if it hits
-
-Longbow
-- Skill: Dual Shot - fire two arrows at your foe for 2*150% damage. Gain adrenaline
-- Skill: Fan of Fire - fire a spread of flaming arrows, burning foes and dealing 3*200% damage. Gain adrenaline
-- Skill: Pin Down - fire an arrow that bleeds and cripples your target, dealing 400% damage. Gain adrenaline
-- Skill: Arcing Arrow - fire an arrow that explodes on impact, burning and dealing 500% damage in a large radius. Gain adrenaline
-- Burst: Scorched Earth - fire a burning shot into the ground that creates a trail of flaming destruction for 500% damage, inflicting large amounts of burning. Gain Might*5
-
-Traits:
-- Level  5: Critical hits grant double adrenaline
-- Level 10: Double Berserk Mode duration, receiving fatal damage while in Berserk Mode breaks Berserk Mode and heals you for 25% health
-- Level 15: Deal double damage while in Berserk Mode
-
-[WARRIOR - SPELLBREAKER]
-- Full Counter: block for two seconds. If hit while blocking, lash out and gain adrenaline and Might*5, stunning nearby enemies and dealing 150% damage
-
-Dagger/Dagger
-- Skill: Dagger Chain - attack chain consisting of:
-	Cut: deal 200% damage. Deals 100% increased critical strike damage
-	Slash: deal 250% damage. Deals 100% increased critical strike damage
-	Strike: deal 300% damage. Deals 100% increased critical strike damage. Gain adrenaline
-- Skill: Wastrel's Ruin - quickly stab your target, dealing 400% damage. Deals 100% increased critical strike damage, and 100% increased damage to foes not using skills. Gain adrenaline
-- Skill: Aura Slicer - leap and strike your foe, dealing 300% damage. Gain adrenaline
-- Skill: Bladestorm - unleash a flurry of attacks dealing 10*200% damage, reflecting projectiles. Gain adrenaline
-- Burst: Breaching Strike - lunge forward, dealing 500% damage. Gain Might*2 and steal all boons, including Elite effect
-
-Mace/Shield
-- Skill: Mace Chain - attack chain consisting of:
-	Smash: deal 100% damage
-	Bash: deal 150% damage
-	Pulverize: deal 200% damage and weaken target. Gain adrenaline
-- Skill: Pommel Bash - stun your foe with a brutal pommel bash, dealing 250% damage. Gain adrenaline
-- Skill: Shield Bash - charge forward with your shield and stun foes, dealing 200% damage. Gain adrenaline
-- Skill: Shield Stance - block all attacks for five seconds. Gain adrenaline per attack blocked
-- Burst: Skull Crack - stun your foe with a skull crack for five seconds. Gain Might*2
-
-Traits:
-- Level  5: Lifesteal 1% of Dagger damage, deal 15% increased damage to Elites
-- Level 10: Gain 5*Aegis after a successfull Full Counter, Full Counter refreshes Burst skills on hit
-- Level 15: Full Counter casts Magebane Tether on hit foes, tethering them to you and pulsing Might to you
-
-[WARRIOR - BLADESWORN]
-- Charge Meter: no fill, but .right / localScale from 200 to 0, intervals of 20
-- Adrenaline -> Flow: instead of active Adrenaline gain, gain Flow passively. Increase rate with skill usage. Cap increased to 100 (from 30)
-
-- Dragon Trigger: enter a meditative state, leaving you vulnerable. Charge up a devastating attack, up to 10 charges, one second per charge
-	Force: requires no charge. Slash all foes in front of you, dealing 200*charge% damage.
-	Reach: requires three charges. Create a blade of air that strikes foes in a line in front of you, dealing 300*charge% damage.
-	Boost: requires six charges. Dash forward while slashing foes along your path, dealing 400*charge% damage.
-	End: requires maximum charge. Slay all in front of you for 5000% damage, you are invulnerable during its duration. Now I'm a little motivated!
-
-Gunsaber
-- Skill: Gunsaber Chain - attack chain consisting of:
-	Swift Cut: deal 250% damage, gain Flow
-	Steel Divide: deal 350% damage, gain Flow
-	Explosive Thrust: deal 500% damage, gain Flow and Might*1
-- Skill: Artillery Slash - shoot a shell from your sword, dealing 400% damage. Gain Flow
-- Skill: Cyclone Trigger - spin and block enemy projectiles, dealing 350% damage. Gain Flow
-- Skill: Blooming Fire - slash around, throwing shrapnel all around you for 10*400% damage. Gain Flow and Might*5
-
-Traits:
-- Level  5: All Gunsaber attacks deal extra explosive damage
-- Level 10: Gain Aegis for every two seconds spent in Dragon Trigger, lose all Aegis after exiting Dragon Trigger
-- Level 15: Dragon Trigger charges 100% faster, Dragon Trigger skills deal triple damage
+[REVENANT]

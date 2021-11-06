@@ -6,15 +6,15 @@ namespace GuardianPlugin.Modules
 {
     public static class Buffs
     {
-        internal static BuffDef justiceBuff;
-        internal static BuffDef shieldOfAbsorptionBuff;
+        internal static BuffDef guardianJusticeBuff;
+        internal static BuffDef guardianShieldOfAbsorptionBuff;
 
         internal static List<BuffDef> buffDefs = new List<BuffDef>();
 
         internal static void RegisterBuffs()
         {
-            justiceBuff = AddNewBuff("GW2JusticeBuff", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texJusticeCore"), Color.white, true, false);
-            shieldOfAbsorptionBuff = AddNewBuff("GW2ShieldOfAbsorptionBuff", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texUtilityCore"), Color.white, false, false);
+            guardianJusticeBuff = AddNewBuff("GW2GuardianJusticeBuff", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texJusticeCore"), Color.white, true, false);
+            guardianShieldOfAbsorptionBuff = AddNewBuff("GW2GuardianShieldOfAbsorptionBuff", Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texUtilityCore"), Color.white, false, false);
         }
 
         // simple helper method

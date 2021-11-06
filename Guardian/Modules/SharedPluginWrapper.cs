@@ -19,6 +19,15 @@ namespace Guardian.Modules
                 if (!_enabled)
                 {
                     _enabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.Ozzymops.GW2Shared");
+
+                    if (_enabled)
+                    {
+                        Debug.Log("SharedPluginWrapper - enabled!");
+                    }
+                    else
+                    {
+                        Debug.Log("SharedPluginWrapper - something went wrong!");
+                    }
                 }
 
                 return (bool) _enabled;

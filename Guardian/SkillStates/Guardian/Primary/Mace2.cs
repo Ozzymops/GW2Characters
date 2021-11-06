@@ -15,7 +15,7 @@ namespace GuardianPlugin.SkillStates.Primary
             this.hitboxName = "Mace";
 
             this.damageType = DamageType.Generic;
-            this.damageCoefficient = Modules.StaticValues.corePrimaryDamageCoefficient * 1.5f;
+            this.damageCoefficient = Modules.StaticValues.corePrimaryChain2Damage / 100f;
             this.procCoefficient = 1f;
             this.pushForce = 300f;
             this.bonusForce = Vector3.zero;
@@ -32,8 +32,12 @@ namespace GuardianPlugin.SkillStates.Primary
             this.muzzleString = "SwingRight";
             this.swingEffectPrefab = Modules.Assets.swordSwingEffect;
             this.hitEffectPrefab = Modules.Assets.swordHitImpactEffect;
-
             this.impactSound = Modules.Assets.swordHitSoundEvent.index;
+
+            this.layerString = "Gesture, Override";
+            this.animString = "Mace2";
+            this.playbackRateString = "macePlaybackRate";
+            this.crossfadeDuration = 0.05f;
 
             hitEnemy = false;
 

@@ -25,7 +25,7 @@ namespace GuardianPlugin.SkillStates
             base.characterBody.SetAimTimer(2f);
             this.animator = base.GetModelAnimator();
 
-            base.PlayAnimation("Gesture, Override", "ThrowBomb", "ThrowBomb.playbackRate", this.duration);
+            base.PlayAnimation("Gesture, Override", "Sanctuary", "sancPlaybackRate", this.duration);
         }
 
         public override void OnExit()

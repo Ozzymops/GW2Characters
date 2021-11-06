@@ -17,7 +17,7 @@ namespace GuardianPlugin.SkillStates.Primary
             this.hitboxName = "Mace";
 
             this.damageType = DamageType.Generic;
-            this.damageCoefficient = Modules.StaticValues.corePrimaryDamageCoefficient * 2.5f;
+            this.damageCoefficient = Modules.StaticValues.corePrimaryChain3Damage / 100f;
             this.procCoefficient = 1f;
             this.pushForce = 400f;
             this.bonusForce = Vector3.zero;
@@ -34,8 +34,12 @@ namespace GuardianPlugin.SkillStates.Primary
             this.muzzleString = "SwingLeft";
             this.swingEffectPrefab = Modules.Assets.swordSwingEffect;
             this.hitEffectPrefab = Modules.Assets.swordHitImpactEffect;
-
             this.impactSound = Modules.Assets.swordHitSoundEvent.index;
+
+            this.layerString = "Gesture, Override";
+            this.animString = "Mace3";
+            this.playbackRateString = "macePlaybackRate";
+            this.crossfadeDuration = 0.05f;
 
             hitEnemy = false;
             didHeal = false;
@@ -66,7 +70,7 @@ namespace GuardianPlugin.SkillStates.Primary
             if (NetworkServer.active && !didHeal)
             {
                 didHeal = true;
-                characterBody.healthComponent.Heal(characterBody.maxHealth * 0.05f, new ProcChainMask(), true);
+                characterBody.healthComponent.Heal(characterBody.maxHealth * (Modules.StaticValues.corePrimaryChain3Heal / 100f), new ProcChainMask(), true);
             }
         }
 

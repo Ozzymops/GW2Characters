@@ -46,6 +46,12 @@ namespace GuardianPlugin.SkillStates.BaseStates
         private BaseState.HitStopCachedState hitStopCachedState;
         private Vector3 storedVelocity;
 
+        // customized
+        protected string layerString;
+        protected string animString;
+        protected string playbackRateString;
+        protected float crossfadeDuration;
+
         public override void OnEnter()
         {
             base.OnEnter();
@@ -84,7 +90,8 @@ namespace GuardianPlugin.SkillStates.BaseStates
 
         protected virtual void PlayAttackAnimation()
         {
-            base.PlayCrossfade("Gesture, Override", "Slash" + (1 + swingIndex), "Slash.playbackRate", this.duration, 0.05f);
+            base.PlayCrossfade(layerString, animString, playbackRateString, this.duration, crossfadeDuration);
+            Debug.Log("BaseMeleeAttack: playing animation " + animString + " from layer " + layerString);
         }
 
         public override void OnExit()
@@ -118,7 +125,7 @@ namespace GuardianPlugin.SkillStates.BaseStates
             if (!this.inHitPause && this.hitStopDuration > 0f)
             {
                 this.storedVelocity = base.characterMotor.velocity;
-                this.hitStopCachedState = base.CreateHitStopCachedState(base.characterMotor, this.animator, "Slash.playbackRate");
+                this.hitStopCachedState = base.CreateHitStopCachedState(base.characterMotor, this.animator, playbackRateString);
                 this.hitPauseTimer = this.hitStopDuration / this.attackSpeedStat;
                 this.inHitPause = true;
             }
@@ -179,7 +186,7 @@ namespace GuardianPlugin.SkillStates.BaseStates
             else
             {
                 if (base.characterMotor) base.characterMotor.velocity = Vector3.zero;
-                if (this.animator) this.animator.SetFloat("Swing.playbackRate", 0f);
+                if (this.animator) this.animator.SetFloat(playbackRateString, 0f);
             }
 
             if (this.stopwatch >= (this.duration * this.attackStartTime) && this.stopwatch <= (this.duration * this.attackEndTime))

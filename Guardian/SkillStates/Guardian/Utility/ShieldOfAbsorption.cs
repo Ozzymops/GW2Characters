@@ -22,6 +22,7 @@ namespace GuardianPlugin.SkillStates.Utility
         private int shieldRadius;
         private int pulses;
         private float pulseTimer;
+        private bool playLoop = false;
 
         public override void OnEnter()
         {
@@ -38,21 +39,29 @@ namespace GuardianPlugin.SkillStates.Utility
                 //shieldObject.GetComponent<Rigidbody>().useGravity = false;
                 //shieldObject.GetComponent<Rigidbody>().isKinematic = true;
 
-                shieldObject = Guardian.Modules.SkillHelpers.ShieldBubble.CreateShieldBubble();
-                shieldObject.GetComponent<Guardian.Modules.SkillHelpers.ShieldBubble>().SetupVariables(shieldRadius);
-                shieldObject.transform.SetParent(gameObject.transform);
-                shieldObject.transform.position = base.characterBody.corePosition;
+                //shieldObject = Guardian.Modules.SkillHelpers.ShieldBubble.CreateShieldBubble();
+                //shieldObject.GetComponent<Guardian.Modules.SkillHelpers.ShieldBubble>().SetupVariables(shieldRadius);
+                //shieldObject.transform.SetParent(gameObject.transform);
+                //shieldObject.transform.position = base.characterBody.corePosition;
 
                 if (NetworkServer.active)
                 {
-                    base.characterBody.AddTimedBuff(Modules.Buffs.shieldOfAbsorptionBuff, duration);
+                    base.characterBody.AddTimedBuff(Modules.Buffs.guardianShieldOfAbsorptionBuff, duration);
                 }
             }
+
+            base.PlayAnimation("Gesture, Override", "ShieldOfAbsorptionIn", "soaPlaybackRate", 0.5f);
         }
 
         public override void FixedUpdate()
         {
             base.FixedUpdate();
+
+            if (!playLoop)
+            {
+                playLoop = true;
+                base.PlayAnimation("Gesture, Override", "ShieldOfAbsorptionLoop", "soaPlaybackRate", 0.5f);
+            }
 
             if (base.isAuthority)
             {
@@ -82,7 +91,7 @@ namespace GuardianPlugin.SkillStates.Utility
                         {
                             if (hurtBox.healthComponent.body && hurtBox.healthComponent.body.teamComponent.teamIndex == TeamIndex.Player)
                             {
-                                // hurtBox.healthComponent.body.AddTimedBuff(SharedPlugin.Modules.Buffs.aegisBuff, 9.9f, 5);
+                                hurtBox.healthComponent.body.AddTimedBuff(SharedPlugin.Modules.Buffs.protectionBuff, 10f, 1);
                             }
                         }
                     }
@@ -94,11 +103,13 @@ namespace GuardianPlugin.SkillStates.Utility
         {
             base.OnExit();
 
-            shieldObject.GetComponent<Guardian.Modules.SkillHelpers.ShieldBubble>().SetState(2);
+            base.PlayAnimation("Gesture, Override", "ShieldOfAbsorptionOut", "soaPlaybackRate", 0.5f);
 
-            base.characterBody.ClearTimedBuffs(Modules.Buffs.shieldOfAbsorptionBuff);
+            //shieldObject.GetComponent<Guardian.Modules.SkillHelpers.ShieldBubble>().SetState(2);
 
-            if (NetworkServer.active && base.characterBody.GetComponent<TraitController>().GetTrait(2) && base.characterBody.GetComponent<TraitController>().GetTraitType() == 0)
+            base.characterBody.ClearTimedBuffs(Modules.Buffs.guardianShieldOfAbsorptionBuff);
+
+            if (NetworkServer.active && base.characterBody.GetComponent<TraitController>().ReturnTraits()[2])
             {
                 base.characterBody.healthComponent.HealFraction(0.025f, new ProcChainMask());
             }

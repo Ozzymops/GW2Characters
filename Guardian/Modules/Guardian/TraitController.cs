@@ -1,211 +1,164 @@
 ﻿using GuardianPlugin;
 using RoR2;
+using GuardianPlugin.Modules;
 using UnityEngine;
 
 namespace Guardian.Modules.Guardian
 {
     public class TraitController : MonoBehaviour
     {
+        private bool setup = false;
+        private int eliteSpecialisation = 0;
         private CharacterBody characterBody;
-        private VirtueController virtueController;
-        private enum TraitType { Core, Dragonhunter, Firebrand, Willbender };
-        private TraitType traitType = TraitType.Core;
+        private MechanicController mechanicController;
 
-        private bool adeptTrait = false;        // level  5
-        private bool masterTrait = false;       // level 10
-        private bool grandmasterTrait = false;  // level 15
+        private bool adeptTrait;
+        private bool masterTrait;
+        private bool grandmasterTrait;
 
-        private int adeptLevel = 5;
-        private int masterLevel = 10;
-        private int grandmasterLevel = 15;
+        private bool adeptTraitAvailable;
+        private bool masterTraitAvailable;
+        private bool grandmasterTraitAvailable;
 
-        #region Core Traits
-        private bool core_lowHealthAegis;
-        private float core_lowHealthAegisTimer;
-        private float core_lowHealthAegisCooldown = 6f;
+        private float adeptTraitCooldownTimer;
+        private float masterTraitCooldownTimer;
+        private float grandmasterTraitCooldownTimer;
 
-        private bool core_renewedJustice;
-        private float core_renewedJusticeTimer;
-        private float core_renewedJusticeCooldown = 5f;
-
-        private float core_healFromAbilityPercent = 2.5f;
-        #endregion
-
-        private void Awake()
+        public void Setup(int es, CharacterBody cb, MechanicController mc)
         {
-            characterBody = GetComponent<CharacterBody>();
-
-            if (characterBody.baseNameToken.StartsWith("OZZ"))
+            if (!setup)
             {
-                virtueController = GetComponent<VirtueController>();
+                setup = true;
 
-                On.RoR2.CharacterBody.OnLevelUp += HandleTraitsOnLevelUp;
+                eliteSpecialisation = es;
+                characterBody = cb;
+                mechanicController = mc;
+
+                On.RoR2.CharacterBody.OnLevelUp += LevelUp;
             }
         }
 
-        private void Destroy()
+        private void OnDestroy()
         {
-            On.RoR2.CharacterBody.OnLevelUp -= HandleTraitsOnLevelUp;
+            On.RoR2.CharacterBody.OnLevelUp -= LevelUp;
         }
 
-        private void HandleTraitsOnLevelUp(On.RoR2.CharacterBody.orig_OnLevelUp orig, CharacterBody self)
+        private void LevelUp(On.RoR2.CharacterBody.orig_OnLevelUp orig, CharacterBody self)
         {
-            orig.Invoke(self);
+            orig(self);
 
-            if (!adeptTrait && self.level >= adeptLevel)
+            if (!adeptTrait && self.level >= 5)
             {
                 adeptTrait = true;
-
-                if (traitType == TraitType.Core)
-                {
-                    core_lowHealthAegis = true;
-                    core_lowHealthAegisTimer = core_lowHealthAegisCooldown;
-                }            
+                adeptTraitAvailable = true;
             }
 
-            if (!masterTrait && self.level >= masterLevel)
+            if (!masterTrait && self.level >= 10)
             {
                 masterTrait = true;
-
-                if (traitType == TraitType.Core)
-                {
-                    core_renewedJustice = true;
-                    core_renewedJusticeTimer = core_renewedJusticeCooldown;
-                }               
+                masterTraitAvailable = true;
             }
 
-            if (!grandmasterTrait && self.level >= grandmasterLevel)
+            if (!grandmasterTrait && self.level >= 15)
             {
                 grandmasterTrait = true;
+                grandmasterTraitAvailable = true;
             }
+
+            mechanicController.ResetCooldowns();
         }
 
         private void Update()
         {
-            #region Core Trait Cooldowns
-            if (traitType == TraitType.Core)
+            if (!adeptTraitAvailable)
             {
-                if (adeptTrait && !core_lowHealthAegis)
+                adeptTraitCooldownTimer -= 1f * Time.deltaTime;
+
+                if (adeptTraitCooldownTimer <= 0)
                 {
-                    core_lowHealthAegisTimer -= 1f * Time.deltaTime;
-
-                    if (core_lowHealthAegisTimer <= 0f)
-                    {
-                        core_lowHealthAegis = true;
-                        core_lowHealthAegisTimer = core_lowHealthAegisCooldown;
-                    }
-                }
-
-                if (masterTrait && !core_renewedJustice)
-                {
-                    core_renewedJusticeTimer -= 1f * Time.deltaTime;
-
-                    if (core_renewedJusticeTimer <= 0f)
-                    {
-                        core_renewedJustice = true;
-                        core_renewedJusticeTimer = core_renewedJusticeCooldown;
-                    }
+                    adeptTraitAvailable = true;
+                    adeptTraitCooldownTimer = 99f;
                 }
             }
-            #endregion
+
+            if (!masterTraitAvailable)
+            {
+                masterTraitCooldownTimer -= 1f * Time.deltaTime;
+
+                if (masterTraitCooldownTimer <= 0)
+                {
+                    masterTraitAvailable = true;
+                    masterTraitCooldownTimer = 99f;
+                }
+            }
+
+            if (!grandmasterTraitAvailable)
+            {
+                grandmasterTraitCooldownTimer -= 1f * Time.deltaTime;
+
+                if (grandmasterTraitCooldownTimer <= 0)
+                {
+                    grandmasterTraitAvailable = true;
+                    grandmasterTraitCooldownTimer = 99f;
+                }
+            }
         }
 
-        public bool[] GetTraits()
+        public void SetTraitUnavailable(int trait, float cooldown)
+        {
+            switch (trait)
+            {
+                case 0:
+                    adeptTraitAvailable = false;
+                    adeptTraitCooldownTimer = cooldown;
+                    break;
+
+                case 1:
+                    masterTraitAvailable = false;
+                    masterTraitCooldownTimer = cooldown;
+                    break;
+
+                case 2:
+                    grandmasterTraitAvailable = false;
+                    grandmasterTraitCooldownTimer = cooldown;
+                    break;
+            }
+        }  
+
+        public bool[] ReturnTraits()
         {
             return new bool[] { adeptTrait, masterTrait, grandmasterTrait };
         }
 
-        public bool GetTrait(int trait)
+        public bool[] ReturnTraitsAvailability()
         {
-            switch(trait)
+            return new bool[] { adeptTraitAvailable, masterTraitAvailable, grandmasterTraitAvailable };
+        }
+
+        public float[] ReturnCooldowns()
+        {
+            return new float[] { adeptTraitCooldownTimer, masterTraitCooldownTimer, grandmasterTraitCooldownTimer };
+        }
+
+        #region Core Traits
+
+        public void LowHealthAegis()
+        {
+            if (adeptTrait && adeptTraitAvailable)
             {
-                case 0:
-                    return adeptTrait;
+                mechanicController.GrantCourageBuff();
+                SetTraitUnavailable(0, StaticValues.traitAegisCooldown);
+            }      
+        }
 
-                case 1:
-                    return masterTrait;
-
-                case 2:
-                    return grandmasterTrait;
-
-                default:
-                    return false;
+        public void RenewedJustice()
+        {
+            if (masterTrait && masterTraitAvailable && mechanicController.ReturnActivatedVirtues()[0])
+            {
+                mechanicController.ResetCooldown(0);
+                SetTraitUnavailable(1, StaticValues.traitRenewedJusticeCooldown);
             }
         }
-
-        public bool[] GetConditionalTraits()
-        {
-            switch (traitType)
-            {
-                case TraitType.Core:
-                    return new bool[] { core_lowHealthAegis, core_renewedJustice, false };
-
-                default:
-                    return new bool[] { false, false, false };
-            }
-        }
-
-        public bool GetConditionalTrait(int trait)
-        {
-            switch (traitType)
-            {
-                case TraitType.Core:
-                    switch(trait)
-                    {
-                        case 0:
-                            return core_lowHealthAegis;
-
-                        case 1:
-                            return core_renewedJustice;
-
-                        default:
-                            return false;
-                    }
-
-                default:
-                    return false;
-            }
-        }
-
-        public float[] GetCooldowns()
-        {
-            switch(traitType)
-            {
-                case TraitType.Core:
-                    return new float[] { core_lowHealthAegisTimer, core_lowHealthAegisCooldown, core_renewedJusticeTimer, core_renewedJusticeCooldown, 0f, 0f };
-
-                default:
-                    return new float[] { 0f, 0f, 0f, 0f, 0f, 0f };
-            }
-        }
-
-        /// <returns>0: core, 1: dragonhunter, 2: firebrand, 3: willbender</returns>
-        public int GetTraitType()
-        {
-            return (int)traitType;
-        }
-
-        #region Core Trait Functions
-        public void Core_AegisCooldown()
-        {
-            core_lowHealthAegis = false;
-        }
-
-        public void Core_JusticeCooldown()
-        {
-            core_renewedJustice = false;
-        }
-        #endregion
-
-        #region Dragonhunter Trait Functions
-
-        #endregion
-
-        #region Firebrand Trait Functions
-
-        #endregion
-
-        #region Willbender Trait Functions
 
         #endregion
     }

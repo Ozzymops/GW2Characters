@@ -1,5 +1,7 @@
 ﻿using BepInEx;
+using Guardian.Modules;
 using Guardian.Modules.Guardian;
+using GuardianPlugin.Modules;
 using GuardianPlugin.Modules.Survivors;
 using R2API.Utils;
 using RoR2;
@@ -85,22 +87,91 @@ namespace GuardianPlugin
 
         private void Hook()
         {
-            // run hooks here, disabling one is as simple as commenting out the line
-            On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;           
+            On.RoR2.CharacterBody.RecalculateStats += RecalculateStats_Buffs;
+            On.RoR2.HealthComponent.TakeDamage += TakeDamage_Traits;
         }        
 
-        private void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
+        private void OnDestroy()
+        {
+            On.RoR2.CharacterBody.RecalculateStats -= RecalculateStats_Buffs;
+            On.RoR2.HealthComponent.TakeDamage -= TakeDamage_Traits;
+        }
+
+        private void RecalculateStats_Buffs(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
             orig(self);
 
-            // a simple stat hook, adds armor after stats are recalculated
             if (self)
             {
-                if (self.HasBuff(Modules.Buffs.shieldOfAbsorptionBuff))
+                // Shield of Absorption
+                if (self.HasBuff(Modules.Buffs.guardianShieldOfAbsorptionBuff))
                 {
                     self.armor += 50f;
                     self.moveSpeed *= 0.8f;
                 }
+            }
+        }
+
+        private void TakeDamage_Traits(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        {           
+            if (SharedPluginWrapper.enabled && self.GetComponent<CharacterBody>().baseNameToken.StartsWith("OZZ_GUARDIAN") && self.body.HasBuff(SharedPlugin.Modules.Buffs.aegisBuff))
+            {
+                // Shattered Aegis
+                DamageInfo shatteredAegis = new DamageInfo();
+                shatteredAegis.damage = self.body.damage * StaticValues.traitAegisDamageCoefficient;
+                shatteredAegis.attacker = self.gameObject;
+                shatteredAegis.inflictor = self.gameObject;
+                shatteredAegis.force = Vector3.zero;
+                shatteredAegis.crit = false;
+                shatteredAegis.procCoefficient = 0f;
+                shatteredAegis.damageType = DamageType.BypassArmor;
+
+                List<HurtBox> hurtBoxes = new List<HurtBox>();
+                hurtBoxes = new SphereSearch { radius = 7f, mask = LayerIndex.entityPrecise.mask, origin = self.transform.position }
+                    .RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.all).FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes().ToList();
+
+                foreach (HurtBox hurtBox in hurtBoxes)
+                {
+                    if (hurtBox.healthComponent.body && hurtBox.healthComponent.body.teamComponent.teamIndex != TeamIndex.Player)
+                    {
+                        shatteredAegis.position = hurtBox.transform.position;
+
+                        GlobalEventManager.instance.OnHitEnemy(shatteredAegis, hurtBox.gameObject);
+                        GlobalEventManager.instance.OnHitAll(shatteredAegis, hurtBox.gameObject);
+                        hurtBox.healthComponent.TakeDamage(shatteredAegis);
+                    }
+                }
+            }
+
+            if (damageInfo.attacker.GetComponent<CharacterBody>().HasBuff(Modules.Buffs.guardianJusticeBuff))
+            {
+                if (damageInfo.attacker.GetComponent<CharacterBody>().baseNameToken.StartsWith("OZZ_GUARDIAN"))
+                {
+                    // Increased Justice damage
+                    damageInfo.damage *= 1.15f;
+                }
+
+                // Inflict Burning
+                // damageInfo.damageType = SharedPlugin.Modules.DamageTypes;
+                damageInfo.damageType = DamageType.IgniteOnHit;
+            }
+        
+            orig(self, damageInfo);
+
+            if (SharedPluginWrapper.enabled && self.GetComponent<CharacterBody>().baseNameToken.StartsWith("OZZ_GUARDIAN") && self.isHealthLow)
+            {
+                // Low Health Aegis
+                self.GetComponent<TraitController>().LowHealthAegis();
+            }
+
+            bool doOnlyOnce = false;
+
+            if (!self.alive && !doOnlyOnce && damageInfo.attacker.GetComponent<CharacterBody>().baseNameToken.StartsWith("OZZ_GUARDIAN"))
+            {
+                doOnlyOnce = true;
+
+                // Renewed Justice
+                damageInfo.attacker.GetComponent<TraitController>().RenewedJustice();
             }
         }
     }

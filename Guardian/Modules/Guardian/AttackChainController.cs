@@ -7,104 +7,78 @@ using UnityEngine;
 
 namespace Guardian.Modules.Guardian
 {
-    // parts of code were liberated from Daredevil
     public class AttackChainController : MonoBehaviour
     {
+        private bool setup = false;
+
         public int chainCount = 0;
         private int maxChainCount = 2;
         private float chainTimer = 3f;
+        private bool overrideChain = false;
 
-        private Sprite[] chainSprites;
-        private SkillDef[] chainSkills;
+        private Sprite[] chainSprites = new Sprite[] { };
+        private SkillDef[] chainSkills = new SkillDef[] { };
 
-        private void Awake()
+        public void Setup(int eliteSpecialisation)
         {
-            chainSprites = new Sprite[] { GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore1"),
-                                          GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore2"),
-                                          GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore3")};
+            if (!setup)
+            {
+                setup = true;
 
-            chainSkills = SetupSkills();
+                // Dragonhunter is missing because it doesn't have any auto-attack chainable skills
+                switch (eliteSpecialisation)
+                {
+                    case 0: // Core
+                        chainSprites = new Sprite[] { GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore1"),
+                                                      GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore2"),
+                                                      GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryCore3")};
 
-            ResetChain();
-            UpdateAttack();
-        }
+                        chainSkills = new SkillDef[] { GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace1)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN1", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN1", chainSprites[0], true),
+                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace2)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN2", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN2", chainSprites[1], true),
+                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace3)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN3", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN3", chainSprites[2], true)};
+                        break;
 
-        private SkillDef[] SetupSkills()
-        {
-            SkillDef mace1 = ScriptableObject.CreateInstance<SkillDef>();
-            mace1 = GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace1)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN1", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN1", chainSprites[0], true);
-            
-            SkillDef mace2 = ScriptableObject.CreateInstance<SkillDef>();
-            mace2 = GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace2)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN2", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN2", chainSprites[1], true);
+                    case 2: // Firebrand
+                        chainSprites = new Sprite[] { GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryFB1"),
+                                                      GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryFB2"),
+                                                      GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryFB3")};
 
-            SkillDef mace3 = ScriptableObject.CreateInstance<SkillDef>();
-            mace3 = GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace3)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_CHAIN3", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_CHAIN3", chainSprites[2], true);
+                        chainSkills = new SkillDef[] { GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace1)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_CHAIN1", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB_CHAIN1", chainSprites[0], true),
+                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace2)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_CHAIN2", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB_CHAIN2", chainSprites[1], true),
+                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace3)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_FB_CHAIN3", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_FB_CHAIN3", chainSprites[2], true)};
+                        break;
 
+                    case 3: // Willbender
+                        chainSprites = new Sprite[] { GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryWB1"),
+                                                      GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryWB2"),
+                                                      GuardianPlugin.Modules.Assets.subAssetBundle.LoadAsset<Sprite>("texPrimaryWB3")};
 
-            return new SkillDef[] { mace1, mace2, mace3 };
+                        chainSkills = new SkillDef[] { GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace1)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_WB_CHAIN1", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_WB_CHAIN1", chainSprites[0], true),
+                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace2)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_WB_CHAIN2", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_WB_CHAIN2", chainSprites[1], true),
+                                                       GuardianPlugin.Modules.Skills.CreatePrimarySkillDef(new SerializableEntityStateType(typeof(Mace3)), "Weapon", "OZZ_GUARDIAN_BODY_PRIMARY_NAME_WB_CHAIN3", "OZZ_GUARDIAN_BODY_PRIMARY_DESCRIPTION_WB_CHAIN3", chainSprites[2], true)};
+                        break;
+
+                    default:
+                        break;
+                }
+
+                ResetChain();
+            }
         }
 
         private void FixedUpdate()
         {
-            ChainDecay();
-        }
-
-        private void ChainDecay()
-        {
-            if (chainCount > 0)
+            if (!overrideChain)
             {
-                chainTimer -= Time.fixedDeltaTime;
-
-                if (chainTimer <= 0)
+                if (chainCount > 0)
                 {
-                    ResetChain();
+                    chainTimer -= 1f * Time.deltaTime;
+
+                    if (chainTimer <= 0)
+                    {
+                        ResetChain();
+                    }
                 }
-            }
-        }
-
-        public void ProgressChain()
-        {
-            int oldChain = chainCount;
-
-            if (chainCount + 1 > maxChainCount)
-            {
-                ResetChain();
-            }
-            else
-            {
-                chainTimer = 3f;
-                chainCount++;
-            }
-
-            UpdateAttack();
-        }
-
-        private void UpdateAttack()
-        {
-            SkillLocator skillLocator = this.GetComponent<CharacterBody>().skillLocator;
-            SkillDef skillDef = skillLocator.primary.skillDef;
-
-            switch (chainCount)
-            {
-                case 0:
-                    skillLocator.primary.UnsetSkillOverride(skillLocator.primary, chainSkills[0], GenericSkill.SkillOverridePriority.Contextual);
-                    skillLocator.primary.SetSkillOverride(skillLocator.primary, chainSkills[0], GenericSkill.SkillOverridePriority.Contextual);
-                    break;
-
-                case 1:
-                    skillLocator.primary.UnsetSkillOverride(skillLocator.primary, chainSkills[1], GenericSkill.SkillOverridePriority.Contextual);
-                    skillLocator.primary.SetSkillOverride(skillLocator.primary, chainSkills[1], GenericSkill.SkillOverridePriority.Contextual);
-                    break;
-
-                case 2:
-                    skillLocator.primary.UnsetSkillOverride(skillLocator.primary, chainSkills[2], GenericSkill.SkillOverridePriority.Contextual);
-                    skillLocator.primary.SetSkillOverride(skillLocator.primary, chainSkills[2], GenericSkill.SkillOverridePriority.Contextual);
-                    break;
-
-                default:
-                    skillLocator.primary.UnsetSkillOverride(skillLocator.primary, chainSkills[0], GenericSkill.SkillOverridePriority.Contextual);
-                    skillLocator.primary.SetSkillOverride(skillLocator.primary, chainSkills[0], GenericSkill.SkillOverridePriority.Contextual);
-                    break;
             }
         }
 
@@ -112,7 +86,64 @@ namespace Guardian.Modules.Guardian
         {
             chainCount = 0;
             chainTimer = 3f;
-            UpdateAttack();
+            UpdateSkill();
+        }
+
+        private void UpdateSkill()
+        {
+            SkillLocator skillLocator = GetComponent<CharacterBody>().skillLocator;
+            SkillDef updatedSkill = skillLocator.primary.skillDef;
+
+            skillLocator.primary.UnsetSkillOverride(skillLocator.primary, skillLocator.primary.skillDef, GenericSkill.SkillOverridePriority.Contextual);
+
+            switch (chainCount)
+            {
+                case 0:
+                    skillLocator.primary.SetSkillOverride(skillLocator.primary, chainSkills[0], GenericSkill.SkillOverridePriority.Contextual);
+                    break;
+
+                case 1:
+                    skillLocator.primary.SetSkillOverride(skillLocator.primary, chainSkills[1], GenericSkill.SkillOverridePriority.Contextual);
+                    break;
+
+                case 2:
+                    skillLocator.primary.SetSkillOverride(skillLocator.primary, chainSkills[2], GenericSkill.SkillOverridePriority.Contextual);
+                    break;
+
+                default:
+                    skillLocator.primary.SetSkillOverride(skillLocator.primary, chainSkills[0], GenericSkill.SkillOverridePriority.Contextual);
+                    break;
+            }
+        }
+
+        public void ProgressChain()
+        {
+            if (!overrideChain)
+            {
+                int previousChainCount = chainCount;
+
+                if (chainCount + 1 > maxChainCount)
+                {
+                    ResetChain();
+                }
+                else
+                {
+                    chainTimer = 3f;
+                    chainCount++;
+                }
+
+                UpdateSkill();
+            }          
+        }
+
+        public void OverrideChain(bool doOverride)
+        {
+            overrideChain = doOverride;
+
+            if (!doOverride)
+            {
+                ResetChain();
+            }
         }
     }
 }

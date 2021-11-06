@@ -10,7 +10,7 @@ namespace GuardianPlugin.SkillStates.Secondary
 {
     public class ZealotsDefense : BaseSkillState
     {
-        public static float damageCoefficient = Modules.StaticValues.coreSecondaryDamageCoefficient;
+        public static float damageCoefficient = Modules.StaticValues.coreSecondaryDamage;
         public static float procCoefficient = 0.5f;
         public static float baseDuration = 1.0f;
         public static float force = 800f;
@@ -26,6 +26,7 @@ namespace GuardianPlugin.SkillStates.Secondary
         private int projectileCount;
         private int firedProjectiles = 0;
         private float timer;
+        private int animIndex = 0;
 
         public override void OnEnter()
         {
@@ -37,15 +38,13 @@ namespace GuardianPlugin.SkillStates.Secondary
             this.muzzleString = "Muzzle";
             this.projectileCount = ZealotsDefense.baseProjectileCount;
             this.timer = 0.2f;
-
-            base.PlayAnimation("LeftArm, Override", "ShootGun", "ShootGun.playbackRate", 1.8f);
         }
 
         public override void OnExit()
         {
             base.OnExit();
 
-            if (NetworkServer.active && base.characterBody.GetComponent<TraitController>().GetTrait(2) && base.characterBody.GetComponent<TraitController>().GetTraitType() == 0)
+            if (NetworkServer.active && base.characterBody.GetComponent<TraitController>().ReturnTraits()[2])
             {
                 base.characterBody.healthComponent.HealFraction(0.025f, new ProcChainMask());
             }
@@ -53,6 +52,17 @@ namespace GuardianPlugin.SkillStates.Secondary
 
         private void Fire()
         {
+            if (animIndex == 0)
+            {
+                animIndex = 1;
+                base.PlayAnimation("Gesture, Override", "ZealotsDefenseLeft", "zdPlaybackRate", 0.5f);
+            }
+            else
+            {
+                animIndex = 0;
+                base.PlayAnimation("Gesture, Override", "ZealotsDefenseRight", "zdPlaybackRate", 0.5f);
+            }
+
             EffectManager.SimpleMuzzleFlash(Resources.Load<GameObject>("Prefabs/Effects/Muzzleflashes/MuzzleflashMageLightning"), base.gameObject, this.muzzleString, false);
             Util.PlaySound(EntityStates.Mage.Weapon.FireLaserbolt.attackString, base.gameObject);
 
@@ -61,7 +71,7 @@ namespace GuardianPlugin.SkillStates.Secondary
                 Ray aimRay = base.GetAimRay();
                 base.characterBody.AddSpreadBloom(bloom);
 
-                ProjectileManager.instance.FireProjectile(projectilePrefab, aimRay.origin, Util.QuaternionSafeLookRotation(aimRay.direction), base.gameObject, damageCoefficient * damageStat, 0f, base.RollCrit());
+                ProjectileManager.instance.FireProjectile(projectilePrefab, aimRay.origin, Util.QuaternionSafeLookRotation(aimRay.direction), base.gameObject, damageCoefficient, 0f, base.RollCrit());
             }
         }
 
